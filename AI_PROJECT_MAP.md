@@ -1,1 +1,1 @@
-Template placeholder
+docs/, project_recovery/, ai_tasks/, contextJSON/

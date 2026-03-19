@@ -1,28 +1,15 @@
-CURRENT IMPLEMENTATION STATUS
+PROJECT: ContextViewer
 
-Completed:
-- Full discipline analytics pipeline
-- Discipline API (/discipline-state)
-- Contract validation
-- Health endpoint
-- LiveRuleEvaluationEngine
-- RealTimeAlertEngine
-- AccountRiskState
-- LiveDisciplineMonitor
-- LiveDisciplineMonitorContractBuilder
-- Live monitor endpoint (/live-discipline-monitor)
-- Live monitor endpoint tests
-- Live route stabilization
-- Context Projection Layer rules synchronization
+CURRENT STAGE:
+Stage 2 — Data Layer (ready)
 
-In progress:
-- transition to context JSON generator design / runtime stub
+STATUS:
+- Architecture locked
+- Recovery system integrated
+- Template OS preserved
 
-Next:
-- context JSON runtime or design stub
-- live route stabilization follow-up for future UI / notification integration
+NEXT STEP:
+Generate AI tasks for Stage 2
 
-Active architecture obligations:
-- architecture sync must maintain populated contextJSON outputs
-- architecture sync now follows the archive-first workflow
-- the newest timestamped context JSON is the authoritative runtime source for the visual application
+CONSTRAINT:
+Do not implement without AI task system

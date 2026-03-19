@@ -1,9 +1,31 @@
-RECOVERY PROMPT
+RECOVERY PROTOCOL — ContextViewer
 
-Before continuing work:
-- read architecture files
-- read plan files
-- read current implementation status
-- read response format rules
-- read recent ai_tasks
-- then reconstruct exact current state
+Always execute in order:
+
+1. Load canonical system definition:
+   docs/architecture/system-definition.md
+
+2. Load architecture:
+   docs/architecture/
+
+3. Load AI context:
+   AI_CONTEXT.md
+
+4. Load current state:
+   project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt
+
+5. Load latest snapshot:
+   contextJSON/
+
+System rules:
+- latest valid contextJSON snapshot = runtime truth
+- markdown is NOT runtime source
+- invalid snapshots excluded from UI
+- development ONLY through AI tasks
+
+If architecture changes required:
+→ require archive upload
+→ run "обнови архитектурные файлы"
+
+Next step:
+→ continue via AI tasks

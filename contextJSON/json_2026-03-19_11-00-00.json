@@ -1,0 +1,5 @@
+{
+  "project": {"name": "ContextViewer","stage": "Stage 2"},
+  "system": {"summary": "Architecture finalized"},
+  "progress": {"next": ["AI tasks for data layer"]}
+}
