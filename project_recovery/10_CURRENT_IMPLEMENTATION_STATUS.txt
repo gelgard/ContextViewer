@@ -14,10 +14,12 @@ STATUS:
 - Recovery aligned
 - AI task system initialized for Stage 2
 - Execution started through AI Task 001
+- Active documents normalized through AI Task 002
+- Stage 2 execution backlog decomposed through AI Task 003
 - No data-layer implementation yet
 
 NEXT ACTION:
-Run AI Task 002 — Documentation Consistency Normalization
+Run AI Task 004 — Project Entity And Snapshot Schema
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

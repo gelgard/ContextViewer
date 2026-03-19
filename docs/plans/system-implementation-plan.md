@@ -13,17 +13,24 @@ Completed:
 - Architecture synchronization completed
 - Recovery aligned with root-level `AGENTS.md`
 - JSON naming rule enforced
+- AI Task 001 — Stage 2 AI Task System Initialization
+- AI Task 002 — Documentation Consistency Normalization
+- AI Task 003 — Stage 2 Data Layer Task Decomposition
 
 Execution status:
 - Stage 2 opened through AI task system
+- Active documents normalized for Stage 2 continuation
+- Stage 2 task backlog decomposed into executable numbered tasks
 - No data-layer implementation started yet
 
 Current:
-- AI Task 001 — Stage 2 AI Task System Initialization
+- AI Task 004 — Project Entity And Snapshot Schema
 
 Next:
-- AI Task 002 — Documentation Consistency Normalization
-- Stage 2 task decomposition for Project entity, Snapshot storage, Validation, Deduplication, Import log
+- AI Task 005 — Snapshot Storage And Constraints
+- AI Task 006 — Snapshot Validation Rules
+- AI Task 007 — Snapshot Deduplication
+- AI Task 008 — Snapshot Import Log
 
 Cross-cutting architecture notes:
 - contextJSON maintenance is part of architecture synchronization

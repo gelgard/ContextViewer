@@ -28,6 +28,8 @@ Current Status:
 - Recovery system integrated into inherited template OS
 - AI task system initialized for Stage 2
 - Execution opened through AI Task 001
+- Active documentation normalized through AI Task 002
+- Stage 2 backlog decomposed through AI Task 003
 - Data-layer implementation not started
 
 Strategy Lock:
@@ -38,4 +40,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 002 and continue implementation strictly through numbered AI tasks.
+Run AI Task 004 and continue implementation strictly through numbered AI tasks.
