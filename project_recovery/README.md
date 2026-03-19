@@ -13,7 +13,7 @@ It inherits:
 Project-specific adaptation:
 - contextJSON = core runtime source
 - system-definition.md = canonical source of truth
-- AGENT.md = root-level execution rules
+- AGENTS.md = root-level execution rules
 - recovery restores full system via ordered loading
 
 Recovery guarantees:

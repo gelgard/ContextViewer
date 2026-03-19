@@ -1,7 +1,7 @@
 # AI Project Map
 
 ## Root Files
-- AGENT.md
+- AGENTS.md
 - AI_CONTEXT.md
 - AI_PROJECT_MAP.md
 

@@ -9,7 +9,7 @@ Canonical System Definition:
 docs/architecture/system-definition.md
 
 Agent Rules:
-AGENT.md
+AGENTS.md
 
 Core Runtime Rule:
 Latest valid contextJSON snapshot = runtime truth.
@@ -26,8 +26,9 @@ Stage 2 — Data Layer
 Current Status:
 - Architecture foundation completed
 - Recovery system integrated into inherited template OS
-- Implementation not started
-- AI task layer not yet initialized
+- AI task system initialized for Stage 2
+- Execution opened through AI Task 001
+- Data-layer implementation not started
 
 Strategy Lock:
 - Architecture workflow inherited and preserved
@@ -37,4 +38,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Initialize AI task system for Stage 2 and continue implementation strictly through numbered AI tasks.
+Run AI Task 002 and continue implementation strictly through numbered AI tasks.

@@ -190,7 +190,7 @@ Only extend them with project-specific implementation.
 
 ## 13.1 Agent Execution Layer
 Agent behavior is defined in:
-→ /AGENT.md
+→ /AGENTS.md
 
 This file defines execution rules and must always be followed.
 

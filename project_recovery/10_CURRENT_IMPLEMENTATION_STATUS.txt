@@ -4,18 +4,20 @@ CURRENT STAGE:
 Stage 2 — Data Layer
 
 CURRENT SUBSTAGE:
-AI Task Initialization (required)
+AI Task Initialization
 
 STATUS:
 - Architecture synced with latest rules
-- AGENT.md moved to project root
-- Recovery updated to load AGENT.md first
+- AGENTS.md moved to project root
+- Recovery updated to load AGENTS.md first
 - JSON naming rule enforced
 - Recovery aligned
-- No implementation yet
+- AI task system initialized for Stage 2
+- Execution started through AI Task 001
+- No data-layer implementation yet
 
 NEXT ACTION:
-Generate AI tasks for Stage 2
+Run AI Task 002 — Documentation Consistency Normalization
 
 CRITICAL:
-Do not proceed without AI tasks
+Do not proceed to coding outside numbered AI tasks

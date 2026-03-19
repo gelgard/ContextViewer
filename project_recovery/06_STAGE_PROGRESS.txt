@@ -13,10 +13,10 @@ Completed in this stage:
 - fixed ingestion model
 - integrated recovery layer
 - fixed implementation plan inside inherited template OS
-- moved AGENT.md to project root and linked it into recovery + architecture
+- moved AGENTS.md to project root and linked it into recovery + architecture
 
 ### Stage 2 — Data Layer
-Status: initializing
+Status: entered through AI task initialization
 
 Planned scope:
 - Project entity
@@ -24,6 +24,11 @@ Planned scope:
 - Validation
 - Deduplication
 - Import log
+
+Current execution state:
+- AI Task 001 created
+- execution layer opened
+- implementation not started yet
 
 ### Stage 3 — Ingestion Engine
 Status: pending

@@ -3,7 +3,7 @@ RECOVERY PROTOCOL — ContextViewer
 Always execute in this order:
 
 1. Load agent rules:
-   AGENT.md
+   AGENTS.md
 
 2. Load canonical system definition:
    docs/architecture/system-definition.md
