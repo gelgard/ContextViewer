@@ -1,0 +1,20 @@
+FULL PROJECT RECOVERY PROMPT
+
+Before continuing work:
+- read AI context files
+- read architecture files
+- read plan files
+- read recovery files
+- read current implementation status
+- read response format rules
+- read recent AI tasks
+- then reconstruct exact project state
+
+Template note:
+If this repository is the universal template, then:
+- "обнови template-repo" means incremental methodology sync
+- "собери canonical template-repo" means full canonical template build
+- do not transfer project-specific content
+- do not auto-update protected governance files unless explicitly requested
+- use project_recovery/12_TEMPLATE_REPO_UPDATE_COMMAND.txt as the official incremental template update prompt
+- use project_recovery/13_CANONICAL_TEMPLATE_REPO_BUILD_COMMAND.txt as the official canonical template build prompt

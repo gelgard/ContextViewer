@@ -1,0 +1,19 @@
+TEMPLATE OPERATING SYSTEM INHERITANCE
+
+Together with this prompt, a template repository archive is provided.
+
+That archive is the source-of-truth for the development operating system of the new project.
+
+Everything created in the new project must inherit and preserve the template-defined:
+- architecture file structure
+- recovery structure
+- planning structure
+- AI task workflow
+- response format rules
+- architecture update procedure
+- archive-first sync workflow
+- contextJSON rules
+- command model
+
+You may extend the system for the new project domain, but you must not invent a different operating system if the template already defines one.
+

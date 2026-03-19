@@ -1,0 +1,7 @@
+BRAND RECOVERY PROMPT
+
+Before generating public-facing brand materials:
+- read brand-system.md
+- read design-tokens.json
+- read AI_CONTEXT.md
+- preserve public product identity

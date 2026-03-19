@@ -1,0 +1,33 @@
+ARCHITECTURE RULES
+
+1. Architecture-first workflow is mandatory.
+2. Recovery files are part of the active source-of-truth layer.
+3. AI task execution must remain structured and deterministic.
+4. The architecture set includes machine-readable context projection files.
+5. The command "обнови архитектурные файлы" must synchronize:
+   - architecture files
+   - plan files
+   - recovery files
+   - contextJSON/json_spec.md
+   - a new populated contextJSON/json_<timestamp>.json
+6. contextJSON/json_<timestamp>.json must contain aggregated and structured project context and must not be empty.
+7. json_spec.md must be overwritten whenever JSON schema or generation logic changes.
+8. The latest timestamped JSON snapshot is the authoritative runtime source for the external visual application.
+9. The visual application must use the latest JSON for structure, statuses, roadmap, graph, and summaries.
+10. Markdown files may be opened by path for raw content display only and must not be required to compute project state.
+11. Context JSON must be sufficient for an external visualization application to render:
+   - architecture tree
+   - file purposes and update rules
+   - architecture dependency graph
+   - plan status
+   - AI task status
+   - roadmap
+   - executive summary
+   - customer status summary
+   - last iteration summary
+12. Architecture sync workflow is archive-first:
+   - first notify that sync is needed
+   - then receive current project archive
+   - then perform full sync
+   - only after that execute "обнови архитектурные файлы"
+13. Architecture sync is incomplete without regenerated contextJSON outputs.

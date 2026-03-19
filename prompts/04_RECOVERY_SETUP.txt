@@ -1,0 +1,13 @@
+RECOVERY SETUP PROMPT
+
+        Build the recovery layer inside the framework inherited from the template repository.
+
+        Do not design recovery from scratch if the template already defines:
+        - recovery files
+        - architecture update procedure
+        - archive-first sync workflow
+        - contextJSON regeneration rules
+        - response format rules
+        - command model
+
+        Adapt the inherited recovery system to the new project's domain while preserving the template operating-system behavior.

@@ -1,0 +1,10 @@
+STAGE PROGRESS
+
+Current stage:
+{{CURRENT_STAGE}}
+
+Completed:
+{{COMPLETED_TASKS_SUMMARY}}
+
+Next:
+{{NEXT_TASK}}

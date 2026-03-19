@@ -1,0 +1,44 @@
+ARCHITECTURE UPDATE COMMAND
+
+Command:
+"обнови архитектурные файлы"
+
+Behavior:
+- triggers safe architecture / plan / recovery synchronization
+- uses priority:
+  1. project_recovery
+  2. docs/architecture
+  3. docs/plans
+  4. ai_tasks
+  5. code
+
+Archive-first workflow:
+1. detect that architecture sync is needed
+2. request the current project archive
+3. perform full synchronization against the uploaded archive
+4. only after that execute the architecture update command
+
+Rules:
+- no full rewrites unless explicitly requested
+- only pointwise updates
+- preserve all valid data
+- sync stage, tasks, next steps
+- sync real-time / API layers
+- update recovery files
+- regenerate contextJSON outputs
+
+Mandatory contextJSON outputs:
+1. contextJSON/json_spec.md
+2. contextJSON/json_<timestamp>.json
+
+JSON requirements:
+- must be populated with aggregated and structured project information
+- must be sufficient for external visualization and reporting
+- must include timestamp for history tracking
+- the newest timestamped JSON becomes the authoritative runtime source for the visual application
+
+Visual app rule:
+- use the newest JSON for structure, status, roadmap, graph, and summaries
+- use markdown paths only for raw content display
+
+Architecture sync is incomplete without these outputs being included in the update archive.

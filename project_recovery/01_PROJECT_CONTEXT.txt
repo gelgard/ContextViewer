@@ -1,0 +1,16 @@
+PROJECT CONTEXT
+
+Project internal identity:
+{{INTERNAL_PROJECT_NAME}}
+
+Public product identity:
+{{PUBLIC_PRODUCT_NAME}}
+
+Short summary:
+{{PROJECT_SHORT_SUMMARY}}
+
+Current stage:
+{{CURRENT_STAGE}}
+
+Current next task:
+{{NEXT_TASK}}

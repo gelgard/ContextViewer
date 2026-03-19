@@ -1,0 +1,15 @@
+CANONICAL TEMPLATE REPO BUILD COMMAND
+
+Command:
+"собери canonical template-repo"
+
+Purpose:
+Build or rebuild the full canonical universal template repository.
+
+This command must produce a complete template that supports:
+- architecture-first startup
+- recovery-driven continuity
+- AI task workflow
+- response format discipline
+- machine-readable context projection
+- populated contextJSON generation

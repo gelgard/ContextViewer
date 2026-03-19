@@ -1,0 +1,14 @@
+
+TEMPLATE INHERITANCE EXECUTION RULE
+
+Implementation must continue strictly inside the framework inherited from the template repository.
+
+Do not replace:
+- architecture workflow
+- recovery workflow
+- AI task workflow
+- response format
+- architecture update rules
+- command model
+
+Only extend them with project-specific implementation.

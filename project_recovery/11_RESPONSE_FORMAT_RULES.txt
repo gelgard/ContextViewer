@@ -1,0 +1,26 @@
+RESPONSE FORMAT RULES
+
+- Always follow AI Task structure
+- Always include terminal testing instructions when terminal testing is involved
+- Always include:
+  - changed files
+  - full file content
+  - test output
+- Always include commit step after successful testing
+- Do not skip numbering
+- No large unstructured responses
+
+Architecture sync rule:
+When the user asks "обнови архитектурные файлы":
+1. first state that an architecture sync requires the current project archive
+2. wait for archive upload
+3. perform full sync against the uploaded archive
+4. only then execute architecture synchronization
+5. include:
+   - contextJSON/json_spec.md
+   - a new populated contextJSON/json_<timestamp>.json
+
+The generated context JSON must contain aggregated and structured information, not an empty schema stub.
+
+The newest timestamped JSON must be treated as the authoritative runtime source for the visual application.
+Markdown files are referenced by path for raw content display only.

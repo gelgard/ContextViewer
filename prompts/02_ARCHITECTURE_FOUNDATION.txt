@@ -1,0 +1,20 @@
+ARCHITECTURE FOUNDATION PROMPT
+
+        The template repository archive is the source-of-truth operating-system layer.
+
+        Generate the new project's foundation by reusing the template-defined structure and rules.
+
+        The new project must inherit and preserve:
+        - architecture structure
+        - recovery structure
+        - planning structure
+        - AI task workflow
+        - response format rules
+        - architecture update procedure
+        - archive-first sync workflow
+        - contextJSON rules
+        - command model
+
+        The project may extend content for its own domain, but it must not replace the inherited operating system.
+
+        Prepare the full foundation layer ready for 1:1 insertion.

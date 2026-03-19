@@ -1,0 +1,18 @@
+{
+  "color": {
+    "primary": {
+      "value": "{{PRIMARY_COLOR}}"
+    },
+    "secondary": {
+      "value": "{{SECONDARY_COLOR}}"
+    },
+    "accent": {
+      "value": "{{ACCENT_COLOR}}"
+    }
+  },
+  "font": {
+    "primary": {
+      "value": "{{PRIMARY_FONT}}"
+    }
+  }
+}

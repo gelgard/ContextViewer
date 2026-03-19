@@ -1,0 +1,8 @@
+GTM RECOVERY PROMPT
+
+Before generating GTM or content:
+- read architecture docs
+- read product docs
+- read current implementation status
+- separate implemented vs planned
+- do not invent functionality

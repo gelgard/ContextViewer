@@ -1,0 +1,9 @@
+RECOVERY PROMPT
+
+Before continuing work:
+- read architecture files
+- read plan files
+- read current implementation status
+- read response format rules
+- read recent ai_tasks
+- then reconstruct exact current state

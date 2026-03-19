@@ -1,0 +1,9 @@
+
+TEMPLATE INHERITANCE RULE
+
+The implementation plan must be built **inside the inherited template operating system**.
+
+This means:
+- stage structure must align with the template process model
+- AI tasks must follow the template execution discipline
+- future recovery and architecture updates must remain compatible with the template-defined rules and commands

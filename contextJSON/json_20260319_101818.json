@@ -1,0 +1,509 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-19T10:18:18.618036+00:00",
+    "generated_filename": "json_20260319_101818.json",
+    "schema_version": "1.2.0",
+    "project_internal_name": "PropAgent",
+    "project_public_name": "Disciplia",
+    "current_stage": "Stage 6 — Real-Time Discipline Guard",
+    "current_task": "063_context_json_generator_design_or_runtime_stub",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "architecture_files": [
+    {
+      "id": "ai_context",
+      "path": "AI_CONTEXT.md",
+      "title": "Global project identity and architecture obligations",
+      "group": "root",
+      "purpose": "Defines product identity, implemented slices, current stage, and architecture-wide rules including archive-first sync and authoritative context JSON behavior.",
+      "update_when": "Update when implemented slices, current task, architecture sync workflow, or context projection rules change.",
+      "status": "active",
+      "used_in_flow_order": 1,
+      "related_file_ids": [
+        "context_projection",
+        "implementation_plan",
+        "impl_status"
+      ]
+    },
+    {
+      "id": "context_projection",
+      "path": "docs/architecture/context-projection-layer.md",
+      "title": "Context Projection Layer",
+      "group": "architecture",
+      "purpose": "Defines the machine-readable populated JSON layer for architecture visualization, roadmap rendering, and management/customer reporting.",
+      "update_when": "Update when JSON structure, generation inputs, reporting requirements, or sync workflow change.",
+      "status": "active",
+      "used_in_flow_order": 2,
+      "related_file_ids": [
+        "json_spec",
+        "arch_update_cmd",
+        "response_rules"
+      ]
+    },
+    {
+      "id": "implementation_plan",
+      "path": "docs/plans/system-implementation-plan.md",
+      "title": "Current implementation plan",
+      "group": "plan",
+      "purpose": "Defines current stage, completed tasks, current task, and next work items.",
+      "update_when": "Update when current task or next tasks change.",
+      "status": "active",
+      "used_in_flow_order": 3,
+      "related_file_ids": [
+        "stage_progress",
+        "impl_status"
+      ]
+    },
+    {
+      "id": "arch_rules",
+      "path": "project_recovery/03_ARCHITECTURE_RULES.txt",
+      "title": "Architecture rules",
+      "group": "recovery",
+      "purpose": "Defines binding architecture rules including mandatory contextJSON outputs, authoritative latest-JSON behavior, and archive-first sync workflow.",
+      "update_when": "Update when architecture process or required artifacts change.",
+      "status": "active",
+      "used_in_flow_order": 4,
+      "related_file_ids": [
+        "response_rules",
+        "arch_update_cmd"
+      ]
+    },
+    {
+      "id": "stage_progress",
+      "path": "project_recovery/06_STAGE_PROGRESS.txt",
+      "title": "Stage progress",
+      "group": "recovery",
+      "purpose": "Stores compact stage/task progress for recovery and synchronization.",
+      "update_when": "Update whenever current or next task changes.",
+      "status": "active",
+      "used_in_flow_order": 5,
+      "related_file_ids": [
+        "implementation_plan",
+        "impl_status"
+      ]
+    },
+    {
+      "id": "impl_status",
+      "path": "project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt",
+      "title": "Current implementation status",
+      "group": "recovery",
+      "purpose": "Summarizes implemented, in-progress, and next capabilities.",
+      "update_when": "Update when a slice is completed or the in-progress item changes.",
+      "status": "active",
+      "used_in_flow_order": 6,
+      "related_file_ids": [
+        "stage_progress",
+        "response_rules"
+      ]
+    },
+    {
+      "id": "response_rules",
+      "path": "project_recovery/11_RESPONSE_FORMAT_RULES.txt",
+      "title": "Response format rules",
+      "group": "recovery",
+      "purpose": "Defines required assistant output structure and archive-first architecture sync expectations.",
+      "update_when": "Update when response format or architecture update workflow changes.",
+      "status": "active",
+      "used_in_flow_order": 7,
+      "related_file_ids": [
+        "arch_update_cmd",
+        "json_spec"
+      ]
+    },
+    {
+      "id": "arch_update_cmd",
+      "path": "project_recovery/12_ARCHITECTURE_UPDATE_COMMAND.txt",
+      "title": "Architecture update command",
+      "group": "recovery",
+      "purpose": "Defines how the architecture update command must run, including archive-first sync and mandatory authoritative contextJSON outputs.",
+      "update_when": "Update when architecture synchronization procedure changes.",
+      "status": "active",
+      "used_in_flow_order": 8,
+      "related_file_ids": [
+        "response_rules",
+        "json_spec",
+        "context_projection"
+      ]
+    },
+    {
+      "id": "json_spec",
+      "path": "contextJSON/json_spec.md",
+      "title": "Context JSON specification",
+      "group": "context_json",
+      "purpose": "Defines the structure and meaning of the populated context projection JSON snapshots.",
+      "update_when": "Overwrite when JSON schema or generation logic changes.",
+      "status": "active",
+      "used_in_flow_order": 9,
+      "related_file_ids": [
+        "context_projection",
+        "arch_update_cmd"
+      ]
+    },
+    {
+      "id": "json_snapshot",
+      "path": "contextJSON/json_20260319_101818.json",
+      "title": "Populated context JSON snapshot",
+      "group": "context_json",
+      "purpose": "Timestamped aggregated project snapshot for external visualization and reporting applications. Latest snapshot is authoritative.",
+      "update_when": "Generate a new file on every architecture sync.",
+      "status": "active",
+      "used_in_flow_order": 10,
+      "related_file_ids": [
+        "json_spec"
+      ]
+    }
+  ],
+  "architecture_tree": {
+    "name": "project-root",
+    "type": "folder",
+    "path": ".",
+    "children": [
+      {
+        "name": "AI_CONTEXT.md",
+        "type": "file",
+        "path": "AI_CONTEXT.md",
+        "children": []
+      },
+      {
+        "name": "docs",
+        "type": "folder",
+        "path": "docs",
+        "children": [
+          {
+            "name": "architecture",
+            "type": "folder",
+            "path": "docs/architecture",
+            "children": [
+              {
+                "name": "context-projection-layer.md",
+                "type": "file",
+                "path": "docs/architecture/context-projection-layer.md",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "plans",
+            "type": "folder",
+            "path": "docs/plans",
+            "children": [
+              {
+                "name": "system-implementation-plan.md",
+                "type": "file",
+                "path": "docs/plans/system-implementation-plan.md",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "project_recovery",
+        "type": "folder",
+        "path": "project_recovery",
+        "children": [
+          {
+            "name": "03_ARCHITECTURE_RULES.txt",
+            "type": "file",
+            "path": "project_recovery/03_ARCHITECTURE_RULES.txt",
+            "children": []
+          },
+          {
+            "name": "06_STAGE_PROGRESS.txt",
+            "type": "file",
+            "path": "project_recovery/06_STAGE_PROGRESS.txt",
+            "children": []
+          },
+          {
+            "name": "10_CURRENT_IMPLEMENTATION_STATUS.txt",
+            "type": "file",
+            "path": "project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt",
+            "children": []
+          },
+          {
+            "name": "11_RESPONSE_FORMAT_RULES.txt",
+            "type": "file",
+            "path": "project_recovery/11_RESPONSE_FORMAT_RULES.txt",
+            "children": []
+          },
+          {
+            "name": "12_ARCHITECTURE_UPDATE_COMMAND.txt",
+            "type": "file",
+            "path": "project_recovery/12_ARCHITECTURE_UPDATE_COMMAND.txt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "contextJSON",
+        "type": "folder",
+        "path": "contextJSON",
+        "children": [
+          {
+            "name": "json_spec.md",
+            "type": "file",
+            "path": "contextJSON/json_spec.md",
+            "children": []
+          },
+          {
+            "name": "json_20260319_101818.json",
+            "type": "file",
+            "path": "contextJSON/json_20260319_101818.json",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "architecture_graph": {
+    "nodes": [
+      {
+        "id": "ai_context",
+        "label": "AI_CONTEXT",
+        "type": "root"
+      },
+      {
+        "id": "context_projection",
+        "label": "Context Projection",
+        "type": "architecture"
+      },
+      {
+        "id": "implementation_plan",
+        "label": "Implementation Plan",
+        "type": "plan"
+      },
+      {
+        "id": "arch_rules",
+        "label": "Architecture Rules",
+        "type": "recovery"
+      },
+      {
+        "id": "stage_progress",
+        "label": "Stage Progress",
+        "type": "recovery"
+      },
+      {
+        "id": "impl_status",
+        "label": "Implementation Status",
+        "type": "recovery"
+      },
+      {
+        "id": "response_rules",
+        "label": "Response Rules",
+        "type": "recovery"
+      },
+      {
+        "id": "arch_update_cmd",
+        "label": "Architecture Update Command",
+        "type": "recovery"
+      },
+      {
+        "id": "json_spec",
+        "label": "JSON Spec",
+        "type": "context_json"
+      },
+      {
+        "id": "json_snapshot",
+        "label": "JSON Snapshot",
+        "type": "context_json"
+      }
+    ],
+    "edges": [
+      {
+        "from": "ai_context",
+        "to": "context_projection",
+        "relation": "declares_authoritative_snapshot_model"
+      },
+      {
+        "from": "implementation_plan",
+        "to": "stage_progress",
+        "relation": "mirrors_progress"
+      },
+      {
+        "from": "implementation_plan",
+        "to": "impl_status",
+        "relation": "drives_status"
+      },
+      {
+        "from": "arch_rules",
+        "to": "arch_update_cmd",
+        "relation": "governs_sync"
+      },
+      {
+        "from": "response_rules",
+        "to": "arch_update_cmd",
+        "relation": "defines_output_requirements"
+      },
+      {
+        "from": "context_projection",
+        "to": "json_spec",
+        "relation": "defines_json_model"
+      },
+      {
+        "from": "arch_update_cmd",
+        "to": "json_snapshot",
+        "relation": "requires_generation"
+      },
+      {
+        "from": "json_spec",
+        "to": "json_snapshot",
+        "relation": "schema_to_snapshot"
+      }
+    ]
+  },
+  "usage_flow": {
+    "source_priority": [
+      "project_recovery/*",
+      "docs/architecture/*",
+      "docs/plans/*",
+      "ai_tasks/*",
+      "factually synchronized implementation state"
+    ],
+    "architecture_usage_sequence": [
+      "project_recovery/06_STAGE_PROGRESS.txt",
+      "project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt",
+      "AI_CONTEXT.md",
+      "docs/architecture/context-projection-layer.md",
+      "docs/plans/system-implementation-plan.md",
+      "project_recovery/03_ARCHITECTURE_RULES.txt",
+      "project_recovery/11_RESPONSE_FORMAT_RULES.txt",
+      "project_recovery/12_ARCHITECTURE_UPDATE_COMMAND.txt",
+      "contextJSON/json_spec.md",
+      "contextJSON/json_20260319_101818.json"
+    ]
+  },
+  "project_plan": {
+    "stage": "Stage 6 — Real-Time Discipline Guard",
+    "substage": "Context projection transition",
+    "completed_task_range": "029–062",
+    "current_task": "063_context_json_generator_design_or_runtime_stub",
+    "next_tasks": [
+      "context JSON runtime or design stub",
+      "live route to UI / notification integration preparation"
+    ],
+    "completed_structure": [
+      {
+        "stage": "Stage 6 — Real-Time Discipline Guard",
+        "substage": "Live monitor and context rules",
+        "tasks": [
+          {
+            "id": "060",
+            "name": "live_monitor_tests"
+          },
+          {
+            "id": "061",
+            "name": "live_route_stabilization"
+          },
+          {
+            "id": "062",
+            "name": "context_json_generation_rules_sync"
+          }
+        ]
+      }
+    ],
+    "future_structure": [
+      {
+        "stage": "Stage 6 — Real-Time Discipline Guard",
+        "substage": "Context JSON generator design or runtime stub"
+      },
+      {
+        "stage": "Future live integration",
+        "substage": "UI / notification integration"
+      }
+    ]
+  },
+  "ai_task_status": [
+    {
+      "id": "060",
+      "name": "live_monitor_tests",
+      "status": "completed",
+      "short_description": "Added automated tests for the live monitoring endpoint payload."
+    },
+    {
+      "id": "061",
+      "name": "live_route_stabilization",
+      "status": "completed",
+      "short_description": "Stabilized the live route structure without changing endpoint behavior."
+    },
+    {
+      "id": "062",
+      "name": "context_json_generation_rules_sync",
+      "status": "completed",
+      "short_description": "Made populated context JSON a mandatory architecture synchronization artifact."
+    },
+    {
+      "id": "063",
+      "name": "context_json_generator_design_or_runtime_stub",
+      "status": "current",
+      "short_description": "Design or stub the runtime generation logic for populated context JSON snapshots."
+    }
+  ],
+  "roadmap": {
+    "stages": [
+      {
+        "id": "stage_1",
+        "name": "Foundational analytics architecture",
+        "status": "completed",
+        "note": "Core analytics pipeline implemented."
+      },
+      {
+        "id": "stage_2",
+        "name": "Analytics API exposure",
+        "status": "completed",
+        "note": "Health and discipline-state API endpoints implemented."
+      },
+      {
+        "id": "stage_3",
+        "name": "Real-time guard slice",
+        "status": "completed",
+        "note": "Live evaluation, alerts, contract, endpoint, tests, and route stabilization implemented."
+      },
+      {
+        "id": "stage_4",
+        "name": "Context projection formalization",
+        "status": "current",
+        "note": "Context JSON rules synchronized; generator/runtime stub is next."
+      },
+      {
+        "id": "stage_5",
+        "name": "Live UI / notification integration",
+        "status": "upcoming",
+        "note": "Future UI and proactive notification layer."
+      }
+    ],
+    "current_pointer": "stage_4"
+  },
+  "summaries": {
+    "system_for_management": {
+      "purpose": "Disciplia is a trader discipline analytics and protection system. It measures discipline historically and is evolving into in-the-moment discipline protection.",
+      "how_it_works": "Historical rule results are transformed into score, explanation, analytics, trend, behavior signals, and profile. In parallel, the live pipeline evaluates current state, generates alerts, calculates account risk, and exposes a live monitoring endpoint.",
+      "architecture_explained": "The system includes analytics, live protection, and context projection layers. The context projection layer prepares the authoritative machine-readable project state for visualization and reporting tools.",
+      "model_relationships": "Historical and live models share the rule foundation. Historical interpretation builds trader discipline state, while the live path builds alerts and account-risk state. Context projection turns architecture and plan state into the authoritative latest JSON snapshot."
+    },
+    "project_status_for_customer": {
+      "implemented": "The discipline analytics engine is implemented and exposed through local API. The live monitoring slice is implemented end-to-end, including endpoint tests and route stabilization. The architecture formally includes a populated context JSON projection layer.",
+      "in_progress": "The project is transitioning from context JSON rules to runtime generation design or stub implementation.",
+      "next": "Next steps are to design or stub the context JSON generator and then continue toward live UI and notification integration.",
+      "approximate_completion_percent": 76
+    },
+    "last_iteration": {
+      "completed_tasks": [
+        "062"
+      ],
+      "summary_for_calendar": "Formalized latest context JSON as the authoritative runtime source for the visual application.",
+      "summary_for_status_report": "In the last iteration, the architecture was clarified so the newest timestamped context JSON snapshot is the authoritative runtime source for the visual application, while markdown files remain raw content sources by path only."
+    }
+  },
+  "generation_rules": {
+    "source_priority": [
+      "project_recovery/*",
+      "docs/architecture/*",
+      "docs/plans/*",
+      "ai_tasks/*",
+      "implementation state synchronized in architecture files"
+    ],
+    "generated_during_command": "обнови архитектурные файлы",
+    "regeneration_trigger": "Any architecture sync after archive upload, schema change, stage change, or task change.",
+    "notes": "The newest timestamped JSON is the authoritative runtime snapshot for the visual application. Markdown files are auxiliary raw-content sources by path."
+  }
+}

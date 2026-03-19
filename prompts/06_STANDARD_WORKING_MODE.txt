@@ -1,0 +1,11 @@
+
+TEMPLATE INHERITANCE EXECUTION RULE
+
+Continue working inside the operating-system layer inherited from the template repository.
+
+All next AI tasks must preserve:
+- the architecture structure
+- the recovery structure
+- the planning discipline
+- the response format
+- the command model

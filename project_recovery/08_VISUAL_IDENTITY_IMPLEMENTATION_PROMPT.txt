@@ -1,0 +1,6 @@
+VISUAL IDENTITY IMPLEMENTATION PROMPT
+
+Before implementing visuals:
+- read brand-system.md
+- read design tokens
+- keep public UI aligned with brand docs
