@@ -175,6 +175,7 @@ Development must follow:
 - atomic tasks
 - testable tasks
 - verifiable tasks
+- after accepted task completion, provide commit text
 
 The implementation plan must continue strictly inside the inherited template operating system.
 

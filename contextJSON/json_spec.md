@@ -34,5 +34,12 @@ Each file must include:
 - roadmap
 - changes_since_previous
 
+## Recommended Structured Sections
+The latest populated snapshot should also include when available:
+- current_task
+- next_tasks
+- recovery_status
+- response_rules
+
 Invalid JSON:
 → marked and ignored for runtime

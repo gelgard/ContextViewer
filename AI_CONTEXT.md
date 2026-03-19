@@ -30,7 +30,9 @@ Current Status:
 - Execution opened through AI Task 001
 - Active documentation normalized through AI Task 002
 - Stage 2 backlog decomposed through AI Task 003
-- Data-layer implementation not started
+- AI Task 004 completed: base Project and Snapshot schema created
+- AI Task 005 completed: snapshot storage constraints verified on Neon
+- Data-layer validation work not started yet
 
 Strategy Lock:
 - Architecture workflow inherited and preserved
@@ -40,4 +42,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 004 and continue implementation strictly through numbered AI tasks.
+Run AI Task 006 and continue implementation strictly through numbered AI tasks.

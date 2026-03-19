@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 2 — Data Layer
 
 CURRENT SUBSTAGE:
-AI Task Initialization
+Validation
 
 STATUS:
 - Architecture synced with latest rules
@@ -16,10 +16,12 @@ STATUS:
 - Execution started through AI Task 001
 - Active documents normalized through AI Task 002
 - Stage 2 execution backlog decomposed through AI Task 003
-- No data-layer implementation yet
+- AI Task 004 completed: base schema created
+- AI Task 005 completed: storage constraints verified on Neon
+- Next slice is validation rules
 
 NEXT ACTION:
-Run AI Task 004 — Project Entity And Snapshot Schema
+Run AI Task 006 — Snapshot Validation Rules
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

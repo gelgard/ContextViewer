@@ -26,6 +26,7 @@ Rules:
 - sync real-time / API layers
 - update recovery files
 - regenerate contextJSON outputs
+- preserve and synchronize response rules, including commit text after accepted task completion
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md

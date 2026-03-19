@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS snapshots (
     content_hash TEXT NOT NULL,
     raw_json JSONB NOT NULL,
     is_valid BOOLEAN NOT NULL,
-    import_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    import_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT snapshots_project_file_name_unique UNIQUE (project_id, file_name),
+    CONSTRAINT snapshots_content_hash_unique UNIQUE (content_hash)
 );
 
 CREATE OR REPLACE FUNCTION prevent_snapshot_update()

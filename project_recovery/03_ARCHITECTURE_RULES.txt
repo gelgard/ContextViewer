@@ -25,9 +25,10 @@ ARCHITECTURE RULES
    - executive summary
    - customer status summary
    - last iteration summary
-12. Architecture sync workflow is archive-first:
+12. After a task is completed and verified, the assistant must provide commit text for that task.
+13. Architecture sync workflow is archive-first:
    - first notify that sync is needed
    - then receive current project archive
    - then perform full sync
    - only after that execute "обнови архитектурные файлы"
-13. Architecture sync is incomplete without regenerated contextJSON outputs.
+14. Architecture sync is incomplete without regenerated contextJSON outputs.

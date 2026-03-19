@@ -16,7 +16,7 @@ Completed in this stage:
 - moved AGENTS.md to project root and linked it into recovery + architecture
 
 ### Stage 2 — Data Layer
-Status: entered through AI task initialization
+Status: validation in progress
 
 Planned scope:
 - Project entity
@@ -28,7 +28,9 @@ Planned scope:
 Current execution state:
 - AI Task 001 created
 - execution layer opened
-- implementation not started yet
+- AI Task 004 completed
+- AI Task 005 completed
+- validation slice is next
 
 ### Stage 3 — Ingestion Engine
 Status: pending

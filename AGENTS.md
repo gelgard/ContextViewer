@@ -90,12 +90,12 @@ Forbidden:
 ## 6. CURRENT PROJECT MODE
 
 - Architecture: LOCKED
-- Execution: NOT STARTED
+- Execution: ACTIVE
 - Stage: Stage 2
-- Substage: AI Task Initialization
+- Substage: Validation
 
 Next required action:
-→ initialize AI task system
+→ run AI Task 006
 
 
 ---
@@ -165,6 +165,7 @@ When command is triggered:
 - architecture update → no explanation, only result
 - AI task → structured task output
 - archive → ready for replacement
+- after successful task completion and verification → provide commit text for that task
 
 
 ---

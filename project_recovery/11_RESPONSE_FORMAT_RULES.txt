@@ -7,6 +7,7 @@ RESPONSE FORMAT RULES
   - full file content
   - test output
 - Always include commit step after successful testing
+- Always provide commit text after a task is accepted as completed
 - Do not skip numbering
 - No large unstructured responses
 
