@@ -1,31 +1,48 @@
 RECOVERY PROTOCOL — ContextViewer
 
-Always execute in order:
+Always execute in this order:
 
-1. Load canonical system definition:
+1. Load agent rules:
+   AGENT.md
+
+2. Load canonical system definition:
    docs/architecture/system-definition.md
 
-2. Load architecture:
-   docs/architecture/
+3. Load architecture:
+   docs/architecture/*
 
-3. Load AI context:
+4. Load product and plan:
+   docs/product/*
+   docs/plans/*
+
+5. Load AI context:
    AI_CONTEXT.md
+   AI_PROJECT_MAP.md
 
-4. Load current state:
+6. Load current recovery state:
+   project_recovery/06_STAGE_PROGRESS.txt
    project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt
 
-5. Load latest snapshot:
+7. Load AI tasks:
+   ai_tasks/*
+
+8. Load latest valid snapshot:
    contextJSON/
 
-System rules:
+System constraints (locked):
 - latest valid contextJSON snapshot = runtime truth
-- markdown is NOT runtime source
+- no direct use of markdown for runtime logic
 - invalid snapshots excluded from UI
-- development ONLY through AI tasks
+- development strictly through AI tasks
+- template operating system behavior must be preserved
 
-If architecture changes required:
-→ require archive upload
-→ run "обнови архитектурные файлы"
+Primary system definition:
+docs/architecture/system-definition.md
+
+If architecture changes are required:
+- require current project archive
+- perform full sync
+- then run command: "обнови архитектурные файлы"
 
 Next step:
-→ continue via AI tasks
+generate AI tasks for Stage 2

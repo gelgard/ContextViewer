@@ -2,10 +2,10 @@
   "project": {
     "name": "ContextViewer",
     "stage": "Stage 2",
-    "status": "ready_for_data_layer"
+    "status": "architecture_synced_agent_root"
   },
   "system": {
-    "summary": "Architecture finalized. System ready for data layer implementation using inherited template operating system and AI task workflow."
+    "summary": "Architecture synchronized after moving AGENT.md to project root and updating recovery and architecture links."
   },
   "progress": {
     "implemented": [
@@ -14,7 +14,8 @@
       "ingestion model",
       "data model",
       "recovery integration",
-      "implementation plan inside inherited template OS"
+      "implementation plan inside inherited template OS",
+      "root-level AGENT execution layer"
     ],
     "in_progress": [],
     "next": [
@@ -22,10 +23,9 @@
     ]
   },
   "changes_since_previous": [
-    "Locked MVP scope",
-    "Locked runtime rules",
-    "Defined stage execution model",
-    "Locked filename timestamp rule"
+    "Moved AGENT.md to project root",
+    "Updated recovery loading order",
+    "Linked AGENT.md from architecture and AI context"
   ],
   "roadmap": [
     "foundation",

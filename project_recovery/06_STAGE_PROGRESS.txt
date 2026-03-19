@@ -1,10 +1,44 @@
-STAGE PROGRESS
+PROJECT: ContextViewer
 
-Current stage:
-{{CURRENT_STAGE}}
+## Stage Progress
 
-Completed:
-{{COMPLETED_TASKS_SUMMARY}}
+### Stage 1 — Foundation
+Status: completed
 
-Next:
-{{NEXT_TASK}}
+Completed in this stage:
+- inherited template operating system
+- defined canonical system-definition
+- fixed runtime rule: latest valid contextJSON snapshot
+- fixed dashboard model
+- fixed ingestion model
+- integrated recovery layer
+- fixed implementation plan inside inherited template OS
+- moved AGENT.md to project root and linked it into recovery + architecture
+
+### Stage 2 — Data Layer
+Status: initializing
+
+Planned scope:
+- Project entity
+- Snapshot storage
+- Validation
+- Deduplication
+- Import log
+
+### Stage 3 — Ingestion Engine
+Status: pending
+
+### Stage 4 — Interpretation Layer
+Status: pending
+
+### Stage 5 — Dashboard Core
+Status: pending
+
+### Stage 6 — Visualization
+Status: pending
+
+### Stage 7 — History Layer
+Status: pending
+
+### Stage 8 — Polish
+Status: pending
