@@ -25,3 +25,7 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 `code/ingestion/get_project_import_status.sh` is read-only: given a numeric `project_id`, it queries `snapshot_import_logs` (latest row) and `snapshots` (count + max filename-derived `timestamp`) and prints one JSON object (`integration_status`, `latest_import_log`, etc.). No pipeline, network, or background work.
 
 `code/ingestion/verify_stage3_ingestion_contracts.sh` runs contract smoke checks (connector → scanner → pipeline → refresh → import status) when `GITHUB_*`, `PROJECT_ID`, and `psql` connectivity are available, and prints one JSON report (`status`, `checks[]`, `failed_checks`, `generated_at`). Use `--help` for prerequisites; no daemons or UI.
+
+## Stage 4 Interpretation
+
+`code/interpretation/get_latest_valid_snapshot_projection.sh` is read-only: given a numeric `project_id`, it returns the newest `snapshots` row with `is_valid = true` ordered by filename-derived `timestamp` DESC (then `id` DESC), and prints one JSON object with `project_id`, `snapshot_id`, `snapshot_timestamp`, and `projection` (the row’s `raw_json`, or all nulls if none). No ingestion or network.
