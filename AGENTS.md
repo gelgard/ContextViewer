@@ -92,10 +92,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 3
-- Substage: AI Task Initialization
+- Substage: File Scanner
 
 Next required action:
-→ дай следующую AI task
+→ run AI Task 011
 
 
 ---

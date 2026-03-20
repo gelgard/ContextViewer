@@ -35,7 +35,9 @@ Current Status:
 - AI Task 006 completed: snapshot validation rules implemented
 - AI Task 007 completed: deduplication entry point implemented
 - AI Task 008 completed: import log implemented
-- Stage 3 initialization is next
+- AI Task 009 completed: read-only GitHub contextJSON connector implemented
+- AI Task 010 completed: contextJSON file scanner implemented
+- Stage 3 import pipeline is next
 
 Strategy Lock:
 - Architecture workflow inherited and preserved
@@ -45,4 +47,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Announce Stage 3 transition in git flow, merge `feature/stage2` into `development`, create `feature/stage3`, then generate AI Task 009.
+Run AI Task 011 and continue Stage 3 ingestion implementation.
