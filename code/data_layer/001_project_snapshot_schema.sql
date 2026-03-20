@@ -138,3 +138,30 @@ BEGIN
     RETURN NEXT;
 END;
 $$;
+
+-- AI Task 008: snapshot import log (refresh / import tracking)
+CREATE TABLE IF NOT EXISTS snapshot_import_logs (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    status TEXT NOT NULL CHECK (status IN ('success', 'failed', 'partial')),
+    message TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE OR REPLACE FUNCTION insert_snapshot_import_log(
+    p_project_id BIGINT,
+    p_status TEXT,
+    p_message TEXT DEFAULT NULL
+)
+RETURNS BIGINT
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id BIGINT;
+BEGIN
+    INSERT INTO snapshot_import_logs (project_id, status, message)
+    VALUES (p_project_id, p_status, p_message)
+    RETURNING id INTO v_id;
+    RETURN v_id;
+END;
+$$;
