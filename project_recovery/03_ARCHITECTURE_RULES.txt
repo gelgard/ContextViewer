@@ -26,9 +26,12 @@ ARCHITECTURE RULES
    - customer status summary
    - last iteration summary
 12. After a task is completed and verified, the assistant must provide commit text for that task.
-13. Architecture sync workflow is archive-first:
+13. Test instructions must be concise, informative, and written as explicit step-by-step actions.
+14. Test instructions must avoid general phrases and visual actions and must explicitly list what the user should send back for validation.
+15. Every test step must specify the exact execution method, including command, SQL, input, or callable entry point; abstract verbs without execution details are invalid.
+16. Architecture sync workflow is archive-first:
    - first notify that sync is needed
    - then receive current project archive
    - then perform full sync
    - only after that execute "обнови архитектурные файлы"
-14. Architecture sync is incomplete without regenerated contextJSON outputs.
+17. Architecture sync is incomplete without regenerated contextJSON outputs.

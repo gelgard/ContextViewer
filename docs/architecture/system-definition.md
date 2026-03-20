@@ -176,6 +176,9 @@ Development must follow:
 - testable tasks
 - verifiable tasks
 - after accepted task completion, provide commit text
+- test instructions must be concise, informative, and step-by-step
+- test instructions must avoid general phrases and visual actions and must specify what to return for validation
+- every test step must specify the exact execution method
 
 The implementation plan must continue strictly inside the inherited template operating system.
 

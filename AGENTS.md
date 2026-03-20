@@ -166,6 +166,9 @@ When command is triggered:
 - AI task → structured task output
 - archive → ready for replacement
 - after successful task completion and verification → provide commit text for that task
+- tests must be concise, informative, and written as explicit step-by-step instructions
+- test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
+- every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
 
 
 ---

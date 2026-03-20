@@ -8,6 +8,9 @@ RESPONSE FORMAT RULES
   - test output
 - Always include commit step after successful testing
 - Always provide commit text after a task is accepted as completed
+- Tests must be concise, informative, and describe each required step explicitly
+- Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
+- Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
 - Do not skip numbering
 - No large unstructured responses
 

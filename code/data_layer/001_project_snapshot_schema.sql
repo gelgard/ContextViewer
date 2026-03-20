@@ -1,5 +1,6 @@
 -- AI Task 004: Project Entity And Snapshot Schema
 -- Stage 2 Data Layer (base entities only)
+-- AI Task 006 extension: JSON structure validation rule
 
 CREATE TABLE IF NOT EXISTS projects (
     id BIGSERIAL PRIMARY KEY,
@@ -42,9 +43,42 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION contextjson_has_required_sections(payload JSONB)
+RETURNS BOOLEAN
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT
+        jsonb_typeof(payload) = 'object'
+        AND payload ? 'project'
+        AND payload ? 'system'
+        AND payload ? 'progress'
+        AND payload ? 'roadmap'
+        AND payload ? 'changes_since_previous'
+        AND jsonb_typeof(payload->'project') = 'object'
+        AND jsonb_typeof(payload->'system') = 'object'
+        AND jsonb_typeof(payload->'progress') = 'object'
+        AND jsonb_typeof(payload->'roadmap') = 'array'
+        AND jsonb_typeof(payload->'changes_since_previous') = 'array';
+$$;
+
 DROP TRIGGER IF EXISTS snapshots_no_update ON snapshots;
 
 CREATE TRIGGER snapshots_no_update
 BEFORE UPDATE ON snapshots
 FOR EACH ROW
 EXECUTE FUNCTION prevent_snapshot_update();
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'snapshots_is_valid_matches_json_structure'
+    ) THEN
+        ALTER TABLE snapshots
+        ADD CONSTRAINT snapshots_is_valid_matches_json_structure
+        CHECK (is_valid = contextjson_has_required_sections(raw_json)) NOT VALID;
+    END IF;
+END;
+$$;

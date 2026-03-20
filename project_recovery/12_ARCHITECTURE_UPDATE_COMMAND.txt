@@ -27,6 +27,9 @@ Rules:
 - update recovery files
 - regenerate contextJSON outputs
 - preserve and synchronize response rules, including commit text after accepted task completion
+- preserve and synchronize test-instruction rules requiring concise step-by-step guidance
+- preserve and synchronize test-instruction rules requiring exact return payloads for validation
+- preserve and synchronize test-instruction rules requiring exact executable methods for every step
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md
