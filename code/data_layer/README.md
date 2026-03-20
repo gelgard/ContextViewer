@@ -21,3 +21,5 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 `code/ingestion/import_contextjson_pipeline.sh` chains connector → scanner, downloads each valid `download_url`, SHA-256-hashes the raw body, calls `insert_snapshot_dedup` / `insert_snapshot_import_log`, and prints one JSON summary (stdout). Requires `PROJECT_ID`, GitHub env vars, and `psql` connectivity.
 
 `code/ingestion/refresh_contextjson_ingestion.sh` is the only supported entrypoint for running that pipeline in MVP: pass `manual_refresh` or `project_open`, get one JSON object with `trigger_source`, UTC `started_at` / `finished_at`, and nested `pipeline` (the pipeline summary). Invalid triggers do not run the importer; no cron/daemon logic.
+
+`code/ingestion/get_project_import_status.sh` is read-only: given a numeric `project_id`, it queries `snapshot_import_logs` (latest row) and `snapshots` (count + max filename-derived `timestamp`) and prints one JSON object (`integration_status`, `latest_import_log`, etc.). No pipeline, network, or background work.
