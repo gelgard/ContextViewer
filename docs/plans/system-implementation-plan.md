@@ -4,7 +4,7 @@
 Stage 3 — Ingestion Engine
 
 ## Current Substage
-AI Task Initialization
+File Scanner
 
 ## Progress
 
@@ -21,21 +21,25 @@ Completed:
 - AI Task 006 — Snapshot Validation Rules
 - AI Task 007 — Snapshot Deduplication
 - AI Task 008 — Snapshot Import Log
+- AI Task 009 — GitHub ContextJSON Connector
+- AI Task 010 — ContextJSON File Scanner
 
 Execution status:
 - Stage 2 opened through AI task system
 - Active documents normalized for Stage 2 continuation
 - Stage 2 task backlog decomposed into executable numbered tasks
 - Stage 2 scope completed
-- Transitioned to Stage 3 initialization
+- Stage 3 ingestion connector completed
+- Stage 3 file scanner completed
+- Transitioning to import pipeline slice
 
 Current:
-- AI Task 009 — to be defined (Stage 3)
+- AI Task 011 — Stage 3 import pipeline
 
 Next:
-- Stage 3 ingestion connector task
-- Stage 3 file scanner task
-- Stage 3 import pipeline task
+- Stage 3 import pipeline implementation
+- Stage 3 refresh trigger wiring
+- Stage 3 import status integration
 
 Response rule update:
 - task completion responses must include commit text after acceptance

@@ -181,6 +181,9 @@ Development must follow:
 - every test step must specify the exact execution method
 - on each Stage transition, explicitly announce the new Stage
 - on each Stage transition, merge current branch into `development` and create `feature/stage<stageNum>` before new stage tasks
+- for command "дай следующую AI task", physically create `ai_tasks/NNN_*.md` before response
+- if AI task file is missing, stop normal output and return: `BLOCKED: AI task file missing, creating it now.`
+- before AI task response, run self-check: file existence, numbering continuity, stage/substage sync, executable tests
 
 The implementation plan must continue strictly inside the inherited template operating system.
 

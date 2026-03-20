@@ -38,3 +38,7 @@ ARCHITECTURE RULES
    - then perform full sync
    - only after that execute "обнови архитектурные файлы"
 20. Architecture sync is incomplete without regenerated contextJSON outputs.
+21. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
+22. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
+23. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
+24. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
