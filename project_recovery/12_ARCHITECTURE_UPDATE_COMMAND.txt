@@ -31,6 +31,10 @@ Rules:
 - preserve and synchronize test-instruction rules requiring exact return payloads for validation
 - preserve and synchronize test-instruction rules requiring exact executable methods for every step
 - preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
+- preserve and synchronize AI-task creation gate for "дай следующую AI task"
+- preserve and synchronize self-check gate before AI-task response (file exists, numbering, stage/substage, executable tests)
+- if a missing expected AI task file is detected during sync, create the missing `ai_tasks/NNN_*.md` before continuing updates
+- preserve and synchronize blocked-output rule: `BLOCKED: AI task file missing, creating it now.`
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md

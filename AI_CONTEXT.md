@@ -43,6 +43,7 @@ Strategy Lock:
 - Architecture workflow inherited and preserved
 - Recovery workflow inherited and preserved
 - AI task workflow inherited and preserved
+- AI task creation gate enforced: no "next AI task" response without physical `ai_tasks/NNN_*.md` file
 - Architecture update command preserved
 - Project-specific logic extends the template OS, never replaces it
 

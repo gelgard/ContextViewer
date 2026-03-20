@@ -92,7 +92,7 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 3
-- Substage: File Scanner
+- Substage: Import Pipeline
 
 Next required action:
 → run AI Task 011
@@ -127,6 +127,8 @@ Supported commands:
 - always validate state before action
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
+- command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
+- if the AI task file is missing, response must stop and switch to file creation
 
 
 ---
@@ -172,6 +174,14 @@ When command is triggered:
 - test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
+- for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
+- before sending any AI task response, run self-check:
+  - file exists in `ai_tasks/`
+  - numbering is continuous
+  - stage/substage is synchronized
+  - test steps are executable and explicit
+- if self-check fails due to missing AI task file, output only:
+  - `BLOCKED: AI task file missing, creating it now.`
 
 
 ---
@@ -197,3 +207,4 @@ If any answer is NO → stop execution
 - skip recovery
 - ignore architecture
 - generate uncontrolled output
+- return a "next AI task" response without creating `ai_tasks/NNN_*.md`

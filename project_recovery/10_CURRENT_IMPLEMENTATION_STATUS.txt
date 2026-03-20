@@ -24,7 +24,8 @@ STATUS:
 - Stage 2 scope completed
 - AI Task 009 completed: GitHub contextJSON connector implemented
 - AI Task 010 completed: contextJSON file scanner implemented
-- Next slice is import pipeline
+- AI Task 011 active: import pipeline
+- AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
 Run AI Task 011 — Stage 3 import pipeline
