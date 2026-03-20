@@ -1,0 +1,1 @@
+/usr/local/Cellar/postgresql@14/14.12/bin/postgres "-D" "/Users/gelgard/PROJECTS/ContextViewer-1/.tmp_pg_016" "-p" "54337"

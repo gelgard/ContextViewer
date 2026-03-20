@@ -91,11 +91,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 3
-- Substage: Import Pipeline
+- Stage: Stage 4
+- Substage: Snapshot Diff
 
 Next required action:
-→ run AI Task 011
+→ run AI Task 017
 
 
 ---

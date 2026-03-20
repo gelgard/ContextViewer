@@ -1,10 +1,10 @@
 PROJECT: ContextViewer
 
 CURRENT STAGE:
-Stage 3 — Ingestion Engine
+Stage 4 — Interpretation Layer
 
 CURRENT SUBSTAGE:
-File Scanner
+Snapshot Diff
 
 STATUS:
 - Architecture synced with latest rules
@@ -24,11 +24,18 @@ STATUS:
 - Stage 2 scope completed
 - AI Task 009 completed: GitHub contextJSON connector implemented
 - AI Task 010 completed: contextJSON file scanner implemented
-- AI Task 011 active: import pipeline
+- AI Task 011 completed: import pipeline
+- AI Task 012 completed: refresh trigger wiring
+- AI Task 013 completed: import status integration
+- AI Task 014 completed: ingestion contract smoke suite
+- Stage 3 scope completed
+- AI Task 015 completed: latest valid snapshot projection endpoint
+- AI Task 016 completed: latest two valid snapshots diff summary endpoint
+- Stage 4 interpretation layer is in progress
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 011 — Stage 3 import pipeline
+Run AI Task 017 — Stage 4 interpretation continuation
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

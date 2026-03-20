@@ -1,10 +1,10 @@
 # System Implementation Plan
 
 ## Current Stage
-Stage 3 — Ingestion Engine
+Stage 4 — Interpretation Layer
 
 ## Current Substage
-File Scanner
+Snapshot Diff
 
 ## Progress
 
@@ -23,23 +23,28 @@ Completed:
 - AI Task 008 — Snapshot Import Log
 - AI Task 009 — GitHub ContextJSON Connector
 - AI Task 010 — ContextJSON File Scanner
+- AI Task 011 — Stage 3 Import Pipeline
+- AI Task 012 — Stage 3 Refresh Trigger Wiring
+- AI Task 013 — Stage 3 Import Status Integration
+- AI Task 014 — Stage 3 Ingestion Contract Smoke Suite
+- AI Task 015 — Stage 4 Latest Valid Snapshot Projection
+- AI Task 016 — Stage 4 Snapshot Diff Summary
 
 Execution status:
 - Stage 2 opened through AI task system
 - Active documents normalized for Stage 2 continuation
 - Stage 2 task backlog decomposed into executable numbered tasks
 - Stage 2 scope completed
-- Stage 3 ingestion connector completed
-- Stage 3 file scanner completed
-- Transitioning to import pipeline slice
+- Stage 3 scope completed
+- Stage 4 interpretation entrypoints started
 
 Current:
-- AI Task 011 — Stage 3 import pipeline
+- AI Task 017 — Stage 4 interpretation continuation (next)
 
 Next:
-- Stage 3 import pipeline implementation
-- Stage 3 refresh trigger wiring
-- Stage 3 import status integration
+- Stage 4 interpretation continuation
+- Stage 4 changes-since-previous projection
+- Stage 4 roadmap/progress normalization
 
 Response rule update:
 - task completion responses must include commit text after acceptance

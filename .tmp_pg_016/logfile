@@ -1,0 +1,8 @@
+2026-03-20 17:55:36.993 EET [92559] LOG:  starting PostgreSQL 14.12 (Homebrew) on x86_64-apple-darwin23.4.0, compiled by Apple clang version 15.0.0 (clang-1500.3.9.4), 64-bit
+2026-03-20 17:55:36.998 EET [92559] LOG:  listening on IPv6 address "::1", port 54337
+2026-03-20 17:55:36.999 EET [92559] LOG:  listening on IPv4 address "127.0.0.1", port 54337
+2026-03-20 17:55:36.999 EET [92559] LOG:  listening on Unix socket "/tmp/.s.PGSQL.54337"
+2026-03-20 17:55:37.006 EET [92560] LOG:  database system was shut down at 2026-03-20 17:55:36 EET
+2026-03-20 17:55:37.029 EET [92559] LOG:  database system is ready to accept connections
+2026-03-20 17:56:04.008 EET [92970] FATAL:  lock file "postmaster.pid" already exists
+2026-03-20 17:56:04.008 EET [92970] HINT:  Is another postmaster (PID 92559) running in data directory "/Users/gelgard/PROJECTS/ContextViewer-1/.tmp_pg_016"?

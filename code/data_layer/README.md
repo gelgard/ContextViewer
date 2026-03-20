@@ -29,3 +29,7 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 ## Stage 4 Interpretation
 
 `code/interpretation/get_latest_valid_snapshot_projection.sh` is read-only: given a numeric `project_id`, it returns the newest `snapshots` row with `is_valid = true` ordered by filename-derived `timestamp` DESC (then `id` DESC), and prints one JSON object with `project_id`, `snapshot_id`, `snapshot_timestamp`, and `projection` (the row’s `raw_json`, or all nulls if none). No ingestion or network.
+
+`code/interpretation/get_latest_snapshot_diff_summary.sh` is read-only: compares the two latest valid snapshots’ `raw_json` at **top-level keys only** (`added_*`, `removed_*`, `changed_*` arrays). With 0–1 valid snapshots, ids and diff arrays are empty where required; exit 0. No ingestion or network.
+
+`code/interpretation/get_latest_changes_since_previous_projection.sh` is read-only: loads latest (+ previous id) valid snapshots (`timestamp` DESC, `id` DESC) and returns `changes_since_previous` and `changes_count` from the **latest** `raw_json` when that key is a JSON array; otherwise empty array and count 0. No ingestion or network.

@@ -36,15 +36,23 @@ Current execution state:
 - data layer scope closed
 
 ### Stage 3 — Ingestion Engine
-Status: in progress
+Status: completed
 
 Current execution state:
 - AI Task 009 completed
 - AI Task 010 completed
-- AI Task 011 active: import pipeline
+- AI Task 011 completed: import pipeline
+- AI Task 012 completed: refresh trigger wiring
+- AI Task 013 completed: import status integration
+- AI Task 014 completed: ingestion contract smoke suite
 
 ### Stage 4 — Interpretation Layer
-Status: pending
+Status: in progress
+
+Current execution state:
+- AI Task 015 completed: latest valid snapshot projection
+- AI Task 016 completed: latest two valid snapshots diff summary
+- AI Task 017 next
 
 ### Stage 5 — Dashboard Core
 Status: pending
