@@ -184,6 +184,9 @@ Development must follow:
 - for command "дай следующую AI task", physically create `ai_tasks/NNN_*.md` before response
 - if AI task file is missing, stop normal output and return: `BLOCKED: AI task file missing, creating it now.`
 - before AI task response, run self-check: file existence, numbering continuity, stage/substage sync, executable tests
+- after user submits test outputs, generate `List of changed files` automatically from `git status --short`
+- validate changed-file scope against the current AI task and explicitly flag unrelated changes
+- ignore transient runtime artifacts in changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
 
 The implementation plan must continue strictly inside the inherited template operating system.
 

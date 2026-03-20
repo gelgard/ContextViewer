@@ -50,6 +50,7 @@ Strategy Lock:
 - Recovery workflow inherited and preserved
 - AI task workflow inherited and preserved
 - AI task creation gate enforced: no "next AI task" response without physical `ai_tasks/NNN_*.md` file
+- Post-test changed-files gate enforced: assistant auto-generates and validates changed files from `git status --short`
 - Architecture update command preserved
 - Project-specific logic extends the template OS, never replaces it
 
