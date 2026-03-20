@@ -1,0 +1,69 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 2",
+    "substage": "Validation",
+    "status": "data_layer_in_progress"
+  },
+  "system": {
+    "summary": "Architecture synchronized after accepting AI Task 005, adding the commit-text response rule, and advancing the active slice to snapshot validation."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "recovery integration",
+      "AI task execution layer",
+      "Stage 2 task decomposition",
+      "project and snapshot base schema",
+      "snapshot storage constraints"
+    ],
+    "in_progress": [
+      "AI Task 006 — Snapshot Validation Rules"
+    ],
+    "next": [
+      "AI Task 007 — Snapshot Deduplication",
+      "AI Task 008 — Snapshot Import Log"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Accepted AI Task 004 for base Project and Snapshot schema",
+    "Accepted AI Task 005 for snapshot storage constraints",
+    "Added rule: provide commit text after accepted task completion",
+    "Advanced current task to AI Task 006"
+  ],
+  "current_task": {
+    "id": "006",
+    "name": "Snapshot Validation Rules",
+    "stage": "Stage 2 — Data Layer",
+    "substage": "Validation"
+  },
+  "next_tasks": [
+    {
+      "id": "007",
+      "name": "Snapshot Deduplication"
+    },
+    {
+      "id": "008",
+      "name": "Snapshot Import Log"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true
+  }
+}

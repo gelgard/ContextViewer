@@ -90,12 +90,12 @@ Forbidden:
 ## 6. CURRENT PROJECT MODE
 
 - Architecture: LOCKED
-- Execution: NOT STARTED
-- Stage: Stage 2
+- Execution: ACTIVE
+- Stage: Stage 3
 - Substage: AI Task Initialization
 
 Next required action:
-→ initialize AI task system
+→ дай следующую AI task
 
 
 ---
@@ -125,6 +125,8 @@ Supported commands:
 - no architecture changes without command
 - no assumptions
 - always validate state before action
+- when a new Stage begins, explicitly announce the stage transition
+- before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 
 
 ---
@@ -165,6 +167,11 @@ When command is triggered:
 - architecture update → no explanation, only result
 - AI task → structured task output
 - archive → ready for replacement
+- after successful task completion and verification → provide commit text for that task
+- tests must be concise, informative, and written as explicit step-by-step instructions
+- test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
+- every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
+- on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
 
 
 ---

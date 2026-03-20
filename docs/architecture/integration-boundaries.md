@@ -1,8 +1,8 @@
 # Integration Boundaries
 
 ## External Integrations
-- {{INTEGRATION_1}}
-- {{INTEGRATION_2}}
+- GitHub public repository as the read-only source of contextJSON snapshots
+- Neon PostgreSQL as the planned persistence layer for projects, snapshots, and import logs
 
 ## Internal Boundaries
 - UI must not bypass service layer

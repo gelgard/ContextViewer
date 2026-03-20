@@ -1,13 +1,13 @@
 # Real-Time Layer
 
 ## Purpose
-{{REAL_TIME_PURPOSE}}
+Define how project state becomes visible in the dashboard after a refresh-triggered snapshot update, without introducing continuous background synchronization in MVP.
 
 ## Current Status
 Implemented:
-- {{IMPLEMENTED_RT_1}}
-- {{IMPLEMENTED_RT_2}}
+- Runtime discipline is defined: latest valid contextJSON snapshot is the active state source.
+- Refresh policy is locked at architecture level: manual refresh and project open only.
 
 Planned:
-- {{PLANNED_RT_1}}
-- {{PLANNED_RT_2}}
+- Execute refresh-triggered ingestion and derived-state recomputation when implementation begins.
+- Surface refresh status and failures in the UI without background polling.

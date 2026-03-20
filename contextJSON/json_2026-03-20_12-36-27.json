@@ -1,0 +1,81 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 3",
+    "substage": "AI Task Initialization",
+    "status": "ingestion_engine_initializing"
+  },
+  "system": {
+    "summary": "Architecture synchronized after accepting AI Task 008. Stage 2 Data Layer is completed and the project is now entering Stage 3 Ingestion Engine."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "recovery integration",
+      "AI task execution layer",
+      "Stage 2 task decomposition",
+      "project and snapshot base schema",
+      "snapshot storage constraints",
+      "snapshot validation rules",
+      "snapshot deduplication entry point",
+      "snapshot import log table and insert function"
+    ],
+    "in_progress": [
+      "Stage 3 initialization"
+    ],
+    "next": [
+      "AI Task 009 — Stage 3 ingestion connector",
+      "AI Task 010 — Stage 3 file scanner",
+      "AI Task 011 — Stage 3 import pipeline"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Accepted AI Task 006",
+    "Accepted AI Task 007",
+    "Accepted AI Task 008",
+    "Marked Stage 2 as completed",
+    "Moved active stage to Stage 3 initialization"
+  ],
+  "current_task": {
+    "id": "009",
+    "name": "to be defined",
+    "stage": "Stage 3 — Ingestion Engine",
+    "substage": "AI Task Initialization"
+  },
+  "next_tasks": [
+    {
+      "id": "009",
+      "name": "Stage 3 ingestion connector"
+    },
+    {
+      "id": "010",
+      "name": "Stage 3 file scanner"
+    },
+    {
+      "id": "011",
+      "name": "Stage 3 import pipeline"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "concise_step_by_step_executable",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true
+  }
+}
