@@ -30,6 +30,7 @@ Rules:
 - preserve and synchronize test-instruction rules requiring concise step-by-step guidance
 - preserve and synchronize test-instruction rules requiring exact return payloads for validation
 - preserve and synchronize test-instruction rules requiring exact executable methods for every step
+- preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md

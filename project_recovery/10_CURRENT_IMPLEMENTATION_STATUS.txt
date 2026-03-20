@@ -1,10 +1,10 @@
 PROJECT: ContextViewer
 
 CURRENT STAGE:
-Stage 2 — Data Layer
+Stage 3 — Ingestion Engine
 
 CURRENT SUBSTAGE:
-Validation
+AI Task Initialization
 
 STATUS:
 - Architecture synced with latest rules
@@ -18,10 +18,13 @@ STATUS:
 - Stage 2 execution backlog decomposed through AI Task 003
 - AI Task 004 completed: base schema created
 - AI Task 005 completed: storage constraints verified on Neon
-- Next slice is validation rules
+- AI Task 006 completed: snapshot validation rules enforced
+- AI Task 007 completed: deduplication entry point implemented
+- AI Task 008 completed: import log table and insert function implemented
+- Stage 2 scope completed
 
 NEXT ACTION:
-Run AI Task 006 — Snapshot Validation Rules
+Generate AI Task 009 for Stage 3
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

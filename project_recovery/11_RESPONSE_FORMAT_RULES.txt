@@ -11,6 +11,7 @@ RESPONSE FORMAT RULES
 - Tests must be concise, informative, and describe each required step explicitly
 - Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
 - Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
+- On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
 - Do not skip numbering
 - No large unstructured responses
 

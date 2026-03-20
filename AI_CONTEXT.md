@@ -21,7 +21,7 @@ Operating System:
 Inherited from template repository and preserved.
 
 Current Stage:
-Stage 2 — Data Layer
+Stage 3 — Ingestion Engine
 
 Current Status:
 - Architecture foundation completed
@@ -32,7 +32,10 @@ Current Status:
 - Stage 2 backlog decomposed through AI Task 003
 - AI Task 004 completed: base Project and Snapshot schema created
 - AI Task 005 completed: snapshot storage constraints verified on Neon
-- Data-layer validation work not started yet
+- AI Task 006 completed: snapshot validation rules implemented
+- AI Task 007 completed: deduplication entry point implemented
+- AI Task 008 completed: import log implemented
+- Stage 3 initialization is next
 
 Strategy Lock:
 - Architecture workflow inherited and preserved
@@ -42,4 +45,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 006 and continue implementation strictly through numbered AI tasks.
+Announce Stage 3 transition in git flow, merge `feature/stage2` into `development`, create `feature/stage3`, then generate AI Task 009.

@@ -1,0 +1,72 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 3",
+    "substage": "AI Task Initialization",
+    "status": "ingestion_engine_initializing"
+  },
+  "system": {
+    "summary": "Architecture synchronized with stage-transition git flow rules: announce new stage, merge current branch into development, and create feature/stage<stageNum>."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "recovery integration",
+      "AI task execution layer",
+      "Stage 2 task decomposition",
+      "project and snapshot base schema",
+      "snapshot storage constraints",
+      "snapshot validation rules",
+      "snapshot deduplication entry point",
+      "snapshot import log table and insert function"
+    ],
+    "in_progress": [
+      "Stage 3 initialization"
+    ],
+    "next": [
+      "Stage transition git flow for Stage 3 branch setup",
+      "AI Task 009 — Stage 3 ingestion connector"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Added rule: announce stage transition before next stage tasking",
+    "Added rule: merge current branch into development on stage transition",
+    "Added rule: create feature/stage<stageNum> branch for new stage"
+  ],
+  "current_task": {
+    "id": "009",
+    "name": "to be defined",
+    "stage": "Stage 3 — Ingestion Engine",
+    "substage": "AI Task Initialization"
+  },
+  "next_tasks": [
+    {
+      "id": "009",
+      "name": "Stage 3 ingestion connector"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "concise_step_by_step_executable",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "announce_stage_transition": true,
+    "stage_transition_git_flow": "merge_to_development_then_create_feature_stage_branch"
+  }
+}

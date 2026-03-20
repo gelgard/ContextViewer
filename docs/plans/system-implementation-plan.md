@@ -1,10 +1,10 @@
 # System Implementation Plan
 
 ## Current Stage
-Stage 2 — Data Layer
+Stage 3 — Ingestion Engine
 
 ## Current Substage
-Validation
+AI Task Initialization
 
 ## Progress
 
@@ -18,20 +18,24 @@ Completed:
 - AI Task 003 — Stage 2 Data Layer Task Decomposition
 - AI Task 004 — Project Entity And Snapshot Schema
 - AI Task 005 — Snapshot Storage And Constraints
+- AI Task 006 — Snapshot Validation Rules
+- AI Task 007 — Snapshot Deduplication
+- AI Task 008 — Snapshot Import Log
 
 Execution status:
 - Stage 2 opened through AI task system
 - Active documents normalized for Stage 2 continuation
 - Stage 2 task backlog decomposed into executable numbered tasks
-- Base schema and storage constraints implemented
-- Validation work is the next active slice
+- Stage 2 scope completed
+- Transitioned to Stage 3 initialization
 
 Current:
-- AI Task 006 — Snapshot Validation Rules
+- AI Task 009 — to be defined (Stage 3)
 
 Next:
-- AI Task 007 — Snapshot Deduplication
-- AI Task 008 — Snapshot Import Log
+- Stage 3 ingestion connector task
+- Stage 3 file scanner task
+- Stage 3 import pipeline task
 
 Response rule update:
 - task completion responses must include commit text after acceptance

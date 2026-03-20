@@ -179,6 +179,8 @@ Development must follow:
 - test instructions must be concise, informative, and step-by-step
 - test instructions must avoid general phrases and visual actions and must specify what to return for validation
 - every test step must specify the exact execution method
+- on each Stage transition, explicitly announce the new Stage
+- on each Stage transition, merge current branch into `development` and create `feature/stage<stageNum>` before new stage tasks
 
 The implementation plan must continue strictly inside the inherited template operating system.
 
