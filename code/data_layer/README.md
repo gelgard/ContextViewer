@@ -37,3 +37,5 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 `code/interpretation/get_latest_roadmap_progress_projection.sh` is read-only: latest valid snapshot only (`timestamp` DESC, `id` DESC) and returns `roadmap` (array) plus `progress` `{ implemented, in_progress, next }` (each array) with empty safe fallbacks if keys or types are wrong. No ingestion or network.
 
 `code/interpretation/get_latest_current_status_projection.sh` is read-only: same latest valid snapshot selection and returns one JSON object with `project_id`, `latest_snapshot_id`, and `current_status` combining `progress` arrays (`implemented`, `in_progress`, `next`) with `changes_since_previous` (array from `raw_json` when valid). Missing snapshots or bad types fall back to empty arrays; no ingestion or network.
+
+`code/interpretation/get_valid_snapshot_timeline_projection.sh` is read-only: lists all `snapshots` with `is_valid = true` for a numeric `project_id` as `timeline` (`snapshot_id`, `file_name`, `snapshot_timestamp`, `import_time`), ordered by `timestamp` DESC then `id` DESC, plus `total_valid_snapshots`. Empty project yields `0` and `[]`. No ingestion or network.
