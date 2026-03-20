@@ -82,3 +82,59 @@ BEGIN
     END IF;
 END;
 $$;
+
+-- AI Task 007: snapshot deduplication entry point (filename + content_hash)
+-- Outcomes: inserted | duplicate_by_filename | duplicate_by_hash
+CREATE OR REPLACE FUNCTION insert_snapshot_dedup(
+    p_project_id BIGINT,
+    p_file_name TEXT,
+    p_content_hash TEXT,
+    p_raw_json JSONB,
+    p_is_valid BOOLEAN
+)
+RETURNS TABLE (
+    outcome TEXT,
+    snapshot_id BIGINT
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id BIGINT;
+BEGIN
+    IF p_is_valid IS DISTINCT FROM contextjson_has_required_sections(p_raw_json) THEN
+        RAISE EXCEPTION
+            USING MESSAGE = 'is_valid must equal contextjson_has_required_sections(raw_json)';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM snapshots s
+        WHERE s.project_id = p_project_id
+          AND s.file_name = p_file_name
+    ) THEN
+        outcome := 'duplicate_by_filename';
+        snapshot_id := NULL;
+        RETURN NEXT;
+        RETURN;
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM snapshots s
+        WHERE s.content_hash = p_content_hash
+    ) THEN
+        outcome := 'duplicate_by_hash';
+        snapshot_id := NULL;
+        RETURN NEXT;
+        RETURN;
+    END IF;
+
+    INSERT INTO snapshots (project_id, file_name, content_hash, raw_json, is_valid)
+    VALUES (p_project_id, p_file_name, p_content_hash, p_raw_json, p_is_valid)
+    RETURNING id INTO v_id;
+
+    outcome := 'inserted';
+    snapshot_id := v_id;
+    RETURN NEXT;
+END;
+$$;

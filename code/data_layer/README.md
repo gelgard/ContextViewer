@@ -2,12 +2,11 @@
 
 This folder stores concrete data-layer implementation artifacts for ContextViewer.
 
-For AI Task 004, only base entities are defined:
-- `projects`
-- `snapshots`
+Schema artifacts:
+- `projects` / `snapshots` (AI Task 004+)
+- `insert_snapshot_dedup(...)` — idempotent insert with filename and content-hash deduplication (AI Task 007)
 
-Out of scope for this task:
-- validation pipeline
-- deduplication logic
+Out of scope for this folder:
 - import log
-- ingestion flow
+- ingestion orchestration
+- runtime snapshot selection
