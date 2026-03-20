@@ -17,3 +17,5 @@ Out of scope for this folder:
 Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_contextjson_connector.sh` (GitHub Contents API → normalized JSON array of `*.json` files with `name`, `path`, `size`, `sha`, `download_url`). No database or import pipeline in that script.
 
 `code/ingestion/contextjson_file_scanner.sh` reads that array from stdin, splits entries into `valid_files` / `invalid_files` using the `json_YYYY-MM-DD_HH-MM-SS.json` filename rule, and sets `latest_valid_file` to the row with the maximum extracted timestamp (no DB or runtime selection).
+
+`code/ingestion/import_contextjson_pipeline.sh` chains connector → scanner, downloads each valid `download_url`, SHA-256-hashes the raw body, calls `insert_snapshot_dedup` / `insert_snapshot_import_log`, and prints one JSON summary (stdout). Requires `PROJECT_ID`, GitHub env vars, and `psql` connectivity.
