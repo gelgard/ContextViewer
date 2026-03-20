@@ -11,3 +11,7 @@ Out of scope for this folder:
 - ingestion orchestration
 - runtime snapshot selection
 - dashboard / reporting APIs
+
+## Stage 3 Ingestion
+
+Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_contextjson_connector.sh` (GitHub Contents API → normalized JSON array of `*.json` files with `name`, `path`, `size`, `sha`, `download_url`). No database or import pipeline in that script.
