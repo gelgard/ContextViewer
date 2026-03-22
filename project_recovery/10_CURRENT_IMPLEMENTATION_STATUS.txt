@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 6 — Visualization
 
 CURRENT SUBSTAGE:
-Architecture Tree Feed
+Visualization Bundle Feed
 
 STATUS:
 - Architecture synced with latest rules
@@ -47,11 +47,13 @@ STATUS:
 - AI Task 029 completed: dashboard API contract bundle
 - Stage 5 scope completed
 - AI Task 030 completed: architecture tree feed
+- AI Task 031 completed: architecture graph feed
+- AI Task 032 completed: visualization contract smoke suite
 - Stage 6 visualization layer is in progress
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 031 — Stage 6 visualization continuation
+Run AI Task 033 — Stage 6 visualization bundle feed
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

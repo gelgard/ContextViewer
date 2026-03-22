@@ -14,6 +14,14 @@ RESPONSE FORMAT RULES
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
 - For command "дай следующую AI task", the response is valid only if `ai_tasks/NNN_*.md` was created before sending
 - AI task response must include: `AI Task file created: /ai_tasks/NNN_*.md`
+- For command "дай следующую AI task", response must use strict block order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
+- Missing block `Manual Test (exact commands)` is a hard failure; output only:
+  - `BLOCKED: response format violation, regenerating with full test section.`
+- On next-task format violation, assistant must immediately regenerate full compliant response before any other output
 - After user sends test results, assistant must generate `List of changed files` automatically from `git status --short`
 - Assistant must validate that changed files belong to current AI task scope and explicitly flag unrelated changes
 - Changed-files auto-check must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)

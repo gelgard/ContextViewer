@@ -57,6 +57,8 @@ Current Status:
 - AI Task 028 completed: dashboard contract smoke suite implemented
 - AI Task 029 completed: dashboard API contract bundle implemented
 - AI Task 030 completed: architecture tree feed implemented
+- AI Task 031 completed: architecture graph feed implemented
+- AI Task 032 completed: visualization contract smoke suite implemented
 - Stage 4 and Stage 5 completed, Stage 6 visualization is in progress
 
 Strategy Lock:
@@ -64,9 +66,17 @@ Strategy Lock:
 - Recovery workflow inherited and preserved
 - AI task workflow inherited and preserved
 - AI task creation gate enforced: no "next AI task" response without physical `ai_tasks/NNN_*.md` file
+- Next-task response format gate enforced with strict block order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
+- Missing `Manual Test (exact commands)` block is a hard failure with blocked output:
+  `BLOCKED: response format violation, regenerating with full test section.`
+- On next-task format violation, immediate full regeneration is mandatory before any other output
 - Post-test changed-files gate enforced: assistant auto-generates and validates changed files from `git status --short`
 - Architecture update command preserved
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 031 and continue Stage 6 visualization implementation.
+Run AI Task 033 and continue Stage 6 visualization implementation.

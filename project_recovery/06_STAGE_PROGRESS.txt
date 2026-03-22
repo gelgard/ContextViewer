@@ -76,7 +76,9 @@ Status: in progress
 
 Current execution state:
 - AI Task 030 completed: architecture tree feed
-- AI Task 031 next
+- AI Task 031 completed: architecture graph feed
+- AI Task 032 completed: visualization contract smoke suite
+- AI Task 033 next
 
 ### Stage 7 — History Layer
 Status: pending
