@@ -91,11 +91,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 4
-- Substage: Timeline Projection
+- Stage: Stage 6
+- Substage: Architecture Tree Feed
 
 Next required action:
-→ run AI Task 021
+→ run AI Task 031
 
 
 ---

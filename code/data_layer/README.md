@@ -63,3 +63,5 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 ## Stage 6 Visualization
 
 `code/visualization/get_architecture_tree_feed.sh` is read-only: given a numeric `project_id`, ensures the project exists, then reads the latest valid snapshot’s `raw_json.architecture_tree` and prints `project_id`, `generated_at`, `snapshot_id` (or null), and a flattened `tree` (`path`, `type` as `file` or `directory`, `label`). Missing `architecture_tree` or no valid snapshot yields `tree` `[]` and `snapshot_id` null with exit 0. Unknown project exits non-zero. No ingestion or network.
+
+`code/visualization/get_architecture_graph_feed.sh` is read-only: same snapshot selection as the tree feed; reads `raw_json.architecture_graph` and prints `project_id`, `generated_at`, `snapshot_id` (or null), and `graph` with normalized `nodes` (`id`, `label`, `type`) and `edges` (`source`, `target`, `relation`; accepts legacy `from`/`to` in source JSON). Empty or missing graph data yields empty arrays with exit 0. Unknown project exits non-zero. No ingestion or network.
