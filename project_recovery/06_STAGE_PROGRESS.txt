@@ -52,7 +52,11 @@ Status: in progress
 Current execution state:
 - AI Task 015 completed: latest valid snapshot projection
 - AI Task 016 completed: latest two valid snapshots diff summary
-- AI Task 017 next
+- AI Task 017 completed: changes-since-previous projection
+- AI Task 018 completed: roadmap/progress projection
+- AI Task 019 completed: current status projection
+- AI Task 020 completed: valid snapshot timeline projection
+- AI Task 021 next
 
 ### Stage 5 — Dashboard Core
 Status: pending

@@ -31,11 +31,15 @@ STATUS:
 - Stage 3 scope completed
 - AI Task 015 completed: latest valid snapshot projection endpoint
 - AI Task 016 completed: latest two valid snapshots diff summary endpoint
+- AI Task 017 completed: changes-since-previous projection endpoint
+- AI Task 018 completed: roadmap/progress projection endpoint
+- AI Task 019 completed: current status projection endpoint
+- AI Task 020 completed: valid snapshot timeline projection endpoint
 - Stage 4 interpretation layer is in progress
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 017 — Stage 4 interpretation continuation
+Run AI Task 021 — Stage 4 interpretation continuation
 
 CRITICAL:
 Do not proceed to coding outside numbered AI tasks

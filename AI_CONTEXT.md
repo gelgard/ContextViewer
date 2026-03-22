@@ -43,6 +43,10 @@ Current Status:
 - AI Task 014 completed: Stage 3 ingestion contract smoke suite implemented
 - AI Task 015 completed: latest valid snapshot projection endpoint implemented
 - AI Task 016 completed: latest two valid snapshots diff summary endpoint implemented
+- AI Task 017 completed: changes-since-previous projection endpoint implemented
+- AI Task 018 completed: roadmap/progress projection endpoint implemented
+- AI Task 019 completed: current status projection endpoint implemented
+- AI Task 020 completed: valid snapshot timeline projection endpoint implemented
 - Stage 3 completed, Stage 4 interpretation is in progress
 
 Strategy Lock:
@@ -55,4 +59,4 @@ Strategy Lock:
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 017 and continue Stage 4 interpretation implementation.
+Run AI Task 021 and continue Stage 4 interpretation implementation.

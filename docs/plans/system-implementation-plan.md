@@ -29,6 +29,10 @@ Completed:
 - AI Task 014 — Stage 3 Ingestion Contract Smoke Suite
 - AI Task 015 — Stage 4 Latest Valid Snapshot Projection
 - AI Task 016 — Stage 4 Snapshot Diff Summary
+- AI Task 017 — Stage 4 Changes Since Previous Projection
+- AI Task 018 — Stage 4 Roadmap And Progress Projection
+- AI Task 019 — Stage 4 Current Status Projection
+- AI Task 020 — Stage 4 Snapshot Timeline Projection
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -39,12 +43,12 @@ Execution status:
 - Stage 4 interpretation entrypoints started
 
 Current:
-- AI Task 017 — Stage 4 interpretation continuation (next)
+- AI Task 021 — Stage 4 interpretation continuation (next)
 
 Next:
 - Stage 4 interpretation continuation
-- Stage 4 changes-since-previous projection
-- Stage 4 roadmap/progress normalization
+- Stage 4 projection aggregation for dashboard feed
+- Stage 4 interpretation smoke contract
 
 Response rule update:
 - task completion responses must include commit text after acceptance

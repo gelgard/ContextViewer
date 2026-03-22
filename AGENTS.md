@@ -92,10 +92,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 4
-- Substage: Snapshot Diff
+- Substage: Timeline Projection
 
 Next required action:
-→ run AI Task 017
+→ run AI Task 021
 
 
 ---
