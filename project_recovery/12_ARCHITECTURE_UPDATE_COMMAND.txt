@@ -35,6 +35,9 @@ Rules:
 - preserve and synchronize self-check gate before AI-task response (file exists, numbering, stage/substage, executable tests)
 - if a missing expected AI task file is detected during sync, create the missing `ai_tasks/NNN_*.md` before continuing updates
 - preserve and synchronize blocked-output rule: `BLOCKED: AI task file missing, creating it now.`
+- preserve and synchronize post-test auto-check rule: assistant generates `List of changed files` from `git status --short`
+- preserve and synchronize changed-scope validation rule for current AI task (flag unrelated changes)
+- preserve and synchronize transient-artifact exclusion rule for changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md

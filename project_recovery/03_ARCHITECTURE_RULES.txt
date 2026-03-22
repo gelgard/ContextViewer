@@ -42,3 +42,6 @@ ARCHITECTURE RULES
 22. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
 23. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
 24. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
+25. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
+26. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
+27. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).

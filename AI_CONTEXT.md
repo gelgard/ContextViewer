@@ -21,7 +21,7 @@ Operating System:
 Inherited from template repository and preserved.
 
 Current Stage:
-Stage 3 — Ingestion Engine
+Stage 4 — Interpretation Layer
 
 Current Status:
 - Architecture foundation completed
@@ -37,15 +37,26 @@ Current Status:
 - AI Task 008 completed: import log implemented
 - AI Task 009 completed: read-only GitHub contextJSON connector implemented
 - AI Task 010 completed: contextJSON file scanner implemented
-- Stage 3 import pipeline is next
+- AI Task 011 completed: import pipeline implemented
+- AI Task 012 completed: refresh trigger wiring implemented
+- AI Task 013 completed: read-only import status endpoint implemented
+- AI Task 014 completed: Stage 3 ingestion contract smoke suite implemented
+- AI Task 015 completed: latest valid snapshot projection endpoint implemented
+- AI Task 016 completed: latest two valid snapshots diff summary endpoint implemented
+- AI Task 017 completed: changes-since-previous projection endpoint implemented
+- AI Task 018 completed: roadmap/progress projection endpoint implemented
+- AI Task 019 completed: current status projection endpoint implemented
+- AI Task 020 completed: valid snapshot timeline projection endpoint implemented
+- Stage 3 completed, Stage 4 interpretation is in progress
 
 Strategy Lock:
 - Architecture workflow inherited and preserved
 - Recovery workflow inherited and preserved
 - AI task workflow inherited and preserved
 - AI task creation gate enforced: no "next AI task" response without physical `ai_tasks/NNN_*.md` file
+- Post-test changed-files gate enforced: assistant auto-generates and validates changed files from `git status --short`
 - Architecture update command preserved
 - Project-specific logic extends the template OS, never replaces it
 
 Next Step:
-Run AI Task 011 and continue Stage 3 ingestion implementation.
+Run AI Task 021 and continue Stage 4 interpretation implementation.

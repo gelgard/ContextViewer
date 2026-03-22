@@ -91,11 +91,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 3
-- Substage: Import Pipeline
+- Stage: Stage 4
+- Substage: Timeline Projection
 
 Next required action:
-→ run AI Task 011
+→ run AI Task 021
 
 
 ---
@@ -175,6 +175,9 @@ When command is triggered:
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
+- after user submits test results, assistant must generate "List of changed files" automatically from `git status --short` and validate scope for current AI task
+- changed-files validation assumes one commit boundary per task; if unrelated changes are detected, assistant must flag them explicitly
+- changed-files validation must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
 - before sending any AI task response, run self-check:
   - file exists in `ai_tasks/`
   - numbering is continuous

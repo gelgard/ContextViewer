@@ -1,0 +1,99 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 4",
+    "substage": "Timeline Projection",
+    "status": "interpretation_in_progress"
+  },
+  "system": {
+    "summary": "Architecture synchronized after completing AI Task 017-020 in Stage 4 Interpretation Layer."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "recovery integration",
+      "AI task execution layer",
+      "project and snapshot base schema",
+      "snapshot storage constraints",
+      "snapshot validation rules",
+      "snapshot deduplication entry point",
+      "snapshot import log table and insert function",
+      "read-only GitHub contextJSON connector",
+      "contextJSON file scanner",
+      "import pipeline",
+      "refresh trigger wiring",
+      "import status integration",
+      "ingestion contract smoke suite",
+      "latest valid snapshot projection",
+      "latest snapshot diff summary",
+      "changes-since-previous projection",
+      "roadmap/progress projection",
+      "current status projection",
+      "valid snapshot timeline projection"
+    ],
+    "in_progress": [
+      "Stage 4 interpretation layer"
+    ],
+    "next": [
+      "AI Task 021 — Stage 4 interpretation continuation",
+      "Stage 4 projection aggregation for dashboard feed",
+      "Stage 4 interpretation smoke contract"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Marked AI Task 017 as completed",
+    "Marked AI Task 018 as completed",
+    "Marked AI Task 019 as completed",
+    "Marked AI Task 020 as completed",
+    "Updated next action to AI Task 021"
+  ],
+  "current_task": {
+    "id": "021",
+    "name": "to be defined",
+    "stage": "Stage 4 — Interpretation Layer",
+    "substage": "Interpretation Continuation"
+  },
+  "next_tasks": [
+    {
+      "id": "021",
+      "name": "Stage 4 interpretation continuation"
+    },
+    {
+      "id": "022",
+      "name": "Stage 4 projection aggregation"
+    },
+    {
+      "id": "023",
+      "name": "Stage 4 interpretation contract smoke"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "concise_step_by_step_executable",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "announce_stage_transition": true,
+    "stage_transition_git_flow": "merge_to_development_then_create_feature_stage_branch",
+    "next_ai_task_requires_physical_task_file": true,
+    "next_ai_task_must_include_created_file_line": true,
+    "ai_task_response_requires_self_check": true,
+    "missing_ai_task_file_blocked_output": "BLOCKED: AI task file missing, creating it now.",
+    "changed_files_auto_check": "git status --short with task-scope validation"
+  }
+}

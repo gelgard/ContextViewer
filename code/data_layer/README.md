@@ -25,3 +25,23 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 `code/ingestion/get_project_import_status.sh` is read-only: given a numeric `project_id`, it queries `snapshot_import_logs` (latest row) and `snapshots` (count + max filename-derived `timestamp`) and prints one JSON object (`integration_status`, `latest_import_log`, etc.). No pipeline, network, or background work.
 
 `code/ingestion/verify_stage3_ingestion_contracts.sh` runs contract smoke checks (connector → scanner → pipeline → refresh → import status) when `GITHUB_*`, `PROJECT_ID`, and `psql` connectivity are available, and prints one JSON report (`status`, `checks[]`, `failed_checks`, `generated_at`). Use `--help` for prerequisites; no daemons or UI.
+
+## Stage 4 Interpretation
+
+`code/interpretation/get_latest_valid_snapshot_projection.sh` is read-only: given a numeric `project_id`, it returns the newest `snapshots` row with `is_valid = true` ordered by filename-derived `timestamp` DESC (then `id` DESC), and prints one JSON object with `project_id`, `snapshot_id`, `snapshot_timestamp`, and `projection` (the row’s `raw_json`, or all nulls if none). No ingestion or network.
+
+`code/interpretation/get_latest_snapshot_diff_summary.sh` is read-only: compares the two latest valid snapshots’ `raw_json` at **top-level keys only** (`added_*`, `removed_*`, `changed_*` arrays). With 0–1 valid snapshots, ids and diff arrays are empty where required; exit 0. No ingestion or network.
+
+`code/interpretation/get_latest_changes_since_previous_projection.sh` is read-only: loads latest (+ previous id) valid snapshots (`timestamp` DESC, `id` DESC) and returns `changes_since_previous` and `changes_count` from the **latest** `raw_json` when that key is a JSON array; otherwise empty array and count 0. No ingestion or network.
+
+`code/interpretation/get_latest_roadmap_progress_projection.sh` is read-only: latest valid snapshot only (`timestamp` DESC, `id` DESC) and returns `roadmap` (array) plus `progress` `{ implemented, in_progress, next }` (each array) with empty safe fallbacks if keys or types are wrong. No ingestion or network.
+
+`code/interpretation/get_latest_current_status_projection.sh` is read-only: same latest valid snapshot selection and returns one JSON object with `project_id`, `latest_snapshot_id`, and `current_status` combining `progress` arrays (`implemented`, `in_progress`, `next`) with `changes_since_previous` (array from `raw_json` when valid). Missing snapshots or bad types fall back to empty arrays; no ingestion or network.
+
+`code/interpretation/get_valid_snapshot_timeline_projection.sh` is read-only: lists all `snapshots` with `is_valid = true` for a numeric `project_id` as `timeline` (`snapshot_id`, `file_name`, `snapshot_timestamp`, `import_time`), ordered by `timestamp` DESC then `id` DESC, plus `total_valid_snapshots`. Empty project yields `0` and `[]`. No ingestion or network.
+
+`code/interpretation/get_interpretation_bundle_projection.sh` is read-only: given a numeric `project_id`, runs the six Stage 4 interpretation scripts above (latest snapshot, diff summary, changes projection, roadmap/progress, current status, valid snapshot timeline) and prints one JSON object with `project_id`, `bundle_generated_at` (UTC), and each script’s full output under `latest_snapshot`, `diff_summary`, `changes_projection`, `roadmap_progress`, `current_status`, and `timeline`. No ingestion, network, or extra DB logic beyond those scripts.
+
+`code/interpretation/get_dashboard_feed_projection.sh` is read-only: calls `get_interpretation_bundle_projection.sh` and prints a dashboard-oriented object (`project_id`, `generated_at`, `overview` with snapshot time, counts, and diff/changes metrics, plus `roadmap`, `progress` `{ implemented, in_progress, next }`, and `timeline` as the snapshot row array). Safe fallbacks when sections are empty or malformed. No ingestion or network.
+
+`code/interpretation/verify_stage4_interpretation_contracts.sh` runs JSON contract smoke checks for the eight Stage 4 interpretation entrypoints (latest snapshot, diff summary, changes projection, roadmap/progress, current status, valid snapshot timeline, interpretation bundle, dashboard feed) given a numeric `project_id`, and prints one JSON report (`status`, `checks[]`, `failed_checks`, `generated_at`). Requires `jq` and working `psql` like the scripts under test; invalid `project_id` yields `fail` with `failed_checks > 0`. Exit code is non-zero when `status` is `fail`. No ingestion or network beyond DB connectivity.
