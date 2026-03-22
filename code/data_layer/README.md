@@ -53,3 +53,5 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 `code/dashboard/get_project_overview_feed.sh` is read-only: given a numeric `project_id`, returns one JSON overview for that row (same import/snapshot fields as the list feed entry, plus `overview_generated_at`). Unknown id yields a clear stderr error and non-zero exit. No ingestion or network.
 
 `code/dashboard/get_dashboard_home_feed.sh` is read-only: calls `get_project_list_overview_feed.sh` and prints `generated_at`, `summary` (`total_projects`, `projects_with_import_status`, `projects_with_valid_snapshots`), `projects`, and `selected_project_overview` (null unless `--project-id <id>` is set, then `get_project_overview_feed.sh`). Invalid CLI or unknown project id exits non-zero with stderr. No ingestion or network.
+
+`code/dashboard/get_project_dashboard_feed.sh` is read-only: given a numeric `project_id`, calls `get_project_overview_feed.sh` (project must exist) then `get_dashboard_feed_projection.sh`, and prints `generated_at`, `project_overview`, and `dashboard_feed`. Invalid/missing id or child failure yields stderr + non-zero exit. No ingestion or network.
