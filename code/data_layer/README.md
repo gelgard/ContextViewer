@@ -49,3 +49,5 @@ Read-only GitHub listing for `contextJSON` lives in `code/ingestion/github_conte
 ## Stage 5 Dashboard Core
 
 `code/dashboard/get_project_list_overview_feed.sh` is read-only: no arguments (optional `--help`); queries `projects`, latest `snapshot_import_logs` per project, and valid `snapshots` aggregates; prints one JSON object (`generated_at`, `total_projects`, `projects[]` with metadata, `latest_import_status` / `latest_import_time`, `latest_valid_snapshot_timestamp`, `total_valid_snapshots`). Sorted by `created_at` DESC then `project_id` DESC. Empty database yields `0` and `[]`. No ingestion or network.
+
+`code/dashboard/get_project_overview_feed.sh` is read-only: given a numeric `project_id`, returns one JSON overview for that row (same import/snapshot fields as the list feed entry, plus `overview_generated_at`). Unknown id yields a clear stderr error and non-zero exit. No ingestion or network.
