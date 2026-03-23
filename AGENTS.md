@@ -92,10 +92,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 6
-- Substage: Visualization Bundle Feed
+- Substage: Visualization Performance Baseline
 
 Next required action:
-→ run AI Task 033
+→ run AI Task 042
 
 
 ---

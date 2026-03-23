@@ -4,7 +4,7 @@
 Stage 6 — Visualization
 
 ## Current Substage
-Visualization Bundle Feed
+Visualization Performance Baseline
 
 ## Progress
 
@@ -45,6 +45,15 @@ Completed:
 - AI Task 030 — Stage 6 Architecture Tree Feed
 - AI Task 031 — Stage 6 Architecture Graph Feed
 - AI Task 032 — Stage 6 Visualization Contract Smoke Suite
+- AI Task 033 — Stage 6 Visualization Bundle Feed
+- AI Task 034 — Stage 6 Visualization API Contract Bundle
+- AI Task 035 — Stage 6 Visualization API Contract Smoke Suite
+- AI Task 036 — Stage 6 Project Visualization Feed
+- AI Task 037 — Stage 6 Visualization Home Feed
+- AI Task 038 — Stage 6 Visualization Home Contract Smoke Suite
+- AI Task 039 — Stage 6 Visualization Workspace Contract Bundle
+- AI Task 040 — Stage 6 Visualization Workspace Contract Smoke Suite
+- AI Task 041 — Stage 6 Visualization Performance Baseline
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -57,12 +66,12 @@ Execution status:
 - Stage 6 visualization started
 
 Current:
-- AI Task 033 — Stage 6 Visualization Bundle Feed (next)
+- AI Task 042 — Stage 6 visualization continuation (next)
 
 Next:
-- Stage 6 visualization continuation
-- Stage 6 visualization bundle aggregation
-- Stage 6 visualization API normalization
+- Stage 6 latency guardrails and runtime-safe integration
+- Stage 6 visualization stabilization
+- Stage 6 completion checks
 
 Response rule update:
 - task completion responses must include commit text after acceptance
