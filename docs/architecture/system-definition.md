@@ -182,7 +182,14 @@ Development must follow:
 - on each Stage transition, explicitly announce the new Stage
 - on each Stage transition, merge current branch into `development` and create `feature/stage<stageNum>` before new stage tasks
 - for command "дай следующую AI task", physically create `ai_tasks/NNN_*.md` before response
+- for command "дай следующую AI task", response must include blocks in strict order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
 - if AI task file is missing, stop normal output and return: `BLOCKED: AI task file missing, creating it now.`
+- if block `Manual Test (exact commands)` is missing, stop normal output and return: `BLOCKED: response format violation, regenerating with full test section.`
+- on any next-task format violation, immediately regenerate compliant response before any other output
 - before AI task response, run self-check: file existence, numbering continuity, stage/substage sync, executable tests
 - after user submits test outputs, generate `List of changed files` automatically from `git status --short`
 - validate changed-file scope against the current AI task and explicitly flag unrelated changes

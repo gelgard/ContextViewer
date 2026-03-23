@@ -45,3 +45,11 @@ ARCHITECTURE RULES
 25. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
 26. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
 27. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).
+28. For command "дай следующую AI task", the response format is a hard gate and must contain, in strict order:
+   - `AI Task file created: /ai_tasks/NNN_*.md`
+   - `Cursor prompt (EN)`
+   - `Manual Test (exact commands)`
+   - `What to send back for validation`
+29. If block `Manual Test (exact commands)` is missing, assistant must emit only:
+   - `BLOCKED: response format violation, regenerating with full test section.`
+30. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.

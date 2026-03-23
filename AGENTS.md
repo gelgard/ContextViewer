@@ -91,11 +91,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 4
-- Substage: Timeline Projection
+- Stage: Stage 6
+- Substage: Runtime Contract Smoke Suite
 
 Next required action:
-→ run AI Task 021
+→ run AI Task 045
 
 
 ---
@@ -175,6 +175,14 @@ When command is triggered:
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
+- for "дай следующую AI task", response is valid only in this strict block order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
+- if block `Manual Test (exact commands)` is missing, assistant must output only:
+  - `BLOCKED: response format violation, regenerating with full test section.`
+- on response-format violation for next-task output, assistant must immediately regenerate full response in required format before any other action
 - after user submits test results, assistant must generate "List of changed files" automatically from `git status --short` and validate scope for current AI task
 - changed-files validation assumes one commit boundary per task; if unrelated changes are detected, assistant must flag them explicitly
 - changed-files validation must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)

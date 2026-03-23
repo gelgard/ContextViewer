@@ -1,0 +1,106 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 6",
+    "substage": "Runtime Contract Smoke Suite",
+    "status": "visualization_in_progress"
+  },
+  "system": {
+    "summary": "Architecture context synchronized through AI Task 044, including Stage 6 runtime-safe feeds, latency guardrails, and runtime contract smoke validation."
+  },
+  "progress": {
+    "implemented": [
+      "stage 1 foundation",
+      "stage 2 data layer",
+      "stage 3 ingestion",
+      "stage 4 interpretation",
+      "stage 5 dashboard core",
+      "stage 6 architecture tree feed",
+      "stage 6 architecture graph feed",
+      "stage 6 visualization contract smoke suite",
+      "stage 6 visualization bundle feed",
+      "stage 6 visualization API contract bundle",
+      "stage 6 visualization API contract smoke suite",
+      "stage 6 project visualization feed",
+      "stage 6 visualization home feed",
+      "stage 6 visualization home contract smoke suite",
+      "stage 6 visualization workspace contract bundle",
+      "stage 6 visualization workspace contract smoke suite",
+      "stage 6 visualization performance baseline",
+      "stage 6 latency guardrails",
+      "stage 6 lightweight runtime visualization feed",
+      "stage 6 runtime contract smoke suite"
+    ],
+    "in_progress": [
+      "Stage 6 visualization stabilization and completion"
+    ],
+    "next": [
+      "AI Task 045 — Stage 6 visualization continuation",
+      "Stage 6 runtime safety integration",
+      "Stage 6 completion checks"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Marked AI Task 042 as completed",
+    "Marked AI Task 043 as completed",
+    "Marked AI Task 044 as completed",
+    "Updated architecture and recovery files to set AI Task 045 as next action"
+  ],
+  "current_task": {
+    "id": "045",
+    "name": "Stage 6 visualization continuation",
+    "stage": "Stage 6 — Visualization",
+    "substage": "To be defined by next AI task"
+  },
+  "next_tasks": [
+    {
+      "id": "045",
+      "name": "Stage 6 visualization continuation"
+    },
+    {
+      "id": "046",
+      "name": "Stage 6 runtime safety integration"
+    },
+    {
+      "id": "047",
+      "name": "Stage 6 completion checks"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "concise_step_by_step_executable",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "announce_stage_transition": true,
+    "stage_transition_git_flow": "merge_to_development_then_create_feature_stage_branch",
+    "next_ai_task_requires_physical_task_file": true,
+    "next_ai_task_must_include_created_file_line": true,
+    "next_ai_task_required_blocks_order": [
+      "AI Task file created: /ai_tasks/NNN_*.md",
+      "Cursor prompt (EN)",
+      "Manual Test (exact commands)",
+      "What to send back for validation"
+    ],
+    "ai_task_response_requires_self_check": true,
+    "missing_ai_task_file_blocked_output": "BLOCKED: AI task file missing, creating it now.",
+    "missing_manual_test_blocked_output": "BLOCKED: response format violation, regenerating with full test section.",
+    "next_task_format_violation_retry": "immediate_full_regeneration_required",
+    "changed_files_auto_check": "git status --short with task-scope validation"
+  }
+}
