@@ -53,3 +53,6 @@ ARCHITECTURE RULES
 29. If block `Manual Test (exact commands)` is missing, assistant must emit only:
    - `BLOCKED: response format violation, regenerating with full test section.`
 30. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
+31. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
+32. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
+33. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.

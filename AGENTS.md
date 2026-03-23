@@ -125,6 +125,8 @@ Supported commands:
 - no architecture changes without command
 - no assumptions
 - always validate state before action
+- every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
+- if task-to-goal mapping is missing, task is blocked until mapping is added
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
@@ -193,6 +195,7 @@ When command is triggered:
   - test steps are executable and explicit
 - if self-check fails due to missing AI task file, output only:
   - `BLOCKED: AI task file missing, creating it now.`
+- before sending any AI task response, verify alignment with `docs/plans/product_goal_traceability_matrix.md` and include mapped requirement IDs in the task body
 
 
 ---

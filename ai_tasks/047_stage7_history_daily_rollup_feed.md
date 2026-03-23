@@ -12,6 +12,12 @@ Daily Aggregation API
 ## Why This Matters
 Stage 7 начинается с календарного слоя. Нужен стабильный backend-контракт, чтобы UI мог быстро показать дни с активностью и количество snapshot-изменений без парсинга сырых данных на клиенте.
 
+## Goal Alignment
+Requirement IDs (from `docs/plans/product_goal_traceability_matrix.md`):
+- `PG-HI-001` — History calendar daily aggregation
+- `PG-RT-001` — Runtime truth from valid snapshots
+- `PG-EX-001` — AI-task execution with executable contract tests
+
 ## Files to Create / Update
 Create:
 - `code/history/get_project_history_daily_rollup_feed.sh`
@@ -60,6 +66,9 @@ Update:
 - Positive run returns valid JSON with required keys.
 - `summary.total_valid_snapshots == sum(days[].valid_snapshots_count)`.
 - Date range filtering works (`--from/--to` narrows `days` and `summary`).
+- `PG-HI-001` evidence: daily aggregation is returned in `days[]` grouped by `date` with `valid_snapshots_count` and `snapshot_ids`.
+- `PG-RT-001` evidence: only valid snapshots are represented (counts and latest timestamp align with valid-snapshot projections for the same project).
+- `PG-EX-001` evidence: contract is validated by explicit positive and negative executable CLI tests (help/invalid id/missing project/invalid date/invalid range).
 
 ## Manual Test (exact commands)
 1. Stage transition gate (required before Stage 7 coding):
