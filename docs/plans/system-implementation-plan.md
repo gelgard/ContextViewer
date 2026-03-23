@@ -4,7 +4,7 @@
 Stage 6 — Visualization
 
 ## Current Substage
-Visualization Performance Baseline
+Runtime Contract Smoke Suite
 
 ## Progress
 
@@ -54,6 +54,9 @@ Completed:
 - AI Task 039 — Stage 6 Visualization Workspace Contract Bundle
 - AI Task 040 — Stage 6 Visualization Workspace Contract Smoke Suite
 - AI Task 041 — Stage 6 Visualization Performance Baseline
+- AI Task 042 — Stage 6 Visualization Latency Guardrails
+- AI Task 043 — Stage 6 Visualization Runtime Feed
+- AI Task 044 — Stage 6 Visualization Runtime Contract Smoke Suite
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -66,10 +69,10 @@ Execution status:
 - Stage 6 visualization started
 
 Current:
-- AI Task 042 — Stage 6 visualization continuation (next)
+- AI Task 045 — Stage 6 visualization continuation (next)
 
 Next:
-- Stage 6 latency guardrails and runtime-safe integration
+- Stage 6 runtime safety integration
 - Stage 6 visualization stabilization
 - Stage 6 completion checks
 

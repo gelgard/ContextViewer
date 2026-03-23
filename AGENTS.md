@@ -92,10 +92,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 6
-- Substage: Visualization Performance Baseline
+- Substage: Runtime Contract Smoke Suite
 
 Next required action:
-→ run AI Task 042
+→ run AI Task 045
 
 
 ---
