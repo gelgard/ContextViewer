@@ -56,3 +56,29 @@ ARCHITECTURE RULES
 31. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
 32. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
 33. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.
+34. Context Restore Policy is mandatory and must be enforced before task execution.
+35. Source priority for restore is strict:
+   - project_recovery/*
+   - AGENTS.md
+   - docs/architecture/*
+   - docs/plans/*
+   - ai_tasks/*
+   - contextJSON/json_<latest>.json
+   - code/* (validation only)
+36. Fast restore is required before EVERY new AI task.
+37. Full restore is mandatory after:
+   - `обнови архитектурные файлы`
+   - merge/stage transition
+   - suspected desync
+   - long pause
+   - explicit command `обнови полный контекст`
+38. Command mapping:
+   - `обнови контекст` => Fast restore (default)
+   - `обнови полный контекст` => Full restore (forced)
+39. Long pause is defined as:
+   - inactivity >= 4 hours OR
+   - new calendar day since last restore OR
+   - context handoff between agents/users
+40. Blocked policy response format:
+   - `BLOCKED: Context restore policy violation.`
+   - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`

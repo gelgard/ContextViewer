@@ -97,7 +97,7 @@ Primary user outcomes:
 | PG-OV-001, PG-PL-001 | Stage 4-5 | 018-029 | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047 | implemented |
-| PG-HI-002 | Stage 7 | 048+ | pending |
+| PG-HI-002 | Stage 7 | 048-049 | in_progress |
 | PG-UX-001 | Stage 6-8 | 036+ | in_progress |
 | PG-EX-001 | Stage 2-7 | 001+ | implemented |
 
@@ -110,9 +110,10 @@ For every new AI task:
 If a task cannot map to any Requirement ID, it is out of scope and must not proceed.
 
 ## Current Task Anchor
-- Current Stage 7 anchor task: `AI Task 047 — Stage 7 History Daily Rollup Feed`
+- Current Stage 7 anchor task: `AI Task 049 — Stage 7 Project History Bundle Feed`
 - Requirement mapping:
   - `PG-HI-001`
+  - `PG-HI-002`
   - `PG-RT-001`
   - `PG-EX-001`
 
@@ -121,3 +122,5 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - New task has Requirement ID mapping.
 - Test evidence proves mapped requirements.
 - No unresolved mismatch between recovery, plans, and runtime snapshot.
+- Context Restore Policy executed with correct restore type (Fast vs Full).
+- Full restore was executed for mandatory triggers (architecture update, merge/stage transition, desync, long pause, explicit `обнови полный контекст`).

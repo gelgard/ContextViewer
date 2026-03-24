@@ -46,6 +46,20 @@ Rules:
 - preserve and synchronize post-test auto-check rule: assistant generates `List of changed files` from `git status --short`
 - preserve and synchronize changed-scope validation rule for current AI task (flag unrelated changes)
 - preserve and synchronize transient-artifact exclusion rule for changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- enforce Context Restore Policy:
+  - Fast restore before each new AI task
+  - Full restore after architecture update command execution
+  - Full restore after merge/stage transition
+  - Full restore when desync is suspected
+  - Full restore after long pause
+  - command mapping:
+    - `обнови контекст` => Fast restore (default)
+    - `обнови полный контекст` => Full restore (forced)
+  - long pause definition:
+    - inactivity >= 4 hours OR new calendar day OR context handoff
+  - blocked output on violation:
+    - `BLOCKED: Context restore policy violation.`
+    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md

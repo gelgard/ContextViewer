@@ -35,6 +35,24 @@ RESPONSE FORMAT RULES
   - `BLOCKED: AI task file missing, creating it now.`
 - If self-check fails because Requirement ID mapping is missing, output only:
   - `BLOCKED: AI task has no product-goal mapping, add Requirement IDs first.`
+- Context restore gate:
+  - before every new AI task, execute Fast restore
+  - if Full restore trigger occurred, Fast restore alone is invalid
+- Command mapping for restore:
+  - `обнови контекст` => Fast restore (default)
+  - `обнови полный контекст` => Full restore (forced)
+- Full restore triggers:
+  - after `обнови архитектурные файлы`
+  - after merge/stage transition
+  - when desync is suspected
+  - after long pause
+- Long pause rule:
+  - inactivity >= 4 hours OR
+  - new calendar day since last restore OR
+  - context handoff between agents/users
+- On Context Restore Policy violation, output only:
+  - `BLOCKED: Context restore policy violation.`
+  - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
 - Do not skip numbering
 - No large unstructured responses
 

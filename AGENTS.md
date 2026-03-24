@@ -51,7 +51,8 @@ Always use sources in this order:
 3. docs/architecture/*
 4. docs/plans/*
 5. ai_tasks/*
-6. codebase (validation only)
+6. contextJSON/json_<latest>.json
+7. codebase (validation only)
 
 Never override higher-priority sources.
 
@@ -92,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 7
-- Substage: Daily Aggregation API
+- Substage: History API Bundle
 
 Next required action:
-→ run AI Task 048
+→ run AI Task 049
 
 
 ---
@@ -116,6 +117,12 @@ Supported commands:
 4. "подготовь архив"
    → generate 1:1 files
 
+5. "обнови контекст"
+   → Fast restore (default)
+
+6. "обнови полный контекст"
+   → Full restore (forced)
+
 
 ---
 
@@ -125,12 +132,67 @@ Supported commands:
 - no architecture changes without command
 - no assumptions
 - always validate state before action
+- before EVERY new AI task, run Fast restore
 - every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
 - if task-to-goal mapping is missing, task is blocked until mapping is added
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
 - if the AI task file is missing, response must stop and switch to file creation
+
+
+---
+
+## 8.1 CONTEXT RESTORE POLICY
+
+Fast restore (mandatory before each new AI task) must read only:
+- `project_recovery/06_STAGE_PROGRESS.txt`
+- `project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt`
+- `AGENTS.md`
+- `docs/plans/system-implementation-plan.md`
+- `docs/plans/product_goal_traceability_matrix.md`
+- `contextJSON/json_<latest>.json` (metadata + plan + traceability sections)
+
+Fast restore output must include:
+- current stage / current task / next tasks
+- gate status (Goal Alignment / Requirement mapping)
+- readiness status: `ready` or `blocked`
+
+Full restore must traverse all layers:
+- full `project_recovery/*`
+- full `docs/architecture/*`
+- full `docs/plans/*`
+- relevant `ai_tasks/*`
+- latest contextJSON snapshot validation
+
+Full restore output must include:
+- complete state reconstruction
+- drift/conflict audit
+- architecture/plan/recovery sync status
+- explicit blockers and required fixes (if any)
+
+Trigger matrix:
+- Fast restore: before each new AI task
+- Full restore: after `обнови архитектурные файлы`
+- Full restore: after merge/stage transition
+- Full restore: when desync is suspected
+- Full restore: after long pause
+- Full restore: on explicit `обнови полный контекст`
+
+Long pause rule:
+- inactivity >= 4 hours OR
+- new calendar day since last restore OR
+- context handoff between agents/users
+
+Failure / blocked conditions:
+- required restore type was not executed
+- source priority was violated
+- current/new AI task lacks Goal Alignment mapping when gate is active
+- Full restore trigger occurred but only Fast restore was run
+
+Blocked response format:
+`BLOCKED: Context restore policy violation.`
+`REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
 
 
 ---

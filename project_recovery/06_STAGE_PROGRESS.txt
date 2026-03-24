@@ -98,6 +98,8 @@ Status: in progress
 
 Current execution state:
 - AI Task 047 completed: history daily rollup feed
+- AI Task 048 completed: history timeline feed
+- AI Task 049 next: project history bundle feed
 
 ### Stage 8 — Polish
 Status: pending
