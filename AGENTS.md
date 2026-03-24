@@ -91,11 +91,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 6
-- Substage: Runtime Contract Smoke Suite
+- Stage: Stage 7
+- Substage: Daily Aggregation API
 
 Next required action:
-→ run AI Task 045
+→ run AI Task 048
 
 
 ---
@@ -105,7 +105,7 @@ Next required action:
 Supported commands:
 
 1. "обнови архитектурные файлы"
-   → full sync using archive
+   → full sync using current workspace (archive fallback only if workspace is unavailable)
 
 2. "дай следующую AI task"
    → return next executable task
@@ -139,7 +139,7 @@ Supported commands:
 
 When command is triggered:
 
-1. require project archive
+1. use current workspace as the primary synchronization source
 2. scan using source priority
 3. compare:
    - recovery
@@ -149,7 +149,7 @@ When command is triggered:
    - code
 4. apply targeted updates only
 5. regenerate contextJSON if needed
-6. output full archive (1:1 ready)
+6. if workspace is unavailable, request project archive and run archive-based fallback sync
 
 
 ---

@@ -1,10 +1,10 @@
 # System Implementation Plan
 
 ## Current Stage
-Stage 6 — Visualization
+Stage 7 — History Layer
 
 ## Current Substage
-Runtime Contract Smoke Suite
+Daily Aggregation API
 
 ## Progress
 
@@ -57,6 +57,9 @@ Completed:
 - AI Task 042 — Stage 6 Visualization Latency Guardrails
 - AI Task 043 — Stage 6 Visualization Runtime Feed
 - AI Task 044 — Stage 6 Visualization Runtime Contract Smoke Suite
+- AI Task 045 — Stage 6 Visualization Readiness Report
+- AI Task 046 — Stage 6 Completion Gate Report
+- AI Task 047 — Stage 7 History Daily Rollup Feed
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -66,22 +69,24 @@ Execution status:
 - Stage 3 scope completed
 - Stage 4 scope completed
 - Stage 5 scope completed
-- Stage 6 visualization started
+- Stage 6 scope completed
+- Stage 7 history layer started
+- Goal Traceability Layer enabled for AI-task gating
 
 Current:
-- AI Task 045 — Stage 6 visualization continuation (next)
+- AI Task 048 — Stage 7 history continuation (next)
 
 Next:
-- Stage 6 runtime safety integration
-- Stage 6 visualization stabilization
-- Stage 6 completion checks
+- Stage 7 timeline feed
+- Stage 7 drill-down and history contracts
+- Stage 7 home/history aggregation
 
 Response rule update:
 - task completion responses must include commit text after acceptance
 
 Cross-cutting architecture notes:
 - contextJSON maintenance is part of architecture synchronization
-- architecture synchronization must be archive-first
+- architecture synchronization is workspace-first (archive fallback only if workspace is unavailable)
 - the latest timestamped context JSON is the authoritative runtime source for the visual application
 - visual state computation must come from JSON, not from markdown parsing
 - coding remains blocked until execution proceeds through numbered AI tasks

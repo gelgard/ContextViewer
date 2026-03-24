@@ -40,10 +40,10 @@ RESPONSE FORMAT RULES
 
 Architecture sync rule:
 When the user asks "обнови архитектурные файлы":
-1. first state that an architecture sync requires the current project archive
-2. wait for archive upload
-3. perform full sync against the uploaded archive
-4. only then execute architecture synchronization
+1. use current project workspace as the primary synchronization source
+2. perform full sync directly in workspace
+3. only if workspace is unavailable, request archive and perform archive-based fallback sync
+4. then execute architecture synchronization
 5. include:
    - contextJSON/json_spec.md
    - a new populated contextJSON/json_<timestamp>.json

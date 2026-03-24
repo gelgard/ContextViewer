@@ -12,11 +12,12 @@ Behavior:
   4. ai_tasks
   5. code
 
-Archive-first workflow:
+Workspace-first workflow:
 1. detect that architecture sync is needed
-2. request the current project archive
-3. perform full synchronization against the uploaded archive
-4. only after that execute the architecture update command
+2. use the current project workspace as the synchronization source
+3. perform full synchronization directly in workspace
+4. if workspace access is unavailable, request project archive and perform archive-based fallback sync
+5. execute the architecture update command
 
 Rules:
 - no full rewrites unless explicitly requested
@@ -60,4 +61,4 @@ Visual app rule:
 - use the newest JSON for structure, status, roadmap, graph, and summaries
 - use markdown paths only for raw content display
 
-Architecture sync is incomplete without these outputs being included in the update archive.
+Architecture sync is incomplete without these outputs being generated in workspace (or included in fallback update archive).
