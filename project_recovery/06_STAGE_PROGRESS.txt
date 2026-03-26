@@ -72,7 +72,7 @@ Current execution state:
 - AI Task 029 completed: dashboard API contract bundle
 
 ### Stage 6 — Visualization
-Status: in progress
+Status: completed
 
 Current execution state:
 - AI Task 030 completed: architecture tree feed
@@ -90,10 +90,20 @@ Current execution state:
 - AI Task 042 completed: visualization latency guardrails
 - AI Task 043 completed: visualization runtime feed
 - AI Task 044 completed: visualization runtime contract smoke suite
-- AI Task 045 next
+- AI Task 045 completed: visualization readiness report
+- AI Task 046 completed: Stage 6 completion gate report
 
 ### Stage 7 — History Layer
-Status: pending
+Status: completed
+
+Current execution state:
+- AI Task 047 completed: history daily rollup feed
+- AI Task 048 completed: history timeline feed
+- AI Task 049 completed: project history bundle feed
+- AI Task 050 completed: history API contract smoke suite
+- AI Task 051 completed: history home feed
+- AI Task 052 completed: history workspace contract bundle
+- Stage 7 scope completed
 
 ### Stage 8 — Polish
 Status: pending

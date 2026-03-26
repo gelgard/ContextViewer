@@ -51,7 +51,8 @@ Always use sources in this order:
 3. docs/architecture/*
 4. docs/plans/*
 5. ai_tasks/*
-6. codebase (validation only)
+6. contextJSON/json_<latest>.json
+7. codebase (validation only)
 
 Never override higher-priority sources.
 
@@ -91,11 +92,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 6
-- Substage: Runtime Contract Smoke Suite
+- Stage: Stage 7
+- Substage: History API Bundle
 
 Next required action:
-→ run AI Task 045
+→ run AI Task 049
 
 
 ---
@@ -105,7 +106,7 @@ Next required action:
 Supported commands:
 
 1. "обнови архитектурные файлы"
-   → full sync using archive
+   → full sync using current workspace (archive fallback only if workspace is unavailable)
 
 2. "дай следующую AI task"
    → return next executable task
@@ -116,6 +117,12 @@ Supported commands:
 4. "подготовь архив"
    → generate 1:1 files
 
+5. "обнови контекст"
+   → Fast restore (default)
+
+6. "обнови полный контекст"
+   → Full restore (forced)
+
 
 ---
 
@@ -125,6 +132,9 @@ Supported commands:
 - no architecture changes without command
 - no assumptions
 - always validate state before action
+- before EVERY new AI task, run Fast restore
+- every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
+- if task-to-goal mapping is missing, task is blocked until mapping is added
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
@@ -133,11 +143,69 @@ Supported commands:
 
 ---
 
+## 8.1 CONTEXT RESTORE POLICY
+
+Fast restore (mandatory before each new AI task) must read only:
+- `project_recovery/06_STAGE_PROGRESS.txt`
+- `project_recovery/10_CURRENT_IMPLEMENTATION_STATUS.txt`
+- `AGENTS.md`
+- `docs/plans/system-implementation-plan.md`
+- `docs/plans/product_goal_traceability_matrix.md`
+- `contextJSON/json_<latest>.json` (metadata + plan + traceability sections)
+
+Fast restore output must include:
+- one-line summary only
+- current stage / current task / next tasks
+- gate status (Goal Alignment / Requirement mapping)
+- readiness status: `ready` or `blocked`
+
+Fast restore response format:
+`FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
+
+Full restore must traverse all layers:
+- full `project_recovery/*`
+- full `docs/architecture/*`
+- full `docs/plans/*`
+- relevant `ai_tasks/*`
+- latest contextJSON snapshot validation
+
+Full restore output must include:
+- complete state reconstruction
+- drift/conflict audit
+- architecture/plan/recovery sync status
+- explicit blockers and required fixes (if any)
+
+Trigger matrix:
+- Fast restore: before each new AI task
+- Full restore: after `обнови архитектурные файлы`
+- Full restore: after merge/stage transition
+- Full restore: when desync is suspected
+- Full restore: after long pause
+- Full restore: on explicit `обнови полный контекст`
+
+Long pause rule:
+- inactivity >= 4 hours OR
+- new calendar day since last restore OR
+- context handoff between agents/users
+
+Failure / blocked conditions:
+- required restore type was not executed
+- source priority was violated
+- current/new AI task lacks Goal Alignment mapping when gate is active
+- Full restore trigger occurred but only Fast restore was run
+
+Blocked response format:
+`BLOCKED: Context restore policy violation.`
+`REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
+
+
+---
+
 ## 9. ARCHITECTURE UPDATE PROTOCOL
 
 When command is triggered:
 
-1. require project archive
+1. use current workspace as the primary synchronization source
 2. scan using source priority
 3. compare:
    - recovery
@@ -147,7 +215,7 @@ When command is triggered:
    - code
 4. apply targeted updates only
 5. regenerate contextJSON if needed
-6. output full archive (1:1 ready)
+6. if workspace is unavailable, request project archive and run archive-based fallback sync
 
 
 ---
@@ -165,7 +233,8 @@ When command is triggered:
 
 ## 11. RESPONSE FORMAT RULES
 
-- state restore → 8-section format
+- Fast restore → one-line format only
+- Full restore → 8-section format
 - architecture update → no explanation, only result
 - AI task → structured task output
 - archive → ready for replacement
@@ -180,6 +249,7 @@ When command is triggered:
   2) `Cursor prompt (EN)`
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
+- block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - if block `Manual Test (exact commands)` is missing, assistant must output only:
   - `BLOCKED: response format violation, regenerating with full test section.`
 - on response-format violation for next-task output, assistant must immediately regenerate full response in required format before any other action
@@ -193,6 +263,7 @@ When command is triggered:
   - test steps are executable and explicit
 - if self-check fails due to missing AI task file, output only:
   - `BLOCKED: AI task file missing, creating it now.`
+- before sending any AI task response, verify alignment with `docs/plans/product_goal_traceability_matrix.md` and include mapped requirement IDs in the task body
 
 
 ---

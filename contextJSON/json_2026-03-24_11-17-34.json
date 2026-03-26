@@ -1,0 +1,127 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 7",
+    "substage": "History API Bundle",
+    "status": "history_in_progress"
+  },
+  "system": {
+    "summary": "ContextViewer visualizes project state and evolution from immutable contextJSON snapshots, with strict recovery and task-gated execution."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "AI Task 047 history daily rollup feed completed",
+      "AI Task 048 history timeline feed completed"
+    ],
+    "in_progress": [
+      "Stage 7 History Layer",
+      "AI Task 049 project history bundle feed"
+    ],
+    "next": [
+      "Stage 7 history API contract smoke suite",
+      "Stage 7 history home feed",
+      "Stage 7 history workspace contract bundle"
+    ]
+  },
+  "roadmap": [
+    {
+      "stage": "Stage 1",
+      "name": "Foundation",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 2",
+      "name": "Data Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 3",
+      "name": "Ingestion Engine",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 4",
+      "name": "Interpretation Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 5",
+      "name": "Dashboard Core",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 6",
+      "name": "Visualization",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 7",
+      "name": "History Layer",
+      "status": "in_progress"
+    },
+    {
+      "stage": "Stage 8",
+      "name": "Polish",
+      "status": "pending"
+    }
+  ],
+  "changes_since_previous": [
+    "Context Restore Policy command mapping switched to обнови контекст / обнови полный контекст",
+    "AI Task 048 validated and marked as completed in recovery/plan/context files",
+    "Current task anchor in goal traceability moved to AI Task 049",
+    "New full-restore timestamped snapshot generated"
+  ],
+  "current_task": {
+    "id": "049",
+    "name": "Stage 7 project history bundle feed",
+    "stage": "Stage 7 — History Layer",
+    "substage": "History API Bundle"
+  },
+  "next_tasks": [
+    {
+      "id": "049",
+      "name": "Stage 7 project history bundle feed"
+    },
+    {
+      "id": "050",
+      "name": "Stage 7 history API contract smoke suite"
+    },
+    {
+      "id": "051",
+      "name": "Stage 7 history home feed"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "full_restore_completed"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "explicit_step_by_step",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "next_ai_task_requires_physical_task_file": true,
+    "next_ai_task_required_blocks_order": [
+      "AI Task file created",
+      "Cursor prompt (EN)",
+      "Manual Test (exact commands)",
+      "What to send back for validation"
+    ],
+    "blocked_on_context_restore_violation": "BLOCKED: Context restore policy violation.",
+    "blocked_required_fix": "REQUIRED FIX: Run <Fast|Full> restore and resync required files."
+  },
+  "generated_at": "2026-03-24T11:17:34Z"
+}

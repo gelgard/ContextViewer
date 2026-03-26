@@ -40,8 +40,9 @@ Primary system definition:
 docs/architecture/system-definition.md
 
 If architecture changes are required:
-- require current project archive
-- perform full sync
+- use current project workspace
+- perform full sync in workspace
+- if workspace is unavailable, request current project archive and run fallback full sync
 - then run command: "обнови архитектурные файлы"
 
 Next step:

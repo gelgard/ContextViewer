@@ -187,6 +187,7 @@ Development must follow:
   2) `Cursor prompt (EN)`
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
+- block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - if AI task file is missing, stop normal output and return: `BLOCKED: AI task file missing, creating it now.`
 - if block `Manual Test (exact commands)` is missing, stop normal output and return: `BLOCKED: response format violation, regenerating with full test section.`
 - on any next-task format violation, immediately regenerate compliant response before any other output

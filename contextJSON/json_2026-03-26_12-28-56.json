@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-26T12:28:56Z",
+    "generated_filename": "json_2026-03-26_12-28-56.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 7 — History Layer",
+    "current_substage": "History Workspace Aggregation",
+    "current_task": "Stage 7 complete — Stage 8 transition pending",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 7",
+    "substage": "History Workspace Aggregation",
+    "status": "stage7_completed_pending_stage8_transition"
+  },
+  "system": {
+    "summary": "ContextViewer visualizes project state and evolution from immutable contextJSON snapshots, with strict recovery, traceability gates, and AI-task-only execution."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Task 049 project history bundle feed completed",
+      "AI Task 050 history API contract smoke suite completed",
+      "AI Task 051 history home feed completed",
+      "AI Task 052 history workspace contract bundle completed"
+    ],
+    "in_progress": [
+      "Stage 8 transition preparation"
+    ],
+    "next": [
+      "Announce Stage 8 transition",
+      "Merge current branch into development",
+      "Create feature/stage8",
+      "Define first Stage 8 AI task"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "pending" }
+  ],
+  "changes_since_previous": [
+    "AI Task 049 synchronized as completed in recovery and plan files",
+    "AI Task 050 synchronized as completed in recovery and plan files",
+    "AI Task 051 synchronized as completed in recovery and plan files",
+    "AI Task 052 synchronized as completed in recovery and plan files",
+    "Stage 7 marked completed and Stage 8 transition set as next action",
+    "Invalid nonconforming contextJSON snapshot was marked outside json_* runtime selection"
+  ],
+  "current_task": {
+    "id": "052",
+    "name": "Stage 7 history workspace contract bundle",
+    "stage": "Stage 7 — History Layer",
+    "substage": "History Workspace Aggregation",
+    "status": "completed"
+  },
+  "next_tasks": [
+    {
+      "id": "stage8-transition",
+      "name": "Announce Stage 8 transition and run branch workflow"
+    },
+    {
+      "id": "053",
+      "name": "Stage 8 first AI task to be defined after transition"
+    }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 7 — History Layer",
+    "current_substage": "History Workspace Aggregation",
+    "state": "completed_pending_transition",
+    "next_stage": "Stage 8 — Polish"
+  },
+  "ai_task_status": {
+    "last_completed_task": "052",
+    "completed_in_stage_7": ["047", "048", "049", "050", "051", "052"],
+    "next_task": null,
+    "next_task_status": "blocked_until_stage8_transition_and_task_creation"
+  },
+  "traceability": {
+    "stage_7_status": "implemented",
+    "requirement_coverage": {
+      "PG-HI-001": "implemented",
+      "PG-HI-002": "implemented",
+      "PG-RT-001": "implemented",
+      "PG-EX-001": "implemented",
+      "PG-UX-001": "in_progress"
+    },
+    "current_anchor_task": "AI Task 052 — Stage 7 History Workspace Contract Bundle"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "full_restore_completed"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true
+  },
+  "summaries": {
+    "management": "Core backend and contract layers are implemented through Stage 7. The product is ready for Stage 8 transition and UI-facing polish work.",
+    "customer_status": "History APIs and workspace-level contracts are complete. The next milestone is visual/UI integration and refinement.",
+    "last_iteration": "Completed the Stage 7 history bundle, smoke suite, home feed, and workspace contract bundle, then synchronized architecture and runtime context."
+  },
+  "generated_at": "2026-03-26T12:28:56Z"
+}

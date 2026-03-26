@@ -6,7 +6,7 @@ Recovery is NOT standalone logic.
 It inherits:
 - command model
 - architecture update procedure
-- archive-first sync workflow
+- workspace-first sync workflow (archive fallback only when workspace is unavailable)
 - contextJSON runtime rules
 - response format rules
 

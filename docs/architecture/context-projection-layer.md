@@ -70,11 +70,12 @@ This does not mean the JSON must embed the full raw contents of all markdown fil
 ## Update Rule
 
 Whenever "обнови архитектурные файлы" is executed:
-- first require current project archive upload
-- perform full sync against uploaded archive
+- first use current project workspace as primary sync source
+- perform full sync directly in workspace
+- if workspace is unavailable, request project archive and run archive-based fallback sync
 - regenerate the populated JSON snapshot
 - regenerate json_spec.md if schema logic changed
-- include both files into the update archive
+- keep both files in workspace (or include them in fallback update archive)
 - treat the newest timestamped JSON as the current authoritative visual-app source
 
 ## Human Summary Rule

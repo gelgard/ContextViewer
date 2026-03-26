@@ -12,11 +12,12 @@ Behavior:
   4. ai_tasks
   5. code
 
-Archive-first workflow:
+Workspace-first workflow:
 1. detect that architecture sync is needed
-2. request the current project archive
-3. perform full synchronization against the uploaded archive
-4. only after that execute the architecture update command
+2. use the current project workspace as the synchronization source
+3. perform full synchronization directly in workspace
+4. if workspace access is unavailable, request project archive and perform archive-based fallback sync
+5. execute the architecture update command
 
 Rules:
 - no full rewrites unless explicitly requested
@@ -37,6 +38,7 @@ Rules:
   2) `Cursor prompt (EN)`
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
+- preserve and synchronize hard rule: block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - preserve and synchronize self-check gate before AI-task response (file exists, numbering, stage/substage, executable tests)
 - if a missing expected AI task file is detected during sync, create the missing `ai_tasks/NNN_*.md` before continuing updates
 - preserve and synchronize blocked-output rule: `BLOCKED: AI task file missing, creating it now.`
@@ -45,6 +47,22 @@ Rules:
 - preserve and synchronize post-test auto-check rule: assistant generates `List of changed files` from `git status --short`
 - preserve and synchronize changed-scope validation rule for current AI task (flag unrelated changes)
 - preserve and synchronize transient-artifact exclusion rule for changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- enforce Context Restore Policy:
+  - Fast restore before each new AI task
+  - Fast restore response must be one-line only:
+    `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
+  - Full restore after architecture update command execution
+  - Full restore after merge/stage transition
+  - Full restore when desync is suspected
+  - Full restore after long pause
+  - command mapping:
+    - `обнови контекст` => Fast restore (default)
+    - `обнови полный контекст` => Full restore (forced)
+  - long pause definition:
+    - inactivity >= 4 hours OR new calendar day OR context handoff
+  - blocked output on violation:
+    - `BLOCKED: Context restore policy violation.`
+    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
 
 Mandatory contextJSON outputs:
 1. contextJSON/json_spec.md
@@ -60,4 +78,4 @@ Visual app rule:
 - use the newest JSON for structure, status, roadmap, graph, and summaries
 - use markdown paths only for raw content display
 
-Architecture sync is incomplete without these outputs being included in the update archive.
+Architecture sync is incomplete without these outputs being generated in workspace (or included in fallback update archive).

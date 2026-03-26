@@ -18,10 +18,10 @@ This means:
 - future recovery and architecture updates must remain compatible with the template-defined rules and commands
 
 ## Current Stage
-Stage 1 — Foundation → completed
+Stage 7 — History Layer → completed
 
 ## Next Stage
-Stage 2 — Data Layer
+Stage 8 — Polish
 
 ## Stage Plan
 
@@ -73,11 +73,8 @@ Stage 2 — Data Layer
 - performance
 - error handling
 
-## Missing Step Fix
-Before Stage 2 implementation:
-AI Task System MUST be initialized.
-
-No implementation allowed before that.
+## Process Gate
+Implementation remains locked to numbered AI tasks with executable verification steps.
 
 ## Forbidden Actions
 - skipping stages
