@@ -19,6 +19,7 @@ RESPONSE FORMAT RULES
   2) `Cursor prompt (EN)`
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
+- Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - Missing block `Manual Test (exact commands)` is a hard failure; output only:
   - `BLOCKED: response format violation, regenerating with full test section.`
 - On next-task format violation, assistant must immediately regenerate full compliant response before any other output

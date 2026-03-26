@@ -50,12 +50,13 @@ ARCHITECTURE RULES
    - `Cursor prompt (EN)`
    - `Manual Test (exact commands)`
    - `What to send back for validation`
-29. If block `Manual Test (exact commands)` is missing, assistant must emit only:
+29. Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option.
+30. If block `Manual Test (exact commands)` is missing, assistant must emit only:
    - `BLOCKED: response format violation, regenerating with full test section.`
-30. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
-31. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
-32. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
-33. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.
+31. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
+32. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
+33. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
+34. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.
 34. Context Restore Policy is mandatory and must be enforced before task execution.
 35. Source priority for restore is strict:
    - project_recovery/*

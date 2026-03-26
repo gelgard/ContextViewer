@@ -1,50 +1,53 @@
 #!/usr/bin/env bash
-# AI Task 049: Stage 7 project history bundle (daily rollup + timeline, read-only).
+# AI Task 049: Stage 7 project history bundle (daily + timeline, read-only).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DAILY_FEED="${SCRIPT_DIR}/get_project_history_daily_rollup_feed.sh"
-TIMELINE_FEED="${SCRIPT_DIR}/get_project_history_timeline_feed.sh"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+DAILY_SCRIPT="${SCRIPT_DIR}/get_project_history_daily_rollup_feed.sh"
+TIMELINE_SCRIPT="${SCRIPT_DIR}/get_project_history_timeline_feed.sh"
 
 usage() {
   cat <<'USAGE'
-get_project_history_bundle_feed.sh — daily rollup + timeline in one JSON object
+get_project_history_bundle_feed.sh — single JSON bundle of daily rollup + timeline feeds
 
 Usage:
   get_project_history_bundle_feed.sh --project-id <id> [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--limit n]
 
-Runs (read-only):
-  code/history/get_project_history_daily_rollup_feed.sh --project-id <id> [--from ...] [--to ...]
-  code/history/get_project_history_timeline_feed.sh --project-id <id> [--from ...] [--to ...] [--limit ...]
+Invokes the daily rollup and timeline feeds with the same project id and date bounds.
+--limit applies only to the timeline feed (default 200).
 
 Stdout:
   One JSON object:
     project_id
-    generated_at (UTC — when this bundle was built)
-    range          { from, to, limit } — same as timeline feed
+    generated_at              (UTC ISO-8601 for this bundle)
+    range                     { from, to, limit } — from timeline feed
     history:
-      daily        — full output of daily rollup script
-      timeline     — full output of timeline script
+      daily                   (full output of get_project_history_daily_rollup_feed.sh)
+      timeline                (full output of get_project_history_timeline_feed.sh)
     consistency_checks:
       project_id_match
-      range_match
-      timeline_count_consistent
-      latest_timestamp_aligned
+      range_match               (daily.range.from/to vs timeline.range.from/to)
+      timeline_count_consistent (total_returned == timeline length)
+      latest_timestamp_aligned  (daily vs timeline summary when non-empty; both null when empty)
 
-Invalid CLI (project id, dates, from > to, limit) → stderr, non-zero (same as child scripts).
-Project not found or child failure → stderr from child, non-zero exit propagated.
+Invalid CLI → stderr, non-zero exit.
+Invalid --project-id format → stderr, exit 1 (same as child).
+Project not found → stderr, exit propagated from child (e.g. 4).
+Invalid --limit → stderr, exit 1.
+Child failure → child stderr, child exit code.
+Malformed child JSON → stderr, exit 3.
+Consistency checks false → stderr, exit 3.
 
-Environment:
-  PostgreSQL via child scripts; optional project root .env.local when DB vars unset (in children).
-
-Dependencies: jq; child scripts require psql and python3 for date validation
+Dependencies: jq; child scripts also require psql, python3.
 
 Options:
   -h, --help          Show this help
   --project-id <id>   Required. Non-negative integer; project row must exist.
-  --from <YYYY-MM-DD> Optional. Inclusive lower UTC day bound (both children).
-  --to <YYYY-MM-DD>   Optional. Inclusive upper UTC day bound (both children).
-  --limit <n>         Optional. Integer >= 1 (default 200); passed to timeline only.
+  --from <YYYY-MM-DD> Optional. Passed to both feeds.
+  --to <YYYY-MM-DD>   Optional. Passed to both feeds.
+  --limit <n>         Optional. Integer >= 1 (default 200). Timeline feed only.
 USAGE
 }
 
@@ -150,93 +153,84 @@ command -v jq >/dev/null 2>&1 || {
   exit 127
 }
 
-if [[ ! -f "$DAILY_FEED" || ! -x "$DAILY_FEED" ]]; then
-  echo "error: missing or not executable: $DAILY_FEED" >&2
-  exit 1
-fi
-if [[ ! -f "$TIMELINE_FEED" || ! -x "$TIMELINE_FEED" ]]; then
-  echo "error: missing or not executable: $TIMELINE_FEED" >&2
-  exit 1
+[[ -x "$DAILY_SCRIPT" ]] || [[ -f "$DAILY_SCRIPT" ]] || {
+  echo "error: missing script: $DAILY_SCRIPT" >&2
+  exit 127
+}
+[[ -x "$TIMELINE_SCRIPT" ]] || [[ -f "$TIMELINE_SCRIPT" ]] || {
+  echo "error: missing script: $TIMELINE_SCRIPT" >&2
+  exit 127
+}
+
+if [[ -f "${PROJECT_ROOT}/.env.local" && -z "${DATABASE_URL:-}" && -z "${PGHOST:-}" && -z "${PGDATABASE:-}" ]]; then
+  # shellcheck disable=SC1090
+  set -a
+  source "${PROJECT_ROOT}/.env.local"
+  set +a
 fi
 
-daily_args=(--project-id "$project_id")
+daily_args=(bash "$DAILY_SCRIPT" --project-id "$project_id")
 [[ -n "$from_date" ]] && daily_args+=(--from "$from_date")
 [[ -n "$to_date" ]] && daily_args+=(--to "$to_date")
 
-timeline_args=(--project-id "$project_id" --limit "$limit")
+timeline_args=(bash "$TIMELINE_SCRIPT" --project-id "$project_id" --limit "$limit")
 [[ -n "$from_date" ]] && timeline_args+=(--from "$from_date")
 [[ -n "$to_date" ]] && timeline_args+=(--to "$to_date")
 
-err_daily="$(mktemp)"
-set +e
-daily_json="$("$DAILY_FEED" "${daily_args[@]}" 2>"$err_daily")"
-daily_rc=$?
-set -e
-if [[ "$daily_rc" -ne 0 ]]; then
-  [[ -s "$err_daily" ]] && cat "$err_daily" >&2
-  rm -f "$err_daily"
-  exit "$daily_rc"
-fi
-rm -f "$err_daily"
+daily_json="$("${daily_args[@]}")" || exit "$?"
+timeline_json="$("${timeline_args[@]}")" || exit "$?"
 
 if ! printf '%s\n' "$daily_json" | jq -e . >/dev/null 2>&1; then
-  echo "error: daily rollup stdout is not valid JSON" >&2
+  echo "error: daily feed did not return valid JSON" >&2
   exit 3
 fi
-
-err_tl="$(mktemp)"
-set +e
-timeline_json="$("$TIMELINE_FEED" "${timeline_args[@]}" 2>"$err_tl")"
-tl_rc=$?
-set -e
-if [[ "$tl_rc" -ne 0 ]]; then
-  [[ -s "$err_tl" ]] && cat "$err_tl" >&2
-  rm -f "$err_tl"
-  exit "$tl_rc"
-fi
-rm -f "$err_tl"
-
 if ! printf '%s\n' "$timeline_json" | jq -e . >/dev/null 2>&1; then
-  echo "error: timeline feed stdout is not valid JSON" >&2
+  echo "error: timeline feed did not return valid JSON" >&2
   exit 3
 fi
 
 generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-jq -n \
-  --argjson pid "$project_id" \
-  --arg ga "$generated_at" \
-  --argjson daily "$daily_json" \
-  --argjson timeline "$timeline_json" \
-  '
-  {
-    project_id: ($pid | tonumber),
-    generated_at: $ga,
-    range: $timeline.range,
-    history: {
-      daily: $daily,
-      timeline: $timeline
-    },
-    consistency_checks: {
-      project_id_match: (
-        ($daily.project_id == $timeline.project_id)
-        and ($daily.project_id == ($pid | tonumber))
-      ),
-      range_match: (
-        ($daily.range.from == $timeline.range.from)
-        and ($daily.range.to == $timeline.range.to)
-      ),
-      timeline_count_consistent: (
-        $timeline.summary.total_returned == ($timeline.timeline | length)
-      ),
-      latest_timestamp_aligned: (
-        if ($timeline.timeline | length) == 0 then
-          ($daily.summary.latest_snapshot_timestamp == null)
-          and ($timeline.summary.latest_snapshot_timestamp == null)
-        else
-          ($daily.summary.latest_snapshot_timestamp == $timeline.summary.latest_snapshot_timestamp)
-        end
-      )
-    }
-  }
-  '
+result="$(
+  jq -n \
+    --argjson pid "$project_id" \
+    --arg ga "$generated_at" \
+    --argjson daily "$daily_json" \
+    --argjson timeline "$timeline_json" \
+    '
+    $daily as $d
+    | $timeline as $t
+    | {
+        project_id: ($pid | tonumber),
+        generated_at: $ga,
+        range: $t.range,
+        history: { daily: $d, timeline: $t },
+        consistency_checks: {
+          project_id_match: (
+            ($d.project_id == $t.project_id) and ($d.project_id == ($pid | tonumber))
+          ),
+          range_match: (
+            ($d.range.from == $t.range.from) and ($d.range.to == $t.range.to)
+          ),
+          timeline_count_consistent: (
+            $t.summary.total_returned == ($t.timeline | length)
+          ),
+          latest_timestamp_aligned: (
+            if ($t.timeline | length) > 0 then
+              $d.summary.latest_snapshot_timestamp == $t.summary.latest_snapshot_timestamp
+            else
+              ($d.summary.latest_snapshot_timestamp == null) and ($t.summary.latest_snapshot_timestamp == null)
+            end
+          )
+        }
+      }
+    '
+)"
+
+if ! printf '%s\n' "$result" | jq -e '.consistency_checks | [.project_id_match, .range_match, .timeline_count_consistent, .latest_timestamp_aligned] | all' >/dev/null 2>&1; then
+  echo "error: consistency checks failed" >&2
+  printf '%s\n' "$result" | jq -c '.consistency_checks' >&2 || true
+  exit 3
+fi
+
+printf '%s\n' "$result"

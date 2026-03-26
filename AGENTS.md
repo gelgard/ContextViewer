@@ -244,6 +244,7 @@ When command is triggered:
   2) `Cursor prompt (EN)`
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
+- block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - if block `Manual Test (exact commands)` is missing, assistant must output only:
   - `BLOCKED: response format violation, regenerating with full test section.`
 - on response-format violation for next-task output, assistant must immediately regenerate full response in required format before any other action
