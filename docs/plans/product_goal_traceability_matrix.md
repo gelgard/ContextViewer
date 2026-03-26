@@ -98,8 +98,8 @@ Primary user outcomes:
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
 | PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036+ | in_progress |
-| PG-EX-001 | Stage 2-7 | 001+ | implemented |
+| PG-UX-001 | Stage 6-8 | 036-057 | in_progress |
+| PG-EX-001 | Stage 2-8 | 001-057 | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -110,11 +110,14 @@ For every new AI task:
 If a task cannot map to any Requirement ID, it is out of scope and must not proceed.
 
 ## Current Task Anchor
-- Current Stage 7 completion anchor task: `AI Task 052 — Stage 7 History Workspace Contract Bundle`
+- Current Stage 8 anchor task: `AI Task 057 — Stage 8 UI Preview Local Server`
 - Requirement mapping:
+  - `PG-OV-001`
+  - `PG-AR-001`
+  - `PG-AR-002`
   - `PG-HI-001`
   - `PG-HI-002`
-  - `PG-RT-001`
+  - `PG-UX-001`
   - `PG-EX-001`
 
 ## Audit Checklist (Run Every 1-3 Tasks)

@@ -1,10 +1,10 @@
 PROJECT: ContextViewer
 
 CURRENT STAGE:
-Stage 7 — History Layer
+Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-History Workspace Aggregation
+UI Preview Delivery
 
 STATUS:
 - Architecture synced with latest rules
@@ -71,11 +71,17 @@ STATUS:
 - AI Task 051 completed: Stage 7 history home feed
 - AI Task 052 completed: Stage 7 history workspace contract bundle
 - Stage 7 history layer completed
+- AI Task 053 completed: Stage 8 UI bootstrap bundle
+- AI Task 054 completed: Stage 8 UI bootstrap contract smoke suite
+- AI Task 055 completed: Stage 8 UI bootstrap preview HTML
+- AI Task 056 completed: Stage 8 UI preview launcher
+- AI Task 057 completed: Stage 8 UI preview local server
+- Stage 8 UI bootstrap / preview chain is active
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 7 complete — synchronize transition to Stage 8 before creating new AI tasks
+Stage 8 active — synchronize recovery/plan/runtime and define the next Stage 8 AI task
 
 CRITICAL:
-Do not start Stage 8 tasks before stage-transition git workflow is executed
+UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

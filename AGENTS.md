@@ -92,11 +92,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 7
-- Substage: History API Bundle
+- Stage: Stage 8
+- Substage: UI Preview Delivery
 
 Next required action:
-→ run AI Task 049
+→ define the next Stage 8 AI task
 
 
 ---
@@ -242,6 +242,7 @@ When command is triggered:
 - tests must be concise, informative, and written as explicit step-by-step instructions
 - test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
+- when an AI task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
 - for "дай следующую AI task", response is valid only in this strict block order:

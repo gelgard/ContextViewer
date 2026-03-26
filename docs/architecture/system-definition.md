@@ -179,6 +179,7 @@ Development must follow:
 - test instructions must be concise, informative, and step-by-step
 - test instructions must avoid general phrases and visual actions and must specify what to return for validation
 - every test step must specify the exact execution method
+- when a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence required for validation
 - on each Stage transition, explicitly announce the new Stage
 - on each Stage transition, merge current branch into `development` and create `feature/stage<stageNum>` before new stage tasks
 - for command "дай следующую AI task", physically create `ai_tasks/NNN_*.md` before response

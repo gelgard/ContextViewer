@@ -18,10 +18,10 @@ This means:
 - future recovery and architecture updates must remain compatible with the template-defined rules and commands
 
 ## Current Stage
-Stage 7 — History Layer → completed
+Stage 8 — Polish → active
 
-## Next Stage
-Stage 8 — Polish
+## Current Focus
+UI bootstrap, preview generation, preview launch flow, and local preview delivery
 
 ## Stage Plan
 
@@ -72,6 +72,10 @@ Stage 8 — Polish
 - loading states
 - performance
 - error handling
+- UI bootstrap bundle
+- preview HTML
+- preview launcher
+- local preview server
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

@@ -31,6 +31,7 @@ Rules:
 - preserve and synchronize test-instruction rules requiring concise step-by-step guidance
 - preserve and synchronize test-instruction rules requiring exact return payloads for validation
 - preserve and synchronize test-instruction rules requiring exact executable methods for every step
+- preserve and synchronize hard rule: UI/frontend/HTML preview/browser-output tasks must include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence for validation
 - preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
 - preserve and synchronize AI-task creation gate for "дай следующую AI task"
 - preserve and synchronize strict next-task response format gate with block order:

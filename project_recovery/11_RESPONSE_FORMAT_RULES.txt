@@ -11,6 +11,7 @@ RESPONSE FORMAT RULES
 - Tests must be concise, informative, and describe each required step explicitly
 - Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
 - Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
+- If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
 - For command "дай следующую AI task", the response is valid only if `ai_tasks/NNN_*.md` was created before sending
 - AI task response must include: `AI Task file created: /ai_tasks/NNN_*.md`

@@ -29,17 +29,18 @@ ARCHITECTURE RULES
 13. Test instructions must be concise, informative, and written as explicit step-by-step actions.
 14. Test instructions must avoid general phrases and visual actions and must explicitly list what the user should send back for validation.
 15. Every test step must specify the exact execution method, including command, SQL, input, or callable entry point; abstract verbs without execution details are invalid.
-16. On each Stage transition, the assistant must explicitly announce the new Stage before issuing the next AI task.
-17. Stage transition requires git flow: merge current branch into `development`, then create `feature/stage<stageNum>`.
-18. Stage transition instructions must include exact reproducible git commands.
-19. Architecture sync workflow is workspace-first:
+16. If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, the test section must also include a dedicated visual manual-test subsection with explicit viewing steps and exact visual evidence required for validation.
+17. On each Stage transition, the assistant must explicitly announce the new Stage before issuing the next AI task.
+18. Stage transition requires git flow: merge current branch into `development`, then create `feature/stage<stageNum>`.
+19. Stage transition instructions must include exact reproducible git commands.
+20. Architecture sync workflow is workspace-first:
    - first use the current project workspace as the sync source
    - then perform full sync directly in workspace
    - if workspace access is unavailable, request current project archive and run archive-based fallback
    - then execute "обнови архитектурные файлы"
-20. Architecture sync is incomplete without regenerated contextJSON outputs.
-21. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
-22. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
+21. Architecture sync is incomplete without regenerated contextJSON outputs.
+22. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
+23. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
 23. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
 24. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
 25. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.

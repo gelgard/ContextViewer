@@ -1,0 +1,129 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-26T13:50:31Z",
+    "generated_filename": "json_2026-03-26_15-50-31.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "UI Preview Delivery",
+    "current_task": "AI Task 057 — Stage 8 UI Preview Local Server",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "UI Preview Delivery",
+    "status": "stage8_active"
+  },
+  "system": {
+    "summary": "ContextViewer visualizes project state and evolution from immutable contextJSON snapshots, with strict recovery, traceability gates, AI-task-only execution, and an active Stage 8 UI preview flow."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Task 053 UI bootstrap bundle completed",
+      "AI Task 054 UI bootstrap contract smoke suite completed",
+      "AI Task 055 UI bootstrap preview HTML completed",
+      "AI Task 056 UI preview launcher completed",
+      "AI Task 057 UI preview local server completed"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "UI-facing validation standards synchronized in architecture and recovery layers"
+    ],
+    "next": [
+      "Define the next Stage 8 AI task",
+      "Continue UI polish on top of the bootstrap and preview flow",
+      "Expand visual/manual validation coverage for future UI tasks"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "Stage 8 execution state synchronized across recovery and plan files",
+    "AI Tasks 053-057 recorded as completed in authoritative planning layers",
+    "Current task anchor moved from Stage 7 history completion to Stage 8 UI preview local server",
+    "UI-related tasks now require dedicated visual manual-test instructions with explicit visual evidence",
+    "New runtime contextJSON snapshot generated for Stage 8 active state"
+  ],
+  "current_task": {
+    "id": "057",
+    "name": "Stage 8 UI preview local server",
+    "stage": "Stage 8 — Polish",
+    "substage": "UI Preview Delivery",
+    "status": "completed"
+  },
+  "next_tasks": [
+    {
+      "id": "058",
+      "name": "Next Stage 8 AI task to be defined"
+    }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "UI Preview Delivery",
+    "state": "active",
+    "next_stage": null
+  },
+  "ai_task_status": {
+    "last_completed_task": "057",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057"],
+    "next_task": null,
+    "next_task_status": "awaiting_definition"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented",
+      "PG-RT-002": "implemented",
+      "PG-OV-001": "implemented",
+      "PG-AR-001": "implemented",
+      "PG-AR-002": "implemented",
+      "PG-HI-001": "implemented",
+      "PG-HI-002": "implemented",
+      "PG-UX-001": "in_progress",
+      "PG-EX-001": "implemented"
+    },
+    "current_anchor_task": "AI Task 057 — Stage 8 UI Preview Local Server"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "full_restore_completed"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true
+  },
+  "summaries": {
+    "management": "Stage 8 is active. The product now has a unified UI bootstrap payload, a standalone HTML preview, a launch helper, and a local preview server flow.",
+    "customer_status": "The first visible product surface is available through local preview artifacts and a browser-friendly local URL.",
+    "last_iteration": "Completed AI Tasks 053-057, then synchronized recovery, plans, and runtime context to the active Stage 8 UI preview state."
+  },
+  "generated_at": "2026-03-26T13:50:31Z"
+}

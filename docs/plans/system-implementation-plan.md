@@ -1,10 +1,10 @@
 # System Implementation Plan
 
 ## Current Stage
-Stage 7 — History Layer
+Stage 8 — Polish
 
 ## Current Substage
-History Workspace Aggregation
+UI Preview Delivery
 
 ## Progress
 
@@ -65,6 +65,11 @@ Completed:
 - AI Task 050 — Stage 7 History API Contract Smoke Suite
 - AI Task 051 — Stage 7 History Home Feed
 - AI Task 052 — Stage 7 History Workspace Contract Bundle
+- AI Task 053 — Stage 8 UI Bootstrap Bundle
+- AI Task 054 — Stage 8 UI Bootstrap Contract Smoke Suite
+- AI Task 055 — Stage 8 UI Bootstrap Preview HTML
+- AI Task 056 — Stage 8 UI Preview Launcher
+- AI Task 057 — Stage 8 UI Preview Local Server
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -77,18 +82,20 @@ Execution status:
 - Stage 6 scope completed
 - Stage 7 history layer started
 - Stage 7 scope completed
+- Stage 8 polish started
+- Stage 8 UI bootstrap / preview delivery chain completed through AI Task 057
 - Goal Traceability Layer enabled for AI-task gating
 
 Current:
-- Stage 7 completed — Stage 8 transition pending
+- Stage 8 active — UI preview delivery is available through local HTML and local HTTP preview flow
 
 Next:
-- Announce Stage 8 transition
-- Merge current branch into `development`
-- Create `feature/stage8`
+- Define the next Stage 8 AI task
+- Continue UI polish on top of the preview/bootstrap flow
 
 Response rule update:
 - task completion responses must include commit text after acceptance
+- UI-related tasks must include dedicated visual manual-test instructions with explicit visual evidence for validation
 
 Cross-cutting architecture notes:
 - contextJSON maintenance is part of architecture synchronization
