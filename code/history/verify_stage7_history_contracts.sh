@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
+# AI Task 050: Stage 7 history API JSON contract smoke suite (stdout = one JSON report).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-cd "$ROOT_DIR"
-
-DAILY_SCRIPT="$ROOT_DIR/code/history/get_project_history_daily_rollup_feed.sh"
-TIMELINE_SCRIPT="$ROOT_DIR/code/history/get_project_history_timeline_feed.sh"
-BUNDLE_SCRIPT="$ROOT_DIR/code/history/get_project_history_bundle_feed.sh"
+DAILY_FEED="${SCRIPT_DIR}/get_project_history_daily_rollup_feed.sh"
+TIMELINE_FEED="${SCRIPT_DIR}/get_project_history_timeline_feed.sh"
+BUNDLE_FEED="${SCRIPT_DIR}/get_project_history_bundle_feed.sh"
 
 usage() {
-  cat <<'EOF'
-verify_stage7_history_contracts.sh — Stage 7 history API contract smoke tests
+  cat <<'USAGE'
+verify_stage7_history_contracts.sh — Stage 7 history JSON contract smoke tests
 
-Runs contract checks against Stage 7 history scripts and prints exactly one JSON object:
+Runs contract checks against history feeds (daily, timeline, bundle) and prints exactly one JSON object:
   status        pass | fail (fail if any check fails)
   checks        array of { name, status, details }
   failed_checks integer count of failed checks
@@ -25,9 +23,11 @@ Required:
 Optional:
   --invalid-project-id <value>   string used for negative exit-code checks (default: abc)
 
+Invalid top-level --project-id (not a non-negative integer):
+  stdout only: JSON with status fail, failed_checks 1, check name "project_id"; exit 1.
+
 Prerequisites:
-  jq, psql (via DATABASE_URL or PG* — same as history scripts)
-  Optional: project root .env.local when DATABASE_URL, PGHOST, PGDATABASE all unset
+  jq; child scripts require psql, python3 (same as history feeds)
 
 No ingestion, network beyond DB, or background work.
 
@@ -37,221 +37,264 @@ Usage:
 
 Options:
   -h, --help     Show this help
-EOF
+USAGE
 }
 
-is_non_negative_integer() {
-  [[ "$1" =~ ^[0-9]+$ ]]
-}
-
-ensure_tools() {
-  command -v jq >/dev/null 2>&1 || { echo "error: jq is required" >&2; exit 3; }
-}
-
-PROJECT_ID=""
-INVALID_PROJECT_ID="abc"
+project_id=""
+invalid_id="abc"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --project-id)
-      [[ $# -ge 2 ]] || { echo "error: --project-id requires a value" >&2; exit 2; }
-      PROJECT_ID="$2"
-      shift 2
-      ;;
-    --invalid-project-id)
-      [[ $# -ge 2 ]] || { echo "error: --invalid-project-id requires a value" >&2; exit 2; }
-      INVALID_PROJECT_ID="$2"
-      shift 2
-      ;;
     -h|--help)
       usage
       exit 0
       ;;
+    --project-id)
+      if [[ -z "${2:-}" ]]; then
+        echo "error: --project-id requires a value" >&2
+        exit 2
+      fi
+      project_id="$2"
+      shift 2
+      ;;
+    --invalid-project-id)
+      if [[ -z "${2:-}" ]]; then
+        echo "error: --invalid-project-id requires a value" >&2
+        exit 2
+      fi
+      invalid_id="$2"
+      shift 2
+      ;;
     *)
       echo "error: unknown argument: $1" >&2
-      usage >&2
       exit 2
       ;;
   esac
 done
 
-ensure_tools
+if [[ -z "$project_id" ]]; then
+  echo "error: --project-id is required" >&2
+  usage >&2
+  exit 2
+fi
 
-if [[ -z "${PROJECT_ID}" ]]; then
-  now="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+if [[ ! "$project_id" =~ ^[0-9]+$ ]]; then
+  generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   jq -n \
-    --arg now "$now" \
+    --arg ga "$generated_at" \
     '{
-      status:"fail",
-      checks:[{name:"project_id",status:"fail",details:"must be a non-negative integer, got: "}],
-      failed_checks:1,
-      generated_at:$now
+      status: "fail",
+      checks: [{
+        name: "project_id",
+        status: "fail",
+        details: "--project-id must be a non-negative integer"
+      }],
+      failed_checks: 1,
+      generated_at: $ga
     }'
   exit 1
 fi
 
-if ! is_non_negative_integer "$PROJECT_ID"; then
-  now="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-  jq -n \
-    --arg bad "$PROJECT_ID" \
-    --arg now "$now" \
-    '{
-      status:"fail",
-      checks:[{name:"project_id",status:"fail",details:("must be a non-negative integer, got: " + $bad)}],
-      failed_checks:1,
-      generated_at:$now
-    }'
-  exit 1
-fi
+command -v jq >/dev/null 2>&1 || {
+  echo "error: jq is required" >&2
+  exit 127
+}
 
-tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
-
-checks_json='[]'
-failed=0
+checks='[]'
 
 add_check() {
-  local name="$1"
-  local status="$2"
-  local details="$3"
-  checks_json="$(jq \
-    --arg name "$name" \
-    --arg status "$status" \
-    --arg details "$details" \
-    '. + [{name:$name,status:$status,details:$details}]' <<<"$checks_json")"
-  if [[ "$status" == "fail" ]]; then
-    failed=$((failed + 1))
-  fi
+  local n="$1" s="$2" d="$3"
+  checks="$(jq -n \
+    --argjson c "$checks" \
+    --arg n "$n" \
+    --arg st "$s" \
+    --arg det "$d" \
+    '$c + [{name: $n, status: $st, details: $det}]')"
 }
-
-run_positive_check() {
-  local name="$1"
-  local cmd="$2"
-  local out_file="$3"
-  local err_file="$4"
-  local shape_filter="$5"
-  if eval "$cmd" >"$out_file" 2>"$err_file"; then
-    if jq -e "$shape_filter" "$out_file" >/dev/null 2>&1; then
-      add_check "$name" "pass" "exit 0 and contract shape validated"
-    else
-      add_check "$name" "fail" "exit 0 but contract shape invalid"
-    fi
-  else
-    local err_msg
-    err_msg="$(tr '\n' ' ' <"$err_file" | sed 's/[[:space:]]\+/ /g' | sed 's/^ //; s/ $//')"
-    add_check "$name" "fail" "non-zero exit; stderr: ${err_msg:-<empty>}"
-  fi
-}
-
-run_negative_check() {
-  local name="$1"
-  local cmd="$2"
-  local expected="$3"
-  local err_file="$4"
-  if eval "$cmd" >/dev/null 2>"$err_file"; then
-    add_check "$name" "fail" "expected non-zero exit $expected but got 0"
-  else
-    local code=$?
-    if [[ "$code" -eq "$expected" ]]; then
-      add_check "$name" "pass" "non-zero exit $code as expected"
-    else
-      add_check "$name" "fail" "unexpected exit $code (expected $expected)"
-    fi
-  fi
-}
-
-run_positive_check \
-  "get_project_history_daily_rollup_feed" \
-  "bash \"$DAILY_SCRIPT\" --project-id \"$PROJECT_ID\"" \
-  "$tmp_dir/daily.json" \
-  "$tmp_dir/daily.err" \
-  '.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.summary|type=="object") and (.days|type=="array")' \
-  || true
-
-# Re-run with pid injected for jq filter (portable approach)
-if jq -e --arg pid "$PROJECT_ID" '.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.summary|type=="object") and (.days|type=="array")' "$tmp_dir/daily.json" >/dev/null 2>&1; then
-  :
-fi
-
-run_positive_check \
-  "get_project_history_timeline_feed" \
-  "bash \"$TIMELINE_SCRIPT\" --project-id \"$PROJECT_ID\"" \
-  "$tmp_dir/timeline.json" \
-  "$tmp_dir/timeline.err" \
-  '.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.summary|type=="object") and (.timeline|type=="array")' \
-  || true
-
-run_positive_check \
-  "get_project_history_bundle_feed" \
-  "bash \"$BUNDLE_SCRIPT\" --project-id \"$PROJECT_ID\"" \
-  "$tmp_dir/bundle.json" \
-  "$tmp_dir/bundle.err" \
-  '.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.history.daily|type=="object") and (.history.timeline|type=="object") and (.consistency_checks|type=="object")' \
-  || true
-
-# Override potentially pid-unaware validation results with explicit pid-aware checks
-for f in daily timeline bundle; do
-  case "$f" in
-    daily)
-      filter='.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.summary|type=="object") and (.days|type=="array")'
-      name='get_project_history_daily_rollup_feed'
-      ;;
-    timeline)
-      filter='.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.summary|type=="object") and (.timeline|type=="array")'
-      name='get_project_history_timeline_feed'
-      ;;
-    bundle)
-      filter='.project_id == ($pid|tonumber) and (.generated_at|type=="string") and (.range|type=="object") and (.history.daily|type=="object") and (.history.timeline|type=="object") and (.consistency_checks|type=="object") and (.consistency_checks.project_id_match == true) and (.consistency_checks.range_match == true) and (.consistency_checks.timeline_count_consistent == true) and (.consistency_checks.latest_timestamp_aligned == true)'
-      name='get_project_history_bundle_feed'
-      ;;
-  esac
-  if [[ -s "$tmp_dir/$f.json" ]] && jq -e --arg pid "$PROJECT_ID" "$filter" "$tmp_dir/$f.json" >/dev/null 2>&1; then
-    checks_json="$(jq --arg name "$name" 'map(if .name==$name then .status="pass" | .details=(if .name=="get_project_history_bundle_feed" then "exit 0 and contract + consistency checks validated" else "exit 0 and contract shape validated" end) else . end)' <<<"$checks_json")"
-  fi
-done
-
-# Recompute failed count after potential overrides
-failed="$(jq '[.[] | select(.status=="fail")] | length' <<<"$checks_json")"
-
-run_negative_check \
-  "negative: get_project_history_daily_rollup_feed invalid id" \
-  "bash \"$DAILY_SCRIPT\" --project-id \"$INVALID_PROJECT_ID\"" \
-  1 \
-  "$tmp_dir/neg_daily.err"
-
-run_negative_check \
-  "negative: get_project_history_timeline_feed invalid id" \
-  "bash \"$TIMELINE_SCRIPT\" --project-id \"$INVALID_PROJECT_ID\"" \
-  1 \
-  "$tmp_dir/neg_timeline.err"
-
-run_negative_check \
-  "negative: get_project_history_bundle_feed invalid id" \
-  "bash \"$BUNDLE_SCRIPT\" --project-id \"$INVALID_PROJECT_ID\"" \
-  1 \
-  "$tmp_dir/neg_bundle.err"
-
-failed="$(jq '[.[] | select(.status=="fail")] | length' <<<"$checks_json")"
-status="pass"
-if [[ "$failed" -gt 0 ]]; then
-  status="fail"
-fi
 
 generated_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
-jq -n \
-  --arg status "$status" \
-  --argjson checks "$checks_json" \
-  --argjson failed_checks "$failed" \
-  --arg generated_at "$generated_at" \
-  '{
-    status:$status,
-    checks:$checks,
-    failed_checks:$failed_checks,
-    generated_at:$generated_at
-  }'
-
-if [[ "$status" != "pass" ]]; then
-  exit 1
+# --- positive: daily rollup ---
+if [[ ! -f "$DAILY_FEED" ]]; then
+  add_check "get_project_history_daily_rollup_feed" "fail" "missing script: $DAILY_FEED"
+else
+  errf="$(mktemp)"
+  set +e
+  daily_out="$(bash "$DAILY_FEED" --project-id "$project_id" 2>"$errf")"
+  daily_rc=$?
+  set -e
+  es="$(cat "$errf" 2>/dev/null || true)"
+  rm -f "$errf"
+  if [[ "$daily_rc" -ne 0 ]]; then
+    add_check "get_project_history_daily_rollup_feed" "fail" "exit ${daily_rc}: ${es:0:500}"
+  elif ! printf '%s\n' "$daily_out" | jq -e . >/dev/null 2>&1; then
+    add_check "get_project_history_daily_rollup_feed" "fail" "stdout is not valid JSON"
+  elif ! printf '%s\n' "$daily_out" | jq -e '
+      type == "object"
+      and (.project_id | type == "number")
+      and (.generated_at | type == "string")
+      and (.range | type == "object")
+      and (.range.from == null or (.range.from | type == "string"))
+      and (.range.to == null or (.range.to | type == "string"))
+      and (.summary | type == "object")
+      and (.summary.days_with_activity | type == "number")
+      and (.summary.total_valid_snapshots | type == "number")
+      and (.summary.latest_snapshot_timestamp == null or (.summary.latest_snapshot_timestamp | type == "string"))
+      and (.days | type == "array")
+      and (
+        (.days | length) == 0
+        or (
+          (.days | all(
+            type == "object"
+            and (.date | type == "string")
+            and (.valid_snapshots_count | type == "number")
+            and (.latest_snapshot_timestamp | type == "string")
+            and (.snapshot_ids | type == "array")
+          ))
+        )
+      )
+    ' >/dev/null 2>&1; then
+    add_check "get_project_history_daily_rollup_feed" "fail" "stdout JSON failed contract validation"
+  else
+    add_check "get_project_history_daily_rollup_feed" "pass" "exit 0 and contract shape validated"
+  fi
 fi
 
+# --- positive: timeline ---
+if [[ ! -f "$TIMELINE_FEED" ]]; then
+  add_check "get_project_history_timeline_feed" "fail" "missing script: $TIMELINE_FEED"
+else
+  errf="$(mktemp)"
+  set +e
+  tl_out="$(bash "$TIMELINE_FEED" --project-id "$project_id" 2>"$errf")"
+  tl_rc=$?
+  set -e
+  es="$(cat "$errf" 2>/dev/null || true)"
+  rm -f "$errf"
+  if [[ "$tl_rc" -ne 0 ]]; then
+    add_check "get_project_history_timeline_feed" "fail" "exit ${tl_rc}: ${es:0:500}"
+  elif ! printf '%s\n' "$tl_out" | jq -e . >/dev/null 2>&1; then
+    add_check "get_project_history_timeline_feed" "fail" "stdout is not valid JSON"
+  elif ! printf '%s\n' "$tl_out" | jq -e '
+      type == "object"
+      and (.project_id | type == "number")
+      and (.generated_at | type == "string")
+      and (.range | type == "object")
+      and (.range.from == null or (.range.from | type == "string"))
+      and (.range.to == null or (.range.to | type == "string"))
+      and (.range.limit | type == "number")
+      and (.summary | type == "object")
+      and (.summary.total_returned | type == "number")
+      and (.summary.latest_snapshot_timestamp == null or (.summary.latest_snapshot_timestamp | type == "string"))
+      and (.summary.oldest_snapshot_timestamp == null or (.summary.oldest_snapshot_timestamp | type == "string"))
+      and (.timeline | type == "array")
+      and (
+        (.timeline | length) == 0
+        or (
+          (.timeline | all(
+            type == "object"
+            and (.snapshot_id | type == "number")
+            and (.file_name | type == "string")
+            and (.snapshot_timestamp | type == "string")
+            and (.import_time == null or (.import_time | type == "string"))
+            and (.day | type == "string")
+          ))
+        )
+      )
+    ' >/dev/null 2>&1; then
+    add_check "get_project_history_timeline_feed" "fail" "stdout JSON failed contract validation"
+  else
+    add_check "get_project_history_timeline_feed" "pass" "exit 0 and contract shape validated"
+  fi
+fi
+
+# --- positive: bundle ---
+if [[ ! -f "$BUNDLE_FEED" ]]; then
+  add_check "get_project_history_bundle_feed" "fail" "missing script: $BUNDLE_FEED"
+else
+  errf="$(mktemp)"
+  set +e
+  bun_out="$(bash "$BUNDLE_FEED" --project-id "$project_id" 2>"$errf")"
+  bun_rc=$?
+  set -e
+  es="$(cat "$errf" 2>/dev/null || true)"
+  rm -f "$errf"
+  if [[ "$bun_rc" -ne 0 ]]; then
+    add_check "get_project_history_bundle_feed" "fail" "exit ${bun_rc}: ${es:0:500}"
+  elif ! printf '%s\n' "$bun_out" | jq -e . >/dev/null 2>&1; then
+    add_check "get_project_history_bundle_feed" "fail" "stdout is not valid JSON"
+  elif ! printf '%s\n' "$bun_out" | jq -e '
+      type == "object"
+      and (.project_id | type == "number")
+      and (.generated_at | type == "string")
+      and (.range | type == "object")
+      and (.range.limit | type == "number")
+      and (.history | type == "object")
+      and (.history.daily | type == "object")
+      and (.history.timeline | type == "object")
+      and (.consistency_checks | type == "object")
+      and (.consistency_checks.project_id_match | type == "boolean")
+      and (.consistency_checks.range_match | type == "boolean")
+      and (.consistency_checks.timeline_count_consistent | type == "boolean")
+      and (.consistency_checks.latest_timestamp_aligned | type == "boolean")
+      and (.consistency_checks.project_id_match == true)
+      and (.consistency_checks.range_match == true)
+      and (.consistency_checks.timeline_count_consistent == true)
+      and (.consistency_checks.latest_timestamp_aligned == true)
+    ' >/dev/null 2>&1; then
+    add_check "get_project_history_bundle_feed" "fail" "stdout JSON failed contract or consistency_checks not all true"
+  else
+    add_check "get_project_history_bundle_feed" "pass" "exit 0, shape validated, bundle consistency_checks all true"
+  fi
+fi
+
+# --- negative: invalid project id (expect exit 1) ---
+run_negative_expect_1() {
+  local name="$1"
+  shift
+  local errf out rc
+  errf="$(mktemp)"
+  set +e
+  out="$("$@" 2>"$errf")"
+  rc=$?
+  set -e
+  rm -f "$errf"
+  if [[ "$rc" -eq 1 ]]; then
+    add_check "$name" "pass" "exit 1 as expected for invalid --project-id"
+  elif [[ "$rc" -eq 0 ]]; then
+    add_check "$name" "fail" "expected exit 1 for invalid project id, got 0; stdout: ${out:0:200}"
+  else
+    add_check "$name" "fail" "expected exit 1 for invalid project id, got ${rc}"
+  fi
+}
+
+if [[ ! -f "$DAILY_FEED" ]]; then
+  add_check "negative: daily invalid project-id" "fail" "skip: daily script missing"
+else
+  run_negative_expect_1 "negative: daily invalid project-id" bash "$DAILY_FEED" --project-id "$invalid_id"
+fi
+
+if [[ ! -f "$TIMELINE_FEED" ]]; then
+  add_check "negative: timeline invalid project-id" "fail" "skip: timeline script missing"
+else
+  run_negative_expect_1 "negative: timeline invalid project-id" bash "$TIMELINE_FEED" --project-id "$invalid_id"
+fi
+
+if [[ ! -f "$BUNDLE_FEED" ]]; then
+  add_check "negative: bundle invalid project-id" "fail" "skip: bundle script missing"
+else
+  run_negative_expect_1 "negative: bundle invalid project-id" bash "$BUNDLE_FEED" --project-id "$invalid_id"
+fi
+
+failed_checks="$(echo "$checks" | jq '[.[] | select(.status == "fail")] | length')"
+overall="pass"
+[[ "$failed_checks" -eq 0 ]] || overall="fail"
+
+jq -n \
+  --arg st "$overall" \
+  --argjson checks "$checks" \
+  --argjson fc "$failed_checks" \
+  --arg ga "$generated_at" \
+  '{status: $st, checks: $checks, failed_checks: $fc, generated_at: $ga}'
+
+[[ "$overall" == "pass" ]]
