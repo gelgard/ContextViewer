@@ -96,8 +96,8 @@ Primary user outcomes:
 | PG-RT-001, PG-RT-002 | Stage 2-4 | 004-023 | implemented |
 | PG-OV-001, PG-PL-001 | Stage 4-5 | 018-029 | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
-| PG-HI-001 | Stage 7 | 047 | implemented |
-| PG-HI-002 | Stage 7 | 048-049 | in_progress |
+| PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
+| PG-HI-002 | Stage 7 | 048-052 | implemented |
 | PG-UX-001 | Stage 6-8 | 036+ | in_progress |
 | PG-EX-001 | Stage 2-7 | 001+ | implemented |
 
@@ -110,7 +110,7 @@ For every new AI task:
 If a task cannot map to any Requirement ID, it is out of scope and must not proceed.
 
 ## Current Task Anchor
-- Current Stage 7 anchor task: `AI Task 049 — Stage 7 Project History Bundle Feed`
+- Current Stage 7 completion anchor task: `AI Task 052 — Stage 7 History Workspace Contract Bundle`
 - Requirement mapping:
   - `PG-HI-001`
   - `PG-HI-002`

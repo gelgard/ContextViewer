@@ -28,11 +28,15 @@ This ensures:
 
 ## Minimum Required Sections
 Each file must include:
+- metadata
 - project
 - system
 - progress
 - roadmap
 - changes_since_previous
+- project_plan
+- ai_task_status
+- traceability
 
 ## Recommended Structured Sections
 The latest populated snapshot should also include when available:
@@ -40,6 +44,7 @@ The latest populated snapshot should also include when available:
 - next_tasks
 - recovery_status
 - response_rules
+- summaries
 
 Invalid JSON:
 → marked and ignored for runtime

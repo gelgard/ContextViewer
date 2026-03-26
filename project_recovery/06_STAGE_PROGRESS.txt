@@ -94,12 +94,16 @@ Current execution state:
 - AI Task 046 completed: Stage 6 completion gate report
 
 ### Stage 7 — History Layer
-Status: in progress
+Status: completed
 
 Current execution state:
 - AI Task 047 completed: history daily rollup feed
 - AI Task 048 completed: history timeline feed
-- AI Task 049 next: project history bundle feed
+- AI Task 049 completed: project history bundle feed
+- AI Task 050 completed: history API contract smoke suite
+- AI Task 051 completed: history home feed
+- AI Task 052 completed: history workspace contract bundle
+- Stage 7 scope completed
 
 ### Stage 8 — Polish
 Status: pending

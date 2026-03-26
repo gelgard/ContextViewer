@@ -4,7 +4,7 @@
 Stage 7 — History Layer
 
 ## Current Substage
-History API Bundle
+History Workspace Aggregation
 
 ## Progress
 
@@ -61,6 +61,10 @@ Completed:
 - AI Task 046 — Stage 6 Completion Gate Report
 - AI Task 047 — Stage 7 History Daily Rollup Feed
 - AI Task 048 — Stage 7 History Timeline Feed
+- AI Task 049 — Stage 7 Project History Bundle Feed
+- AI Task 050 — Stage 7 History API Contract Smoke Suite
+- AI Task 051 — Stage 7 History Home Feed
+- AI Task 052 — Stage 7 History Workspace Contract Bundle
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -72,15 +76,16 @@ Execution status:
 - Stage 5 scope completed
 - Stage 6 scope completed
 - Stage 7 history layer started
+- Stage 7 scope completed
 - Goal Traceability Layer enabled for AI-task gating
 
 Current:
-- AI Task 049 — Stage 7 project history bundle feed (next)
+- Stage 7 completed — Stage 8 transition pending
 
 Next:
-- Stage 7 history API contract smoke suite
-- Stage 7 history home feed
-- Stage 7 history workspace contract bundle
+- Announce Stage 8 transition
+- Merge current branch into `development`
+- Create `feature/stage8`
 
 Response rule update:
 - task completion responses must include commit text after acceptance

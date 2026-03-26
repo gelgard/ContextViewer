@@ -18,7 +18,7 @@ This means:
 - future recovery and architecture updates must remain compatible with the template-defined rules and commands
 
 ## Current Stage
-Stage 7 — History Layer → in progress
+Stage 7 — History Layer → completed
 
 ## Next Stage
 Stage 8 — Polish
