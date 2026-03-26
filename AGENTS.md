@@ -154,9 +154,13 @@ Fast restore (mandatory before each new AI task) must read only:
 - `contextJSON/json_<latest>.json` (metadata + plan + traceability sections)
 
 Fast restore output must include:
+- one-line summary only
 - current stage / current task / next tasks
 - gate status (Goal Alignment / Requirement mapping)
 - readiness status: `ready` or `blocked`
+
+Fast restore response format:
+`FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
 
 Full restore must traverse all layers:
 - full `project_recovery/*`
@@ -229,7 +233,8 @@ When command is triggered:
 
 ## 11. RESPONSE FORMAT RULES
 
-- state restore → 8-section format
+- Fast restore → one-line format only
+- Full restore → 8-section format
 - architecture update → no explanation, only result
 - AI task → structured task output
 - archive → ready for replacement

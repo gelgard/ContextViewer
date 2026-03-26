@@ -39,6 +39,8 @@ RESPONSE FORMAT RULES
 - Context restore gate:
   - before every new AI task, execute Fast restore
   - if Full restore trigger occurred, Fast restore alone is invalid
+  - Fast restore response must be one-line only:
+    `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
 - Command mapping for restore:
   - `обнови контекст` => Fast restore (default)
   - `обнови полный контекст` => Full restore (forced)

@@ -49,6 +49,8 @@ Rules:
 - preserve and synchronize transient-artifact exclusion rule for changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
 - enforce Context Restore Policy:
   - Fast restore before each new AI task
+  - Fast restore response must be one-line only:
+    `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
   - Full restore after architecture update command execution
   - Full restore after merge/stage transition
   - Full restore when desync is suspected

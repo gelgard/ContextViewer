@@ -29,9 +29,13 @@ Read only:
 - `contextJSON/json_<latest>.json` (metadata + plan + traceability sections)
 
 Output:
+- one-line summary only
 - current stage/current task/next tasks
 - gate status (Goal Alignment / Requirement mapping)
 - readiness: `ready` or `blocked`
+
+Required response format:
+`FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
 
 ### Full restore
 Mandatory when triggered.
