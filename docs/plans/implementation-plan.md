@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-UI bootstrap, preview generation, preview launch flow, and local preview delivery
+UI bootstrap, preview generation, preview launch flow, local preview delivery, readiness reporting, and demo handoff
 
 ## Stage Plan
 
@@ -76,6 +76,9 @@ UI bootstrap, preview generation, preview launch flow, and local preview deliver
 - preview HTML
 - preview launcher
 - local preview server
+- preview delivery smoke suite
+- preview readiness report
+- demo handoff bundle
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

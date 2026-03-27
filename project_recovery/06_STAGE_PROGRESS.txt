@@ -114,4 +114,7 @@ Current execution state:
 - AI Task 055 completed: UI bootstrap preview HTML
 - AI Task 056 completed: UI preview launcher
 - AI Task 057 completed: UI preview local server
-- Stage 8 UI preview delivery chain is active
+- AI Task 058 completed: UI preview delivery smoke suite
+- AI Task 059 completed: UI preview readiness report
+- AI Task 060 completed: UI demo handoff bundle
+- Stage 8 UI demo handoff chain is active

@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-UI Preview Delivery
+UI Demo Handoff
 
 STATUS:
 - Architecture synced with latest rules
@@ -76,12 +76,15 @@ STATUS:
 - AI Task 055 completed: Stage 8 UI bootstrap preview HTML
 - AI Task 056 completed: Stage 8 UI preview launcher
 - AI Task 057 completed: Stage 8 UI preview local server
-- Stage 8 UI bootstrap / preview chain is active
+- AI Task 058 completed: Stage 8 UI preview delivery smoke suite
+- AI Task 059 completed: Stage 8 UI preview readiness report
+- AI Task 060 completed: Stage 8 UI demo handoff bundle
+- Stage 8 UI bootstrap / preview / handoff chain is active
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 8 active — synchronize recovery/plan/runtime and define the next Stage 8 AI task
+Stage 8 active — define the next Stage 8 AI task after handoff-chain synchronization
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

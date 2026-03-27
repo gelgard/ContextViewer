@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-UI Preview Delivery
+UI Demo Handoff
 
 ## Progress
 
@@ -70,6 +70,9 @@ Completed:
 - AI Task 055 — Stage 8 UI Bootstrap Preview HTML
 - AI Task 056 — Stage 8 UI Preview Launcher
 - AI Task 057 — Stage 8 UI Preview Local Server
+- AI Task 058 — Stage 8 UI Preview Delivery Smoke Suite
+- AI Task 059 — Stage 8 UI Preview Readiness Report
+- AI Task 060 — Stage 8 UI Demo Handoff Bundle
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -83,15 +86,15 @@ Execution status:
 - Stage 7 history layer started
 - Stage 7 scope completed
 - Stage 8 polish started
-- Stage 8 UI bootstrap / preview delivery chain completed through AI Task 057
+- Stage 8 UI bootstrap / preview / handoff chain completed through AI Task 060
 - Goal Traceability Layer enabled for AI-task gating
 
 Current:
-- Stage 8 active — UI preview delivery is available through local HTML and local HTTP preview flow
+- Stage 8 active — UI preview delivery and demo handoff bundle are available through local HTML, local HTTP preview flow, readiness reporting, and handoff metadata
 
 Next:
 - Define the next Stage 8 AI task
-- Continue UI polish on top of the preview/bootstrap flow
+- Continue UI polish on top of the preview/bootstrap/handoff flow
 
 Response rule update:
 - task completion responses must include commit text after acceptance

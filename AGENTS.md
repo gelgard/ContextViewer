@@ -93,7 +93,7 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: UI Preview Delivery
+- Substage: UI Demo Handoff
 
 Next required action:
 → define the next Stage 8 AI task
