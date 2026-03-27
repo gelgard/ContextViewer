@@ -189,6 +189,9 @@ Development must follow:
 - test instructions must be concise, informative, and step-by-step
 - test instructions must avoid general phrases and visual actions and must specify what to return for validation
 - every test step must specify the exact execution method
+- avoid duplication between the local orchestration layer and the Cursor execution layer
+- Cursor prompt content must be limited to code/development implementation instructions for the current task
+- architecture planning, architecture synchronization, validation workflow, changed-file review, next-step planning, and user-facing orchestration must stay in the local agent layer and must not be duplicated inside the Cursor prompt
 - when a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence required for validation
 - when a task generates prompts for an external Figma/design workflow, tests must define the exact prompt blocks and the exact design artifacts that must be returned for validation
 - when a task validates returned Figma/design results, tests must define the exact visual artifacts to submit and the exact structural checks that must pass
@@ -201,11 +204,14 @@ Development must follow:
   3) `Manual Test (exact commands)`
   4) `What to send back for validation`
 - block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
+- block `Cursor prompt (EN)` must not duplicate the content or responsibilities of blocks `Manual Test (exact commands)` and `What to send back for validation`
+- forbidden inside `Cursor prompt (EN)`: manual-test instructions, validation-return instructions, architecture-update instructions, changed-files review instructions, or next-step orchestration
 - if AI task file is missing, stop normal output and return: `BLOCKED: AI task file missing, creating it now.`
 - if block `Manual Test (exact commands)` is missing, stop normal output and return: `BLOCKED: response format violation, regenerating with full test section.`
 - on any next-task format violation, immediately regenerate compliant response before any other output
 - before AI task response, run self-check: file existence, numbering continuity, stage/substage sync, executable tests
 - after user submits test outputs, generate `List of changed files` automatically from `git status --short`
+- during validation, `git status --short` must be executed by the assistant locally even if the user did not provide its output
 - validate changed-file scope against the current AI task and explicitly flag unrelated changes
 - ignore transient runtime artifacts in changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
 

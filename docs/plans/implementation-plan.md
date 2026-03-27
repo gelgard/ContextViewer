@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Design-sync track** **062–079** complete (IA → visual system → screens → import/sync → **079** plan refinement). **Runtime truth** remains latest **contextJSON** + JSON/API **contracts** — production UI must not silently change field semantics. **Next:** **AI Task 080** (first production UI slice).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Design-sync track** **062–079** complete (IA → visual system → screens → import/sync → **079** plan refinement). **Runtime truth** remains latest **contextJSON** + JSON/API **contracts** — production UI must not silently change field semantics. **AI Task 080** is complete (shared shell + tokens on bootstrap preview). **AI Task 081** is complete (Overview fidelity slice). **Next:** **AI Task 082** (Visualization workspace fidelity).
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 
@@ -32,7 +32,7 @@ Stage 8 — Polish → active
 | **082** | **Visualization workspace** (tree + graph + inspector in one surface) | **080** | Viz workspace panels | `bash code/visualization/verify_stage6_visualization_workspace_contracts.sh --project-id <id>`; manual: tree/graph/inspector layout vs `docs/design/artifacts/task076/visible_screen_list.md` + viz export/`task064` stitch |
 | **083** | **History workspace** + **061-class** cross-surface handoff | **080**; full product path needs **081** and **082** | History panels + nav between workspaces | `bash code/history/get_history_workspace_contract_bundle.sh --project-id <id> > /tmp/history_ws_slice.json`; `bash code/ui/verify_stage8_ui_demo_handoff_bundle.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: history vs `task076` history evidence + confirm overview/viz/history markers in served HTML still match **061** expectations |
 
-**Dependencies (summary):** **080** gates all visual alignment; **081** and **082** can follow **080** in parallel once shell is stable; **083** integrates all routes and confirms handoff readiness.
+**Dependencies (summary):** **080** gates all visual alignment and is complete; **081** is complete for Overview fidelity; **082** is now the next deep-workspace slice; **083** integrates all routes and confirms handoff readiness.
 
 **Design-sync vs production (explicit):**
 - **Completed (062–079):** prompt packs, external Figma generation, **066/075/077** validation, **078** import, **079** roadmap — **documentation and artifact authority only**.
@@ -121,7 +121,7 @@ Stage 8 — Polish → active
 - screen result validation
 - Stage 8C — Figma-synced implementation refinement
   - **completed (design authority locked):** Figma import and architecture sync (**078**); post-Figma implementation plan refinement (**079**)
-  - **active/upcoming:** production UI slices **080–083** (see §Post-Figma roadmap above) — apply approved design to preview/product surfaces while preserving **061** checkpoint and JSON contracts
+  - **active/upcoming:** production UI slices **082–083** (see §Post-Figma roadmap above) — continue applying approved design to preview/product surfaces while preserving **061** checkpoint and JSON contracts
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

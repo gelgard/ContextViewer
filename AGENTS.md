@@ -97,7 +97,7 @@ Forbidden:
 - Substage: Post-Figma production UI implementation (tasks **080+**; design-sync **062–079** complete)
 
 Next required action:
-→ run AI Task 080 (first production UI slice — see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
+→ run AI Task 082 (visualization workspace fidelity slice — see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
 
 
 ---
@@ -134,6 +134,9 @@ Supported commands:
 - no assumptions
 - always validate state before action
 - before EVERY new AI task, run Fast restore
+- avoid duplication between the local orchestration layer and the Cursor execution layer
+- Cursor is used only for code-writing, implementation edits, code-adjacent documentation updates, and development execution directly needed for the current AI task
+- architecture planning, architecture synchronization, validation logic, changed-file scope review, next-step planning, and user-facing orchestration remain in the local agent layer and must not be duplicated inside the Cursor prompt
 - every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
 - if task-to-goal mapping is missing, task is blocked until mapping is added
 - validated preview / handoff state is the current Stage 8 checkpoint and must remain preserved while the Figma design branch is developed
@@ -252,6 +255,9 @@ When command is triggered:
 - tests must be concise, informative, and written as explicit step-by-step instructions
 - test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
+- hard anti-duplication rule: the `Cursor prompt (EN)` block must contain only implementation/development instructions for Cursor and must not repeat orchestration that is already handled locally
+- forbidden inside `Cursor prompt (EN)`: `Manual Test` sections, `What to send back for validation`, architecture-update instructions, next-step planning, changed-files validation instructions, or local-agent validation responsibilities
+- `Manual Test (exact commands)` and `What to send back for validation` remain mandatory response blocks in the local agent response, but must stay outside the `Cursor prompt (EN)` block
 - when an AI task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
 - when an AI task generates prompts for an external Figma/design system, tests must specify the exact prompt blocks to use externally and the exact returned evidence required for validation (for example: Figma link, exported frames, page list, component inventory, screenshots)
 - when an AI task validates returned Figma/design results, tests must specify the exact artifacts the user must send back (link/export/screenshots/page map/component list) and the exact visual/structural checks to confirm
@@ -267,6 +273,7 @@ When command is triggered:
   - `BLOCKED: response format violation, regenerating with full test section.`
 - on response-format violation for next-task output, assistant must immediately regenerate full response in required format before any other action
 - after user submits test results, assistant must generate "List of changed files" automatically from `git status --short` and validate scope for current AI task
+- assistant must run `git status --short` itself during validation even if the user did not include it
 - changed-files validation assumes one commit boundary per task; if unrelated changes are detected, assistant must flag them explicitly
 - changed-files validation must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
 - before sending any AI task response, run self-check:

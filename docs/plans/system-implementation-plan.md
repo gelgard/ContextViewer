@@ -122,16 +122,18 @@ Execution status:
 - AI Task 078 completed: Figma import and architecture sync — **authoritative UI design reference** recorded at `docs/design/approved_figma_artifact.md`; artifact package `docs/design/artifacts/task076/` registered as the current whole-application base UI reference; `docs/architecture/system-definition.md` §20 and recovery/plans/contextJSON synchronized
 - runtime truth remains contextJSON + JSON contracts; design truth is the approved artifact record until superseded
 - AI Task 079 completed: post-Figma **implementation plan refinement** — production UI work decomposed into numbered slices **080–083** (see `docs/plans/implementation-plan.md` §Post-Figma roadmap); **design-sync** tasks **062–079** closed as a track; **upcoming** work is **production UI** tied to feeds, not Figma prompt authoring
+- AI Task 080 completed: approved shell + design-token layer applied to bootstrap/preview surfaces; preview HTML now exposes `render_profile=080_shell_tokens` and delivery smoke asserts `data-cv-preview-shell="080"` while preserving payload + section markers
+- AI Task 081 completed: Overview fidelity slice applied to bootstrap preview; preview HTML now exposes `render_profile=081_overview_fidelity` and renders structured feed-backed status / roadmap / progress / recent snapshot blocks while keeping shell marker and payload guarantees intact
 
 Current:
 - Stage 8 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
 - **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
-- **Next execution anchor:** **AI Task 080** (first production UI slice — shared shell / design tokens applied to product preview surfaces)
+- **Next execution anchor:** **AI Task 082** (Visualization workspace fidelity slice — tree + graph + inspector rendered closer to approved layout intent)
 
 Next (production UI, architecture-first):
-- **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task
-- **081** — **Overview** UI slice vs `get_ui_bootstrap_bundle` / `verify_stage5_dashboard_contracts`; visual manual test vs `task064`/`task076` overview evidence
-- **082** — **Visualization workspace** slice (tree + graph + inspector) vs visualization bundle feeds; visual manual test vs visualization export
+- **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**
+- **081** — **Overview** UI slice vs `get_ui_bootstrap_bundle` / `verify_stage5_dashboard_contracts`; visual manual test vs `task064`/`task076` overview evidence — **completed**
+- **082** — **Visualization workspace** slice (tree + graph + inspector) vs visualization bundle feeds; visual manual test vs visualization export — **next**
 - **083** — **History workspace** slice + cross-workspace smoke confirming **061**-class readiness with approved styling
 
 ## Post-Figma validation discipline (all slices 080+)

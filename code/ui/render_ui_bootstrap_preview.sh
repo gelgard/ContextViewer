@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # AI Task 055: Stage 8 standalone HTML preview from UI bootstrap bundle (read-only + output file).
 # AI Task 080: production-aligned shared shell, nav framing, and design tokens (preview only; data unchanged).
+# AI Task 081: overview surface fidelity — structured status, progress, roadmap, timeline from dashboard feed only.
+# AI Task 082: visualization workspace fidelity — unified tree + graph + inspector from visualization_workspace bundle only.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,9 +19,9 @@ Calls get_ui_bootstrap_bundle.sh, writes one self-contained HTML file to --outpu
 one JSON summary line to stdout (project_id, generated_at, output_file, sections_rendered,
 render_profile, source_consistency_checks).
 
-The HTML includes data-section markers (overview, visualization, history), human-readable
-summaries, embedded bootstrap JSON in <script type="application/json" id="ui-bootstrap-payload">,
-and inline CSS only (no external assets).
+The HTML includes data-section markers (overview, visualization, history), feed-backed Overview
+layout (task 081), feed-backed Visualization workspace (task 082), history readout, embedded bootstrap JSON in
+<script type="application/json" id="ui-bootstrap-payload">, and inline CSS only (no external assets).
 
 Environment:
   Same as get_ui_bootstrap_bundle.sh (PostgreSQL via child scripts).
@@ -131,20 +133,508 @@ proj_name="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_ove
 proj_snapshots="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.total_valid_snapshots // 0')"
 proj_latest="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.latest_valid_snapshot_timestamp // "null"')"
 
-overview_block="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.overview.dashboard_feed
-  | "Dashboard feed generated: \(.generated_at // "—")\nProject id: \(.project_id // "—")"
-')"
+tmp_boot_json="$(mktemp)"
+printf '%s' "$boot_json" >"$tmp_boot_json"
+err_py="$(mktemp)"
+set +e
+overview_inner="$(
+  BOOT_JSON_FILE="$tmp_boot_json" python3 <<'PY' 2>"$err_py"
+import html
+import json
+import os
 
-viz_snap="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.visualization_workspace.generated_at // "—"
-')"
-viz_tree="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.visualization_workspace.contracts.project_visualization.visualization.contracts.architecture_tree.snapshot_id // "null"
-')"
-viz_graph="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.visualization_workspace.contracts.project_visualization.visualization.contracts.architecture_graph.snapshot_id // "null"
-')"
+def esc(s):
+    if s is None:
+        return "—"
+    return html.escape(str(s), quote=False)
+
+
+def esc_attr(s):
+    return html.escape(str(s) if s is not None else "", quote=True)
+
+
+def fmt_item(x):
+    if x is None:
+        return ""
+    if isinstance(x, (dict, list)):
+        return esc(json.dumps(x, ensure_ascii=False, separators=(",", ": ")))
+    return esc(x)
+
+
+with open(os.environ["BOOT_JSON_FILE"], encoding="utf-8") as _bf:
+    boot = json.load(_bf)
+sec = boot.get("ui_sections") or {}
+overview_wrap = sec.get("overview") or {}
+po = overview_wrap.get("project_overview") or {}
+df = overview_wrap.get("dashboard_feed") or {}
+ov = df.get("overview") or {}
+if not isinstance(ov, dict):
+    ov = {}
+prog = df.get("progress") or {}
+if not isinstance(prog, dict):
+    prog = {}
+impl = prog.get("implemented")
+ip = prog.get("in_progress")
+nx = prog.get("next")
+impl = impl if isinstance(impl, list) else []
+ip = ip if isinstance(ip, list) else []
+nx = nx if isinstance(nx, list) else []
+roadmap = df.get("roadmap")
+roadmap = roadmap if isinstance(roadmap, list) else []
+timeline = df.get("timeline")
+timeline = timeline if isinstance(timeline, list) else []
+
+feed_gen = df.get("generated_at")
+parts = []
+parts.append(
+    '<div class="overview-surface" role="region" aria-label="Overview from dashboard feed">'
+)
+parts.append('<header class="overview-header">')
+parts.append(
+    '<p class="overview-kicker">Entry surface · dashboard feed generated '
+    '<time datetime="'
+    + esc_attr(feed_gen)
+    + '">'
+    + esc(feed_gen)
+    + "</time></p>"
+)
+parts.append("</header>")
+
+parts.append(
+    '<section class="overview-block overview-current-status" aria-labelledby="ov-status-h">'
+)
+parts.append('<h3 id="ov-status-h" class="overview-block-title">Current status</h3>')
+parts.append('<div class="overview-status-grid">')
+parts.append(
+    '<div class="status-card"><span class="status-label">Latest snapshot time</span>'
+    '<span class="status-value mono">'
+    + esc(ov.get("latest_snapshot_timestamp"))
+    + "</span></div>"
+)
+parts.append(
+    '<div class="status-card"><span class="status-label">Valid snapshots</span>'
+    '<span class="status-value mono">'
+    + esc(str(ov.get("total_valid_snapshots", 0)))
+    + "</span></div>"
+)
+parts.append(
+    '<div class="status-card"><span class="status-label">Top-level diff keys (latest)</span>'
+    '<span class="status-value mono">'
+    + esc(str(ov.get("diff_changed_keys_count", 0)))
+    + "</span></div>"
+)
+parts.append(
+    '<div class="status-card status-card-emphasis"><span class="status-label">'
+    "Changes since previous</span>"
+    '<span class="status-value mono">'
+    + esc(str(ov.get("changes_count", 0)))
+    + "</span></div>"
+)
+parts.append("</div>")
+parts.append('<div class="project-summary-row">')
+gh = po.get("github_url")
+if gh:
+    parts.append(
+        '<a class="project-link mono" href="'
+        + esc_attr(gh)
+        + '" target="_blank" rel="noopener noreferrer">'
+        + esc(gh)
+        + "</a>"
+    )
+else:
+    parts.append('<span class="project-link mono muted">No GitHub URL in feed</span>')
+parts.append(
+    '<span class="import-pill mono">import '
+    + esc(po.get("latest_import_status"))
+    + "</span>"
+)
+parts.append("</div>")
+parts.append("</section>")
+
+parts.append('<div class="overview-row overview-split">')
+parts.append(
+    '<section class="overview-block overview-progress" aria-labelledby="ov-prog-h">'
+)
+parts.append('<h3 id="ov-prog-h" class="overview-block-title">Plan progress</h3>')
+parts.append('<div class="progress-columns">')
+for label, key, items in (
+    ("Implemented", "impl", impl),
+    ("In progress", "ip", ip),
+    ("Next", "next", nx),
+):
+    parts.append('<div class="progress-col" data-progress="' + key + '">')
+    parts.append("<h4>" + esc(label) + "</h4>")
+    parts.append('<ul class="progress-list">')
+    if not items:
+        parts.append('<li class="progress-empty muted">—</li>')
+    else:
+        cap = 24
+        for it in items[:cap]:
+            parts.append("<li>" + fmt_item(it) + "</li>")
+        if len(items) > cap:
+            parts.append(
+                '<li class="muted mono">… +'
+                + esc(str(len(items) - cap))
+                + " more</li>"
+            )
+    parts.append("</ul></div>")
+parts.append("</div></section>")
+
+parts.append(
+    '<section class="overview-block overview-roadmap" aria-labelledby="ov-road-h">'
+)
+parts.append('<h3 id="ov-road-h" class="overview-block-title">Roadmap</h3>')
+if not roadmap:
+    parts.append('<p class="muted roadmap-empty">No roadmap rows in feed.</p>')
+else:
+    parts.append('<ol class="roadmap-list" start="1">')
+    cap = 20
+    for r in roadmap[:cap]:
+        parts.append("<li>" + fmt_item(r) + "</li>")
+    if len(roadmap) > cap:
+        parts.append(
+            '<li class="muted mono">… +'
+            + esc(str(len(roadmap) - cap))
+            + " more</li>"
+        )
+    parts.append("</ol>")
+parts.append("</section>")
+parts.append("</div>")
+
+parts.append(
+    '<section class="overview-block overview-timeline" aria-labelledby="ov-tl-h">'
+)
+parts.append('<h3 id="ov-tl-h" class="overview-block-title">Recent snapshot timeline</h3>')
+if not timeline:
+    parts.append('<p class="muted">No timeline rows in feed.</p>')
+else:
+    parts.append('<div class="timeline-wrap"><table class="timeline-table">')
+    parts.append(
+        "<thead><tr>"
+        "<th scope=\"col\">Snapshot</th>"
+        "<th scope=\"col\">File</th>"
+        "<th scope=\"col\">Snapshot time</th>"
+        "<th scope=\"col\">Import (UTC)</th>"
+        "</tr></thead><tbody>"
+    )
+    cap = 8
+    for row in timeline[:cap]:
+        if not isinstance(row, dict):
+            parts.append(
+                '<tr><td colspan="4">' + fmt_item(row) + "</td></tr>"
+            )
+            continue
+        parts.append(
+            "<tr><td class=\"mono\">"
+            + esc(row.get("snapshot_id"))
+            + '</td><td class="mono">'
+            + esc(row.get("file_name"))
+            + '</td><td class="mono">'
+            + esc(row.get("snapshot_timestamp"))
+            + '</td><td class="mono">'
+            + esc(row.get("import_time"))
+            + "</td></tr>"
+        )
+    parts.append("</tbody></table></div>")
+    if len(timeline) > cap:
+        parts.append(
+            '<p class="timeline-more muted mono">Showing '
+            + esc(str(cap))
+            + " of "
+            + esc(str(len(timeline)))
+            + " rows</p>"
+        )
+parts.append("</section>")
+
+parts.append(
+    '<p class="overview-deep-hint muted">Architecture tree, graph, and inspector: '
+    "use <strong>Visualization</strong> in the sidebar. Snapshot history depth: "
+    "use <strong>History</strong>.</p>"
+)
+parts.append("</div>")
+print("".join(parts), end="")
+PY
+)"
+py_rc=$?
+set -e
+if [[ "$py_rc" -ne 0 ]]; then
+  [[ -s "$err_py" ]] && cat "$err_py" >&2
+  rm -f "$err_py" "$tmp_boot_json"
+  echo "error: overview HTML build failed (python3)" >&2
+  exit 3
+fi
+rm -f "$err_py" "$tmp_boot_json"
+
+tmp_boot_viz="$(mktemp)"
+printf '%s' "$boot_json" >"$tmp_boot_viz"
+err_viz="$(mktemp)"
+set +e
+viz_inner="$(
+  BOOT_JSON_FILE="$tmp_boot_viz" python3 <<'PYVIZ' 2>"$err_viz"
+import html
+import json
+import os
+
+def esc(s):
+    if s is None:
+        return "—"
+    return html.escape(str(s), quote=False)
+
+
+def esc_attr(s):
+    return html.escape(str(s) if s is not None else "", quote=True)
+
+
+with open(os.environ["BOOT_JSON_FILE"], encoding="utf-8") as _bf:
+    boot = json.load(_bf)
+
+viz_ws = (boot.get("ui_sections") or {}).get("visualization_workspace") or {}
+ws_gen = viz_ws.get("generated_at")
+cc_ws = viz_ws.get("consistency_checks") or {}
+pv = (viz_ws.get("contracts") or {}).get("project_visualization") or {}
+api = pv.get("visualization") or {}
+ac = api.get("contracts") or {}
+tree_feed = ac.get("architecture_tree") or {}
+if not isinstance(tree_feed, dict):
+    tree_feed = {}
+graph_feed = ac.get("architecture_graph") or {}
+if not isinstance(graph_feed, dict):
+    graph_feed = {}
+tree_rows = tree_feed.get("tree")
+tree_rows = tree_rows if isinstance(tree_rows, list) else []
+gobj = graph_feed.get("graph") or {}
+if not isinstance(gobj, dict):
+    gobj = {}
+nodes = gobj.get("nodes")
+nodes = nodes if isinstance(nodes, list) else []
+edges = gobj.get("edges")
+edges = edges if isinstance(edges, list) else []
+
+snap_tree = tree_feed.get("snapshot_id")
+snap_graph = graph_feed.get("snapshot_id")
+
+parts = []
+parts.append(
+    '<div class="viz-workspace" role="region" aria-label="Visualization workspace from bootstrap feed">'
+)
+parts.append('<header class="viz-workspace-header">')
+parts.append(
+    '<p class="viz-kicker">Deep workspace · visualization bundle <time datetime="'
+    + esc_attr(ws_gen)
+    + '">'
+    + esc(ws_gen)
+    + "</time></p>"
+)
+parts.append('<div class="viz-meta-strip">')
+parts.append(
+    '<span class="viz-meta-chip mono">tree snapshot <strong>'
+    + esc(snap_tree)
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="viz-meta-chip mono">graph snapshot <strong>'
+    + esc(snap_graph)
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="viz-meta-chip mono">tree rows <strong>'
+    + esc(str(len(tree_rows)))
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="viz-meta-chip mono">nodes <strong>'
+    + esc(str(len(nodes)))
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="viz-meta-chip mono">edges <strong>'
+    + esc(str(len(edges)))
+    + "</strong></span>"
+)
+parts.append("</div>")
+parts.append('<dl class="viz-consistency-dl mono muted">')
+for _k in ("project_id_match", "snapshot_id_match", "all_smokes_pass"):
+    _v = cc_ws.get(_k)
+    parts.append("<dt>" + esc(_k) + "</dt><dd>" + esc(_v) + "</dd>")
+parts.append("</dl>")
+parts.append("</header>")
+
+parts.append('<div class="viz-unified-grid">')
+
+parts.append(
+    '<section class="viz-panel viz-tree-panel" aria-labelledby="viz-tree-h">'
+)
+parts.append('<h3 id="viz-tree-h" class="viz-panel-title">Architecture tree</h3>')
+parts.append(
+    '<p class="viz-panel-sub muted mono">Paths from feed · snapshot '
+    + esc(snap_tree)
+    + "</p>"
+)
+parts.append('<div class="viz-tree-scroll"><ul class="viz-tree-list">')
+cap_t = 400
+for row in tree_rows[:cap_t]:
+    if not isinstance(row, dict):
+        parts.append("<li class=\"viz-tree-row\">" + esc(str(row)) + "</li>")
+        continue
+    path = row.get("path") or ""
+    typ = row.get("type") or ""
+    label = row.get("label") or ""
+    depth = str(path).count("/") if path else 0
+    try:
+        pad = min(int(depth) * 14, 160)
+    except (TypeError, ValueError):
+        pad = 0
+    icon = "▸" if typ in ("directory", "folder") else "·"
+    parts.append(
+        '<li class="viz-tree-row" data-tree-type="'
+        + esc_attr(typ)
+        + '" style="padding-left:'
+        + str(pad)
+        + 'px"><span class="viz-tree-icon" aria-hidden="true">'
+        + esc(icon)
+        + '</span><span class="viz-tree-label mono">'
+        + esc(label)
+        + '</span><span class="viz-tree-path muted mono">'
+        + esc(path)
+        + "</span></li>"
+    )
+if len(tree_rows) > cap_t:
+    parts.append(
+        '<li class="muted mono">… +'
+        + esc(str(len(tree_rows) - cap_t))
+        + " more</li>"
+    )
+if not tree_rows:
+    parts.append('<li class="muted">No tree rows in feed.</li>')
+parts.append("</ul></div></section>")
+
+parts.append(
+    '<section class="viz-panel viz-graph-panel" aria-labelledby="viz-graph-h">'
+)
+parts.append('<h3 id="viz-graph-h" class="viz-panel-title">Architecture graph</h3>')
+parts.append(
+    '<p class="viz-panel-sub muted mono">Nodes and edges · snapshot '
+    + esc(snap_graph)
+    + "</p>"
+)
+parts.append('<div class="viz-graph-scroll">')
+parts.append('<h4 class="viz-table-h">Nodes</h4>')
+parts.append(
+    '<table class="viz-data-table"><thead><tr>'
+    "<th scope=\"col\">id</th><th scope=\"col\">label</th><th scope=\"col\">type</th>"
+    "</tr></thead><tbody>"
+)
+cap_n = 56
+for n in nodes[:cap_n]:
+    if not isinstance(n, dict):
+        parts.append(
+            '<tr><td colspan="3">'
+            + esc(str(n))
+            + "</td></tr>"
+        )
+        continue
+    parts.append(
+        "<tr><td class=\"mono\">"
+        + esc(n.get("id"))
+        + '</td><td class="mono">'
+        + esc(n.get("label"))
+        + '</td><td class="mono">'
+        + esc(n.get("type"))
+        + "</td></tr>"
+    )
+parts.append("</tbody></table>")
+if len(nodes) > cap_n:
+    parts.append(
+        '<p class="viz-cap-note muted mono">Showing '
+        + esc(str(cap_n))
+        + " of "
+        + esc(str(len(nodes)))
+        + " nodes</p>"
+    )
+if not nodes:
+    parts.append('<p class="muted">No graph nodes in feed.</p>')
+
+parts.append('<h4 class="viz-table-h">Edges</h4>')
+parts.append(
+    '<table class="viz-data-table"><thead><tr>'
+    "<th scope=\"col\">source</th><th scope=\"col\">target</th>"
+    "<th scope=\"col\">relation</th></tr></thead><tbody>"
+)
+cap_e = 72
+for e in edges[:cap_e]:
+    if not isinstance(e, dict):
+        parts.append(
+            '<tr><td colspan="3">'
+            + esc(str(e))
+            + "</td></tr>"
+        )
+        continue
+    parts.append(
+        "<tr><td class=\"mono\">"
+        + esc(e.get("source"))
+        + '</td><td class="mono">'
+        + esc(e.get("target"))
+        + '</td><td class="mono">'
+        + esc(e.get("relation"))
+        + "</td></tr>"
+    )
+parts.append("</tbody></table>")
+if len(edges) > cap_e:
+    parts.append(
+        '<p class="viz-cap-note muted mono">Showing '
+        + esc(str(cap_e))
+        + " of "
+        + esc(str(len(edges)))
+        + " edges</p>"
+    )
+if not edges:
+    parts.append('<p class="muted">No graph edges in feed.</p>')
+parts.append("</div></section>")
+
+parts.append(
+    '<aside class="viz-panel viz-inspector-panel" aria-labelledby="viz-insp-h">'
+)
+parts.append('<h3 id="viz-insp-h" class="viz-panel-title">Inspector</h3>')
+parts.append(
+    '<p class="viz-panel-sub muted">Readout for first tree row (preview)</p>'
+)
+if tree_rows and isinstance(tree_rows[0], dict):
+    r0 = tree_rows[0]
+    parts.append('<dl class="viz-inspector-dl">')
+    for key in ("path", "type", "label"):
+        parts.append(
+            "<dt>"
+            + esc(key)
+            + '</dt><dd class="mono">'
+            + esc(r0.get(key))
+            + "</dd>"
+        )
+    parts.append("</dl>")
+    if len(tree_rows) > 1:
+        parts.append(
+            '<p class="viz-insp-foot muted mono">'
+            + esc(str(len(tree_rows) - 1))
+            + " more rows in tree list.</p>"
+        )
+else:
+    parts.append(
+        '<p class="viz-inspector-empty muted">No tree rows — inspector empty.</p>'
+    )
+parts.append("</aside>")
+
+parts.append("</div></div>")
+print("".join(parts), end="")
+PYVIZ
+)"
+viz_rc=$?
+set -e
+if [[ "$viz_rc" -ne 0 ]]; then
+  [[ -s "$err_viz" ]] && cat "$err_viz" >&2
+  rm -f "$err_viz" "$tmp_boot_viz"
+  echo "error: visualization HTML build failed (python3)" >&2
+  exit 3
+fi
+rm -f "$err_viz" "$tmp_boot_viz"
 
 hist_gen="$(printf '%s' "$boot_json" | jq -r '.ui_sections.history_workspace.generated_at // "—"')"
 hist_days="$(printf '%s' "$boot_json" | jq -r '
@@ -374,6 +864,318 @@ tmp_html="$(mktemp)"
     border-radius: var(--cv-radius-sm);
     border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
   }
+  /* AI Task 081 — overview surface (values from dashboard_feed + project_overview only) */
+  .mono { font-family: var(--cv-font-mono); }
+  .muted { color: var(--cv-on-surface-variant); }
+  .overview-surface {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-6);
+  }
+  .overview-header .overview-kicker {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--cv-on-surface-variant);
+  }
+  .overview-block-title {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.8125rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.01em;
+    color: var(--cv-on-surface);
+  }
+  .overview-block {
+    padding: var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .overview-current-status .overview-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--cv-space-3);
+    margin-bottom: var(--cv-space-4);
+  }
+  .status-card {
+    padding: var(--cv-space-3);
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-1);
+  }
+  .status-card-emphasis {
+    border-left: 3px solid var(--cv-tertiary);
+  }
+  .status-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cv-on-surface-variant);
+  }
+  .status-value { font-size: 0.8125rem; font-weight: 600; color: var(--cv-on-surface); }
+  .project-summary-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--cv-space-3);
+    font-size: 0.75rem;
+  }
+  .project-link { word-break: break-all; max-width: 100%; color: var(--cv-primary); }
+  .import-pill {
+    padding: var(--cv-space-1) var(--cv-space-3);
+    background: color-mix(in srgb, var(--cv-primary) 12%, var(--cv-surface-lowest));
+    border-radius: var(--cv-radius-sm);
+    font-weight: 600;
+  }
+  .overview-split {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--cv-space-4);
+  }
+  @media (max-width: 960px) {
+    .overview-split { grid-template-columns: 1fr; }
+  }
+  .progress-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--cv-space-3);
+  }
+  @media (max-width: 960px) {
+    .progress-columns { grid-template-columns: 1fr; }
+  }
+  .progress-col {
+    padding: var(--cv-space-3);
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 16%, transparent);
+  }
+  .progress-col h4 {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cv-on-surface-variant);
+  }
+  .progress-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--cv-on-surface);
+  }
+  .progress-list li { margin: var(--cv-space-2) 0; }
+  .roadmap-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--cv-on-surface);
+  }
+  .roadmap-list li { margin: var(--cv-space-2) 0; }
+  .timeline-wrap { overflow-x: auto; }
+  .timeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+  .timeline-table th,
+  .timeline-table td {
+    padding: var(--cv-space-2) var(--cv-space-3);
+    text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, var(--cv-outline-variant) 25%, transparent);
+  }
+  .timeline-table th {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cv-on-surface-variant);
+    background: var(--cv-surface-lowest);
+  }
+  .overview-deep-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    padding: var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: color-mix(in srgb, var(--cv-primary) 6%, var(--cv-surface-low));
+  }
+  /* AI Task 082 — unified visualization workspace (tree | graph | inspector) */
+  .workspace-panel-viz { padding-bottom: var(--cv-space-8); }
+  .viz-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+  .viz-workspace-header {
+    padding: var(--cv-space-3) var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .viz-kicker {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--cv-on-surface-variant);
+  }
+  .viz-meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cv-space-2);
+    margin-bottom: var(--cv-space-3);
+  }
+  .viz-meta-chip {
+    font-size: 0.6875rem;
+    padding: var(--cv-space-1) var(--cv-space-3);
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+  }
+  .viz-meta-chip strong { font-weight: 700; color: var(--cv-on-surface); }
+  .viz-consistency-dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--cv-space-1) var(--cv-space-4);
+    margin: 0;
+    font-size: 0.6875rem;
+  }
+  .viz-consistency-dl dt { font-weight: 700; }
+  .viz-consistency-dl dd { margin: 0; }
+  .viz-unified-grid {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) minmax(14rem, 1.35fr) minmax(11rem, 22rem);
+    gap: var(--cv-space-4);
+    align-items: stretch;
+    min-height: 18rem;
+  }
+  @media (max-width: 1100px) {
+    .viz-unified-grid {
+      grid-template-columns: 1fr;
+    }
+    .viz-inspector-panel { order: 3; }
+  }
+  .viz-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    padding: var(--cv-space-4);
+  }
+  .viz-inspector-panel {
+    background: color-mix(in srgb, var(--cv-surface-high) 35%, var(--cv-surface-low));
+    border-left: 3px solid var(--cv-primary);
+  }
+  .viz-panel-title {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.01em;
+    color: var(--cv-on-surface);
+  }
+  .viz-panel-sub {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.6875rem;
+  }
+  .viz-tree-scroll, .viz-graph-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    max-height: 28rem;
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 15%, transparent);
+  }
+  .viz-tree-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--cv-space-2) 0;
+    font-size: 0.8125rem;
+  }
+  .viz-tree-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--cv-space-2);
+    padding: var(--cv-space-1) var(--cv-space-3);
+    border-bottom: 1px solid color-mix(in srgb, var(--cv-outline-variant) 12%, transparent);
+  }
+  .viz-tree-row:hover {
+    background: color-mix(in srgb, var(--cv-primary) 5%, transparent);
+  }
+  .viz-tree-icon {
+    flex-shrink: 0;
+    width: 1em;
+    color: var(--cv-on-surface-variant);
+    font-size: 0.65rem;
+  }
+  .viz-tree-label { font-weight: var(--cv-title-weight); }
+  .viz-tree-path {
+    flex: 1 1 100%;
+    margin-left: 1.35rem;
+    font-size: 0.6875rem;
+    word-break: break-all;
+  }
+  .viz-table-h {
+    margin: var(--cv-space-4) 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cv-on-surface-variant);
+  }
+  .viz-table-h:first-child { margin-top: 0; }
+  .viz-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+  .viz-data-table th,
+  .viz-data-table td {
+    padding: var(--cv-space-2) var(--cv-space-2);
+    text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
+  }
+  .viz-data-table th {
+    position: sticky;
+    top: 0;
+    background: var(--cv-surface-lowest);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--cv-on-surface-variant);
+  }
+  .viz-cap-note { margin: var(--cv-space-2) 0 0; font-size: 0.6875rem; }
+  .viz-inspector-dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: var(--cv-space-2);
+    font-size: 0.8125rem;
+  }
+  .viz-inspector-dl dt {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cv-on-surface-variant);
+  }
+  .viz-inspector-dl dd { margin: 0; word-break: break-word; }
+  .viz-insp-foot { margin: var(--cv-space-3) 0 0; font-size: 0.6875rem; }
+  .viz-inspector-empty { margin: 0; font-size: 0.8125rem; }
   .consistency-panel {
     margin-top: var(--cv-space-4);
     padding: var(--cv-space-4) var(--cv-space-6);
@@ -446,15 +1248,13 @@ tmp_html="$(mktemp)"
     </aside>
     <main class="app-main" id="cv-main-workspace">
       <div class="workspace-panels">
-        <section id="cv-section-overview" data-section="overview" class="workspace-panel">
+        <section id="cv-section-overview" data-section="overview" class="workspace-panel workspace-panel-overview">
           <h2>Overview</h2>
-          <pre class="summary">$(printf '%s' "$overview_block" | html_escape)</pre>
+$(printf '%s' "$overview_inner")
         </section>
-        <section id="cv-section-visualization" data-section="visualization" class="workspace-panel">
+        <section id="cv-section-visualization" data-section="visualization" class="workspace-panel workspace-panel-viz">
           <h2>Visualization workspace</h2>
-          <pre class="summary">Workspace bundle: $(printf '%s' "$viz_snap" | html_escape)
-Architecture tree snapshot id: $(printf '%s' "$viz_tree" | html_escape)
-Architecture graph snapshot id: $(printf '%s' "$viz_graph" | html_escape)</pre>
+$(printf '%s' "$viz_inner")
         </section>
         <section id="cv-section-history" data-section="history" class="workspace-panel">
           <h2>History workspace</h2>
@@ -507,6 +1307,6 @@ jq -n \
     generated_at: $ga,
     output_file: $of,
     sections_rendered: ["overview", "visualization", "history"],
-    render_profile: "080_shell_tokens",
+    render_profile: "082_visualization_fidelity",
     source_consistency_checks: $cc
   }'

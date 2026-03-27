@@ -29,6 +29,9 @@ ARCHITECTURE RULES
 13. Test instructions must be concise, informative, and written as explicit step-by-step actions.
 14. Test instructions must avoid general phrases and visual actions and must explicitly list what the user should send back for validation.
 15. Every test step must specify the exact execution method, including command, SQL, input, or callable entry point; abstract verbs without execution details are invalid.
+15a. Hard anti-duplication rule: the local agent layer owns architecture planning, architecture synchronization, validation logic, changed-file review, next-step planning, and user-facing orchestration.
+15b. Cursor is used only for code-writing, implementation edits, development execution, and code-adjacent documentation changes required by the current AI task.
+15c. The `Cursor prompt (EN)` block must not duplicate local-agent responsibilities or repeat content already expressed in `Manual Test (exact commands)` or `What to send back for validation`.
 16. If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, the test section must also include a dedicated visual manual-test subsection with explicit viewing steps and exact visual evidence required for validation.
 17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
 18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
@@ -58,6 +61,13 @@ ARCHITECTURE RULES
    - `Manual Test (exact commands)`
    - `What to send back for validation`
 36. Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option.
+36a. `Cursor prompt (EN)` must contain implementation instructions only and must not include:
+   - `Manual Test`
+   - `What to send back for validation`
+   - architecture update steps
+   - next-step planning
+   - changed-files validation instructions
+   - local-agent validation/orchestration instructions
 37. If block `Manual Test (exact commands)` is missing, assistant must emit only:
    - `BLOCKED: response format violation, regenerating with full test section.`
 38. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
@@ -93,3 +103,4 @@ ARCHITECTURE RULES
 49. Blocked policy response format:
    - `BLOCKED: Context restore policy violation.`
    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
+50. During validation, the assistant must always run `git status --short` itself and use it to generate changed-files scope review, even if the user did not provide that command output.

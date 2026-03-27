@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-27T23:50:00Z",
+    "generated_filename": "json_2026-03-27_23-50-00.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Post-Figma production UI implementation",
+    "current_task": "AI Task 081 — Stage 8 Production UI: Overview surface fidelity",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Post-Figma production UI implementation",
+    "status": "stage8_active_post_figma_production_ui_next_081"
+  },
+  "approved_design_reference": {
+    "import_record_path": "docs/design/approved_figma_artifact.md",
+    "primary_artifact_package": "docs/design/artifacts/task076/",
+    "native_figma_workspace_path": "docs/design/artifacts/task076/raw/ContextViewer.fig",
+    "import_sync_task": "078",
+    "import_recorded_date": "2026-03-27",
+    "evidence_rule": "uploaded_workspace_artifacts_primary_external_urls_optional",
+    "runtime_truth_note": "Latest valid contextJSON and JSON-backed contracts remain authoritative for computed UI state; Figma/design docs are design truth only."
+  },
+  "system": {
+    "summary": "ContextViewer preserves the validated Stage 8 preview/demo handoff checkpoint, certified IA and visual-system baselines, and an approved whole-application UI package under task076. AI Task 080 completed the first production UI slice by applying approved shell and design tokens to the bootstrap preview while preserving payload markers and contract-backed state. The next execution anchor is AI Task 081."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Tasks 053-061 Stage 8 UI bootstrap preview handoff chain completed",
+      "AI Task 062 Figma design branch charter and prompt workflow completed",
+      "AI Task 063-066 product brief and IA prompt/validation completed",
+      "AI Task 073 IA fallback evidence package completed",
+      "AI Task 074-075 visual system prompt and validation completed",
+      "AI Task 076 screen prompt pack completed",
+      "AI Task 077 screen result validation approve GO completed",
+      "AI Task 078 Figma import and architecture sync completed",
+      "AI Task 079 post-Figma implementation plan refinement completed",
+      "AI Task 080 shared shell and design-token preview/bootstrap slice completed"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "Post-Figma production UI implementation",
+      "Overview/UI fidelity rollout against approved design authority"
+    ],
+    "next": [
+      "Run AI Task 081 — Stage 8 Production UI: Overview surface fidelity",
+      "Keep runtime truth contract-backed while increasing Overview visual fidelity against the approved artifact"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "AI Task 080 completed: approved shell and design-token layer applied to bootstrap/preview surfaces",
+    "Preview delivery smoke now confirms data-cv-preview-shell=\"080\" while preserving payload and section markers",
+    "Execution anchor advanced from 080 to 081; runtime snapshot synchronized with AGENTS, recovery, and plans"
+  ],
+  "current_task": {
+    "id": "081",
+    "name": "Stage 8 Production UI: Overview surface fidelity",
+    "stage": "Stage 8 — Polish",
+    "substage": "Post-Figma production UI implementation",
+    "status": "next_defined"
+  },
+  "next_tasks": [
+    { "id": "081", "name": "Stage 8 Production UI: Overview surface fidelity" },
+    { "id": "082", "name": "Stage 8 Production UI: Visualization workspace fidelity" },
+    { "id": "083", "name": "Stage 8 Production UI: History workspace + cross-surface handoff smoke" }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Post-Figma production UI implementation",
+    "state": "active",
+    "next_stage": null,
+    "design_branch": {
+      "status": "complete_imported_and_authoritative",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "approved_design_record": "docs/design/approved_figma_artifact.md",
+      "primary_ui_artifact_package": "docs/design/artifacts/task076/",
+      "validated_external_ui_baseline": "docs/design/artifacts/task064/",
+      "validated_ia_baseline": "docs/design/artifacts/task065/",
+      "validated_visual_system_baseline": "docs/design/artifacts/task074/",
+      "screen_validation_status": "approve_go_final",
+      "import_task": "078_completed",
+      "plan_refinement_task": "079_completed",
+      "fallback_evidence_rule": "uploaded_workspace_artifacts_only_no_external_figma_link_authority",
+      "legacy_superseded_placeholders": ["067", "068", "069", "070", "071", "072"],
+      "remaining_design_gaps": [
+        "secondary flows (settings/profile, diff viewer) per approved artifact known gaps",
+        "optional richer demo deck polish"
+      ],
+      "next_design_tasks": []
+    },
+    "post_figma_production_ui": {
+      "status": "active",
+      "current_anchor": "081",
+      "completed_slices": ["080"],
+      "planned_slices": ["081", "082", "083"],
+      "runtime_truth_rule": "json_contracts_remain_authoritative",
+      "design_truth_rule": "approved_figma_artifact_and_task076_package"
+    }
+  },
+  "ai_task_status": {
+    "last_completed_design_branch_task": "080",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "073", "066", "074", "075", "076", "077", "078", "079", "080"],
+    "next_task": "081",
+    "next_task_status": "defined_and_ready"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented",
+      "PG-RT-002": "implemented",
+      "PG-OV-001": "implemented_and_design_reference_registered_in_progress_for_fidelity",
+      "PG-AR-001": "implemented_and_design_reference_registered",
+      "PG-AR-002": "implemented_and_design_reference_registered",
+      "PG-HI-001": "implemented_and_design_reference_registered",
+      "PG-HI-002": "implemented_and_design_reference_registered",
+      "PG-PL-001": "implemented_post_figma_plan_refinement_and_slice_080_complete",
+      "PG-UX-001": "in_progress_post_figma_production_ui",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": "AI Task 081 — Stage 8 Production UI: Overview surface fidelity"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "ai_task_080_completed_contextjson_regenerated_for_081"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8: task080 completed the first production UI slice by applying approved shell/tokens to preview surfaces; next production slice is task081 for Overview fidelity.",
+    "customer_status": "The product preview now carries approved shell styling while remaining JSON-driven. Next work deepens Overview fidelity against the approved UI artifact.",
+    "last_iteration": "Architecture sync after AI Task 080: runtime snapshot advanced to AI Task 081."
+  },
+  "generated_at": "2026-03-27T23:50:00Z"
+}

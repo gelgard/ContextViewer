@@ -11,6 +11,14 @@ RESPONSE FORMAT RULES
 - Tests must be concise, informative, and describe each required step explicitly
 - Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
 - Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
+- Hard anti-duplication rule: the local agent response owns planning, architecture, validation, changed-files review, and next-step orchestration
+- Cursor is used only for code/development execution; the `Cursor prompt (EN)` block must contain implementation instructions only
+- The `Cursor prompt (EN)` block must not repeat:
+  - `Manual Test (exact commands)`
+  - `What to send back for validation`
+  - architecture synchronization instructions
+  - changed-files validation instructions
+  - next-step planning or local validation responsibilities
 - If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
 - If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
 - If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
@@ -27,6 +35,7 @@ RESPONSE FORMAT RULES
   - `BLOCKED: response format violation, regenerating with full test section.`
 - On next-task format violation, assistant must immediately regenerate full compliant response before any other output
 - After user sends test results, assistant must generate `List of changed files` automatically from `git status --short`
+- Assistant must run `git status --short` itself during validation even if the user did not include it
 - Assistant must validate that changed files belong to current AI task scope and explicitly flag unrelated changes
 - Changed-files auto-check must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
 - Before sending AI task response, run self-check for:

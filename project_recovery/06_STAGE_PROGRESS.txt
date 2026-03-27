@@ -139,11 +139,11 @@ Current execution state:
 - Stage 8 UI demo handoff chain is validated
 - AI Task 078 completed: Figma import and architecture sync — authoritative UI design reference `docs/design/approved_figma_artifact.md`; primary package `docs/design/artifacts/task076/`; runtime truth remains latest contextJSON + contracts per `docs/architecture/system-definition.md` §20
 - AI Task 079 completed: post-Figma implementation plan refinement — **production UI** roadmap **080–083** recorded in `docs/plans/implementation-plan.md`; **design-sync** track **062–079** closed; **preserved checkpoint** remains JSON preview / demo handoff through **061**
+- AI Task 080 completed: approved shell + visual tokens applied to bootstrap/preview surfaces; preview HTML now carries production shell marker `data-cv-preview-shell="080"` while preserving bootstrap payload and section markers; bootstrap and preview delivery smokes passed
+- AI Task 081 completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; high-signal status/roadmap/progress/changes blocks now render from dashboard feed + project overview only; dashboard contracts and preview readiness remain `pass/ready`
 
 Stage 8 — **post-Figma production UI** (current):
 - **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`** (charter: `docs/design/figma_design_branch_charter.md`)
 - **Implementation baseline (non-negotiable):** validated UI bootstrap / preview / handoff through **AI Task 061**
-- **Next execution anchor:** **AI Task 080** — apply approved shell + visual tokens to bootstrap/preview surfaces (first slice; see system + implementation plans)
-- **081** — Overview UI fidelity vs dashboard/bootstrap feeds
-- **082** — Visualization workspace UI vs Stage 6 workspace bundle
+- **Next execution anchor:** **AI Task 082** — Visualization workspace UI vs Stage 6 workspace bundle
 - **083** — History workspace UI + **061-class** demo handoff smoke with approved styling
