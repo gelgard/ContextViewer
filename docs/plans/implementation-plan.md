@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; Figma design branch per `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`; external Figma-generation prompts, returned-artifact validation, import, and post-Figma plan refinement (tasks **063**–**072**)
+preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; next refinement pass is information architecture tightening, followed by visual system, screen coverage, import, and post-Figma plan refinement (tasks **065**–**072**)
 
 ## Stage Plan
 
@@ -87,6 +87,13 @@ preserved validated preview / handoff checkpoint; Figma design branch per `docs/
 - authoritative workflow (tasks 062–072, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
 - product UI brief prompt pack
 - product UI brief result validation
+- preserve validated external artifacts in-repo per task
+- use Task 064 result as the current near-complete core UI baseline
+- required refinements from Task 064:
+  - tighter information architecture and workspace transitions
+  - broader visual system/token coverage
+  - deeper screen / flow coverage
+  - stronger final import-ready artifact identity
 - information architecture prompt pack
 - information architecture result validation
 - visual system prompt pack

@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-Figma Design Branch Planning
+Figma Information Architecture Prompt Generation
 
 ## Progress
 
@@ -75,6 +75,8 @@ Completed:
 - AI Task 060 — Stage 8 UI Demo Handoff Bundle
 - AI Task 061 — Stage 8 UI Demo Handoff Smoke Suite
 - AI Task 062 — Stage 8 Figma Design Branch Charter And Prompt Workflow
+- AI Task 063 — Stage 8 Figma Product UI Brief Prompt Pack
+- AI Task 064 — Stage 8 Figma Product UI Brief Result Validation
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -94,13 +96,15 @@ Execution status:
 - branch operating mode: generate prompts for an external Figma-generation system, receive generated Figma artifacts back into the workspace, validate them, import the approved artifact, and then continue implementation planning
 - Goal Traceability Layer enabled for AI-task gating
 - Figma branch charter and prompt workflow published: `docs/design/figma_design_branch_charter.md`, `docs/design/figma_prompt_workflow.md` (AI Task 062)
+- external product-brief artifacts preserved in-repo: `docs/design/artifacts/task064/`
+- product brief result validated in `docs/design/reviews/figma_product_ui_brief_validation.md` (AI Task 064, verdict `pass`)
+- current design baseline: near-complete core UI for overview / visualization / history, but not yet final import-ready exhaustive UI
+- required next refinements: information architecture, broader visual-system coverage, deeper screen/flow coverage, stronger final import-ready artifact identity
 
 Current:
-- Stage 8 active — validated preview / handoff checkpoint preserved; Figma design branch governed by charter and workflow docs; next executable work is prompt packs and validations **063** onward
+- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; next executable work is information architecture refinement starting at **AI Task 065**
 
 Next:
-- AI Task 063 — Stage 8 Figma Product UI Brief Prompt Pack
-- AI Task 064 — Stage 8 Figma Product UI Brief Result Validation
 - AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack
 - AI Task 066 — Stage 8 Figma Information Architecture Result Validation
 - AI Task 067 — Stage 8 Figma Visual System Prompt Pack
@@ -123,3 +127,4 @@ Cross-cutting architecture notes:
 - visual state computation must come from JSON, not from markdown parsing
 - coding remains blocked until execution proceeds through numbered AI tasks
 - Stage 8 Figma branch rules: `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`
+- current validated external artifact registry: `docs/design/artifacts/task064/README.md`

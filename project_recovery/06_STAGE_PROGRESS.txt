@@ -119,14 +119,16 @@ Current execution state:
 - AI Task 059 completed: UI preview readiness report
 - AI Task 060 completed: UI demo handoff bundle
 - AI Task 061 completed: UI demo handoff smoke suite
+- AI Task 062 completed: Figma design branch charter and prompt workflow
+- AI Task 063 completed: Figma product UI brief prompt pack
+- AI Task 064 completed: Figma product UI brief result validation
+- external design artifacts preserved under `docs/design/artifacts/task064/`
+- validated external result establishes a near-complete core UI baseline for further refinement
 - Stage 8 UI demo handoff chain is validated
 
 Planned next branch inside Stage 8:
 - local AI tasks in this branch generate prompts for a third-party Figma-generation system rather than generating final UI screens directly
 - generated Figma files / exports are returned to the workspace for validation, import, and post-Figma implementation refinement
-- AI Task 062: Figma design branch charter and prompt workflow
-- AI Task 063: Figma product UI brief prompt pack
-- AI Task 064: Figma product UI brief result validation
 - AI Task 065: Figma information architecture prompt pack
 - AI Task 066: Figma information architecture result validation
 - AI Task 067: Figma visual system prompt pack

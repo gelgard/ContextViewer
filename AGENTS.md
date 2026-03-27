@@ -93,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Figma Design Branch Planning
+- Substage: Figma Information Architecture Prompt Generation
 
 Next required action:
-→ run AI Task 062
+→ run AI Task 065
 
 
 ---

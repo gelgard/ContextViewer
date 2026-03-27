@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextViewer | States &amp; Variations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#4a5268",
+              "on-error-container": "#752121",
+              "surface-dim": "#cfdce3",
+              "tertiary-fixed": "#69f6b8",
+              "surface-container-high": "#e1e9ee",
+              "on-surface": "#2a3439",
+              "surface-container-low": "#f0f4f7",
+              "tertiary-fixed-dim": "#58e7ab",
+              "outline-variant": "#a9b4b9",
+              "inverse-primary": "#dae2fd",
+              "on-secondary-fixed-variant": "#4d5d73",
+              "error-dim": "#4e0309",
+              "surface-variant": "#d9e4ea",
+              "tertiary-dim": "#005f40",
+              "primary-fixed": "#dae2fd",
+              "on-primary-container": "#4a5167",
+              "secondary": "#506076",
+              "error": "#9f403d",
+              "secondary-fixed": "#d3e4fe",
+              "surface-container-highest": "#d9e4ea",
+              "inverse-surface": "#0b0f10",
+              "tertiary-container": "#69f6b8",
+              "surface": "#f7f9fb",
+              "on-surface-variant": "#566166",
+              "on-secondary-container": "#435368",
+              "on-primary": "#f7f7ff",
+              "on-tertiary-fixed": "#00452d",
+              "secondary-container": "#d3e4fe",
+              "on-tertiary": "#e6ffee",
+              "primary-fixed-dim": "#ccd4ee",
+              "secondary-fixed-dim": "#c5d6f0",
+              "on-primary-fixed-variant": "#535b71",
+              "primary-container": "#dae2fd",
+              "on-tertiary-container": "#005a3c",
+              "on-background": "#2a3439",
+              "surface-tint": "#565e74",
+              "on-primary-fixed": "#373f54",
+              "on-secondary": "#f7f9ff",
+              "secondary-dim": "#44546a",
+              "background": "#f7f9fb",
+              "outline": "#717c82",
+              "on-tertiary-fixed-variant": "#006544",
+              "tertiary": "#006d4a",
+              "surface-bright": "#f7f9fb",
+              "on-secondary-fixed": "#314055",
+              "primary": "#565e74",
+              "on-error": "#fff7f6",
+              "error-container": "#fe8983",
+              "surface-container": "#e8eff3",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#9a9d9f"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #e8eff3 25%, #f0f4f7 50%, #e8eff3 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 z-50 flex justify-between items-center w-full px-5 h-14 bg-[#f7f9fb] dark:bg-[#0f172a] border-b border-[#a9b4b9]/10 dark:border-slate-800 font-['Inter'] text-sm tracking-tight">
+<div class="flex items-center gap-4">
+<span class="text-lg font-semibold text-[#2a3439] dark:text-[#f1f5f9]">ContextViewer</span>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<span class="text-[#565e74] dark:text-[#f1f5f9] font-medium">Stage 8 — Polish</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-[#566166] dark:text-[#64748b] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-[#566166] dark:text-[#64748b] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#566166] dark:text-[#64748b] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Left) -->
+<aside class="fixed left-0 top-14 bottom-0 flex flex-col py-4 px-3 gap-2 w-64 bg-[#f0f4f7] dark:bg-[#1e293b] font-['Inter'] text-[0.875rem] border-r border-[#a9b4b9]/10">
+<div class="px-3 py-4 mb-2">
+<div class="text-[#565e74] dark:text-[#94a3b8] font-semibold text-xs uppercase tracking-wider mb-1">System Architecture</div>
+<div class="text-on-surface-variant text-xs">Project Overview</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-[#ffffff] dark:bg-[#0f172a] text-[#2a3439] dark:text-[#f8fafc] font-medium shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span>Visualization</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>History</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 mr-80 mt-14 p-8 min-h-screen bg-surface">
+<!-- SECTION 1: LOADING STATE (SKELETONS) -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-headline-sm font-semibold text-on-surface">Overview (Loading State)</h2>
+<div class="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded">Async Init</div>
+</div>
+<div class="grid grid-cols-3 gap-6 mb-8">
+<div class="h-32 bg-surface-container-lowest rounded-sm p-4 flex flex-col justify-between">
+<div class="h-3 w-24 skeleton rounded"></div>
+<div class="h-8 w-16 skeleton rounded"></div>
+<div class="h-2 w-32 skeleton rounded"></div>
+</div>
+<div class="h-32 bg-surface-container-lowest rounded-sm p-4 flex flex-col justify-between">
+<div class="h-3 w-24 skeleton rounded"></div>
+<div class="h-8 w-12 skeleton rounded"></div>
+<div class="h-2 w-28 skeleton rounded"></div>
+</div>
+<div class="h-32 bg-surface-container-lowest rounded-sm p-4 flex flex-col justify-between">
+<div class="h-3 w-24 skeleton rounded"></div>
+<div class="h-8 w-20 skeleton rounded"></div>
+<div class="h-2 w-36 skeleton rounded"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-sm p-6">
+<div class="flex items-center gap-4 mb-6">
+<div class="h-10 w-10 skeleton rounded-full"></div>
+<div class="space-y-2">
+<div class="h-4 w-48 skeleton rounded"></div>
+<div class="h-3 w-32 skeleton rounded"></div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="h-4 w-full skeleton rounded"></div>
+<div class="h-4 w-[90%] skeleton rounded"></div>
+<div class="h-4 w-[95%] skeleton rounded"></div>
+<div class="h-4 w-[60%] skeleton rounded"></div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: EMPTY STATE (HISTORY) -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-headline-sm font-semibold text-on-surface">History (Empty State)</h2>
+</div>
+<div class="flex flex-col items-center justify-center py-24 px-6 bg-surface-container-low border border-dashed border-outline-variant/30 rounded-lg">
+<div class="w-16 h-16 bg-surface-variant flex items-center justify-center rounded-full mb-6">
+<span class="material-symbols-outlined text-outline text-3xl" data-icon="history_toggle_off">history_toggle_off</span>
+</div>
+<h3 class="text-title-sm font-semibold text-on-surface mb-2">No snapshots found</h3>
+<p class="text-body-md text-on-surface-variant text-center max-w-sm mb-8">
+                    Architectural snapshots are captured during system transitions or manually committed via the CLI.
+                </p>
+<button class="px-6 py-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary text-label-sm rounded-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    Take Initial Snapshot
+                </button>
+</div>
+</section>
+<!-- SECTION 3: SPARSE STATE (NEW PROJECT) -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-headline-sm font-semibold text-on-surface">New Project (Sparse State)</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Project Identity Card -->
+<div class="bg-surface-container-lowest p-6 rounded-sm">
+<div class="flex items-start justify-between mb-8">
+<div>
+<div class="text-label-sm text-tertiary font-bold mb-1">PROVISIONED</div>
+<h3 class="text-headline-sm font-semibold text-on-surface">Project: Alpha-Zero</h3>
+</div>
+<div class="w-10 h-10 bg-primary-container flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="rocket_launch">rocket_launch</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-body-md text-on-surface-variant">Architecture Type</span>
+<span class="text-body-md font-medium">Monolith-to-Micro</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-body-md text-on-surface-variant">Last Pulse</span>
+<span class="text-body-md font-medium text-outline">Never</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-body-md text-on-surface-variant">Node Count</span>
+<span class="text-body-md font-medium">0 nodes detected</span>
+</div>
+</div>
+</div>
+<!-- Setup Guide -->
+<div class="bg-surface-container-low p-6 rounded-sm flex flex-col">
+<h3 class="text-title-sm font-semibold text-on-surface mb-4">Onboarding Progress</h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-tertiary flex items-center justify-center text-on-tertiary">
+<span class="material-symbols-outlined text-xs" data-icon="check" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+</div>
+<div class="w-px h-full bg-tertiary/30 my-1"></div>
+</div>
+<div class="pb-4">
+<div class="text-body-md font-semibold text-on-surface">Initialize Project</div>
+<div class="text-label-sm text-on-surface-variant">Completed 2h ago</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 rounded-full border-2 border-primary text-primary flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="w-px h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-4">
+<div class="text-body-md font-semibold text-on-surface">Connect Data Source</div>
+<div class="text-label-sm text-on-surface-variant">Pending configuration</div>
+<div class="mt-2 p-3 bg-surface-container-lowest rounded border border-outline-variant/20 flex items-center justify-between">
+<code class="text-xs font-mono text-primary">cv connect --src=github</code>
+<span class="material-symbols-outlined text-sm text-outline cursor-pointer hover:text-primary transition-colors" data-icon="content_copy">content_copy</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-outline">
+<span class="text-[10px] font-bold">3</span>
+</div>
+</div>
+<div>
+<div class="text-body-md font-semibold text-outline">First Visualization</div>
+<div class="text-label-sm text-outline-variant">Locked</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- SideNavBar (Right Inspector) -->
+<aside class="fixed right-0 top-14 bottom-0 z-40 w-80 bg-[#f0f4f7]/85 dark:bg-[#1e293b]/85 backdrop-blur-xl border-l border-[#a9b4b9]/10 dark:border-slate-800 shadow-[-12px_0_32px_-4px_rgba(42,52,57,0.08)] font-['Inter'] text-[0.875rem]">
+<div class="p-5 border-b border-outline-variant/10 flex justify-between items-center">
+<div>
+<div class="text-xs font-bold uppercase tracking-widest text-[#566166]">Inspector</div>
+<div class="text-on-surface-variant text-[11px]">Node Details</div>
+</div>
+<button class="text-primary hover:underline font-medium text-xs">Collapse</button>
+</div>
+<div class="p-6">
+<!-- Inspector Loading State -->
+<div class="space-y-8">
+<div>
+<div class="h-3 w-32 skeleton rounded mb-4"></div>
+<div class="grid grid-cols-2 gap-2">
+<div class="h-10 bg-surface-container-low rounded skeleton"></div>
+<div class="h-10 bg-surface-container-low rounded skeleton"></div>
+<div class="h-10 bg-surface-container-low rounded skeleton"></div>
+<div class="h-10 bg-surface-container-low rounded skeleton"></div>
+</div>
+</div>
+<div>
+<div class="h-3 w-40 skeleton rounded mb-4"></div>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<div class="h-2 w-20 skeleton rounded"></div>
+<div class="h-2 w-12 skeleton rounded"></div>
+</div>
+<div class="flex justify-between items-center">
+<div class="h-2 w-24 skeleton rounded"></div>
+<div class="h-2 w-16 skeleton rounded"></div>
+</div>
+<div class="flex justify-between items-center">
+<div class="h-2 w-16 skeleton rounded"></div>
+<div class="h-2 w-20 skeleton rounded"></div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-sm flex items-center justify-center">
+<span class="text-on-surface-variant text-xs italic">Select a node to inspect details</span>
+</div>
+</div>
+</div>
+</aside>
+</body></html>

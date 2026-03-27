@@ -53,6 +53,7 @@ Output:
 - architecture/plan/recovery sync status
 - explicit blockers and required fixes
 - when the Stage 8 Figma design branch is active, include current design checkpoint, pending design tasks, and imported-design sync status when available
+- when external Figma artifacts have passed a validation gate, include the preserved artifact location, validation verdict, and remaining design gaps before final import
 
 ### Trigger matrix
 Fast restore:

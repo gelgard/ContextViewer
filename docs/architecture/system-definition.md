@@ -162,6 +162,7 @@ Snapshots are immutable.
 - the currently validated Stage 8 preview / handoff flow is a transitional implementation checkpoint, not the final authored product UI
 - Stage 8 includes a Figma design branch that refines UI structure, visual language, and implementation sequencing without replacing runtime architecture
 - external design generation must happen through prompt-driven AI tasks: the local agent authors prompt packs for a third-party Figma-generation system, then the returned Figma artifacts are validated and tracked as numbered AI tasks
+- validated external Figma artifacts may be preserved inside the repository as design-branch evidence and must remain linked to their specific validation task
 - once a Figma artifact is approved and imported back into the workspace, it becomes the authoritative UI design reference for implementation decisions
 - imported Figma artifacts do not replace JSON as runtime truth; they refine presentation, hierarchy, styling, and interaction decisions
 - after Figma import, architecture files, plans, recovery files, and contextJSON summaries must be synchronized before implementation continues

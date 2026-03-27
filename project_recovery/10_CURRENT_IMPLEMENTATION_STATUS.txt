@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Figma Design Branch Planning
+Figma Information Architecture Prompt Generation
 
 STATUS:
 - Architecture synced with latest rules
@@ -80,15 +80,21 @@ STATUS:
 - AI Task 059 completed: Stage 8 UI preview readiness report
 - AI Task 060 completed: Stage 8 UI demo handoff bundle
 - AI Task 061 completed: Stage 8 UI demo handoff smoke suite
+- AI Task 062 completed: Stage 8 Figma design branch charter and prompt workflow
+- AI Task 063 completed: Stage 8 Figma product UI brief prompt pack
+- AI Task 064 completed: Stage 8 Figma product UI brief result validation
 - Stage 8 UI bootstrap / preview / handoff chain is validated through smoke coverage
 - validated preview / handoff state is fixed as the baseline checkpoint before design-source expansion
 - Stage 8 Figma design branch is planned as a refinement path, not a replacement for runtime or implementation architecture
 - current branch operating rule: local tasks generate prompts for an external Figma-generation system, the generated Figma artifacts are returned into the workspace, and only then are they validated and imported into the implementation plan
+- external product-brief artifacts are now preserved in `docs/design/artifacts/task064/`
+- formal validation result for the external brief is `pass`; this produces a near-complete core UI baseline, but not yet the final exhaustive import-ready UI artifact
+- required next refinements are: tighter information architecture, broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 062 — Stage 8 Figma design branch charter and prompt workflow
+Run AI Task 065 — Stage 8 Figma information architecture prompt pack
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

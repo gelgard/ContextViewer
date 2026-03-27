@@ -112,8 +112,10 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 ## Current Task Anchor
 - Preserved checkpoint (implementation + handoff): through `AI Task 061 — Stage 8 UI Demo Handoff Smoke Suite` (bootstrap → preview → handoff JSON contracts validated).
 - Active Stage 8 design branch docs: `docs/design/figma_design_branch_charter.md`, `docs/design/figma_prompt_workflow.md` (`AI Task 062` deliverables).
-- Next executable design-branch task: `AI Task 063 — Stage 8 Figma Product UI Brief Prompt Pack`
-- Requirement mapping for **063**:
+- Validated external brief artifacts preserved at: `docs/design/artifacts/task064/`
+- Formal validation record: `docs/design/reviews/figma_product_ui_brief_validation.md` (`AI Task 064`, verdict `pass`, Go for `065`)
+- Next executable design-branch task: `AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack`
+- Requirement mapping for **065**:
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -126,7 +128,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `062` — Stage 8 Figma Design Branch Charter And Prompt Workflow — **completed** (charter + workflow in `docs/design/`)
   - `PG-UX-001`
   - `PG-EX-001`
-- `063` — Stage 8 Figma Product UI Brief Prompt Pack
+- `063` — Stage 8 Figma Product UI Brief Prompt Pack — **completed**
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -134,7 +136,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-HI-002`
   - `PG-UX-001`
   - `PG-EX-001`
-- `064` — Stage 8 Figma Product UI Brief Result Validation
+- `064` — Stage 8 Figma Product UI Brief Result Validation — **completed** (`pass`; near-complete core UI baseline preserved for further refinement)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
