@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 059: Stage 8 UI preview readiness report (read-only; stdout = one JSON object).
+# AI Task 080: delivery smoke gains production shell marker check; readiness still gates on full delivery pass.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 058: Stage 8 UI preview delivery smoke suite (stdout = one JSON report).
+# AI Task 080: stronger HTML check for production shell marker on served preview.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,7 +12,7 @@ usage() {
 verify_stage8_ui_preview_delivery.sh — Stage 8 UI preview delivery end-to-end smoke tests
 
 Runs start_ui_preview_server.sh (metadata + local HTTP), validates preview URL via curl and HTML
-markers, then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
+markers (incl. AI Task 080 `data-cv-preview-shell="080"`), then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
   status        pass | fail
   checks        array of { name, status, details }
   failed_checks integer
@@ -221,12 +222,18 @@ if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; 
     else
       add_check "delivery: served HTML bootstrap payload script" "fail" "script id not found"
     fi
+    if printf '%s' "$html_body" | grep -q 'data-cv-preview-shell="080"'; then
+      add_check "delivery: served HTML production shell marker (080)" "pass" 'found data-cv-preview-shell="080"'
+    else
+      add_check "delivery: served HTML production shell marker (080)" "fail" "body shell marker not found"
+    fi
   else
     add_check "delivery: preview URL reachable (curl)" "fail" "skipped: preview_url mismatch"
     add_check "delivery: served HTML overview marker" "fail" "skipped"
     add_check "delivery: served HTML visualization marker" "fail" "skipped"
     add_check "delivery: served HTML history marker" "fail" "skipped"
     add_check "delivery: served HTML bootstrap payload script" "fail" "skipped"
+    add_check "delivery: served HTML production shell marker (080)" "fail" "skipped"
   fi
 else
   if [[ "$srv_rc" -eq 0 ]]; then
@@ -237,6 +244,7 @@ else
     add_check "delivery: served HTML visualization marker" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML history marker" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML bootstrap payload script" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML production shell marker (080)" "fail" "skipped: invalid JSON"
   else
     det="skipped: start_ui_preview_server failed"
     add_check "delivery: server JSON shape" "fail" "$det"
@@ -246,6 +254,7 @@ else
     add_check "delivery: served HTML visualization marker" "fail" "$det"
     add_check "delivery: served HTML history marker" "fail" "$det"
     add_check "delivery: served HTML bootstrap payload script" "fail" "$det"
+    add_check "delivery: served HTML production shell marker (080)" "fail" "$det"
   fi
 fi
 
