@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-UI Demo Handoff
+Figma Design Branch Planning
 
 STATUS:
 - Architecture synced with latest rules
@@ -79,12 +79,17 @@ STATUS:
 - AI Task 058 completed: Stage 8 UI preview delivery smoke suite
 - AI Task 059 completed: Stage 8 UI preview readiness report
 - AI Task 060 completed: Stage 8 UI demo handoff bundle
-- Stage 8 UI bootstrap / preview / handoff chain is active
+- AI Task 061 completed: Stage 8 UI demo handoff smoke suite
+- Stage 8 UI bootstrap / preview / handoff chain is validated through smoke coverage
+- validated preview / handoff state is fixed as the baseline checkpoint before design-source expansion
+- Stage 8 Figma design branch is planned as a refinement path, not a replacement for runtime or implementation architecture
+- current branch operating rule: local tasks generate prompts for an external Figma-generation system, the generated Figma artifacts are returned into the workspace, and only then are they validated and imported into the implementation plan
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 8 active — define the next Stage 8 AI task after handoff-chain synchronization
+Run AI Task 062 — Stage 8 Figma design branch charter and prompt workflow
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements
+Figma prompt-generation and Figma-result-validation tasks must specify exact prompt blocks and exact returned design artifacts for validation

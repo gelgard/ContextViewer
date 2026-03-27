@@ -52,6 +52,7 @@ Output:
 - drift/conflict audit
 - architecture/plan/recovery sync status
 - explicit blockers and required fixes
+- when the Stage 8 Figma design branch is active, include current design checkpoint, pending design tasks, and imported-design sync status when available
 
 ### Trigger matrix
 Fast restore:
@@ -63,6 +64,7 @@ Full restore:
 - when desync is suspected
 - after long pause
 - on explicit `обнови полный контекст`
+- after Figma artifact import or design-sync update
 
 ### Long pause rule
 Long pause is any of:

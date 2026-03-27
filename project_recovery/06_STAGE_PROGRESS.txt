@@ -109,6 +109,7 @@ Current execution state:
 Status: active
 
 Current execution state:
+- validated preview / handoff checkpoint fixed as baseline before design-source branch
 - AI Task 053 completed: UI bootstrap bundle
 - AI Task 054 completed: UI bootstrap contract smoke suite
 - AI Task 055 completed: UI bootstrap preview HTML
@@ -117,4 +118,20 @@ Current execution state:
 - AI Task 058 completed: UI preview delivery smoke suite
 - AI Task 059 completed: UI preview readiness report
 - AI Task 060 completed: UI demo handoff bundle
-- Stage 8 UI demo handoff chain is active
+- AI Task 061 completed: UI demo handoff smoke suite
+- Stage 8 UI demo handoff chain is validated
+
+Planned next branch inside Stage 8:
+- local AI tasks in this branch generate prompts for a third-party Figma-generation system rather than generating final UI screens directly
+- generated Figma files / exports are returned to the workspace for validation, import, and post-Figma implementation refinement
+- AI Task 062: Figma design branch charter and prompt workflow
+- AI Task 063: Figma product UI brief prompt pack
+- AI Task 064: Figma product UI brief result validation
+- AI Task 065: Figma information architecture prompt pack
+- AI Task 066: Figma information architecture result validation
+- AI Task 067: Figma visual system prompt pack
+- AI Task 068: Figma visual system result validation
+- AI Task 069: Figma screen prompt pack
+- AI Task 070: Figma screen result validation
+- AI Task 071: Figma import and architecture sync
+- AI Task 072: post-Figma implementation plan refinement

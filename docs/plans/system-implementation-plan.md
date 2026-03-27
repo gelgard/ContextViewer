@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-UI Demo Handoff
+Figma Design Branch Planning
 
 ## Progress
 
@@ -73,6 +73,8 @@ Completed:
 - AI Task 058 — Stage 8 UI Preview Delivery Smoke Suite
 - AI Task 059 — Stage 8 UI Preview Readiness Report
 - AI Task 060 — Stage 8 UI Demo Handoff Bundle
+- AI Task 061 — Stage 8 UI Demo Handoff Smoke Suite
+- AI Task 062 — Stage 8 Figma Design Branch Charter And Prompt Workflow
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -86,19 +88,33 @@ Execution status:
 - Stage 7 history layer started
 - Stage 7 scope completed
 - Stage 8 polish started
-- Stage 8 UI bootstrap / preview / handoff chain completed through AI Task 060
+- Stage 8 UI bootstrap / preview / handoff chain completed and validated through AI Task 061
+- validated preview / handoff chain fixed as the current implementation checkpoint before Figma-driven UI refinement
+- Stage 8 Figma design branch opened as a refinement path for authored UI design artifacts
+- branch operating mode: generate prompts for an external Figma-generation system, receive generated Figma artifacts back into the workspace, validate them, import the approved artifact, and then continue implementation planning
 - Goal Traceability Layer enabled for AI-task gating
+- Figma branch charter and prompt workflow published: `docs/design/figma_design_branch_charter.md`, `docs/design/figma_prompt_workflow.md` (AI Task 062)
 
 Current:
-- Stage 8 active — UI preview delivery and demo handoff bundle are available through local HTML, local HTTP preview flow, readiness reporting, and handoff metadata
+- Stage 8 active — validated preview / handoff checkpoint preserved; Figma design branch governed by charter and workflow docs; next executable work is prompt packs and validations **063** onward
 
 Next:
-- Define the next Stage 8 AI task
-- Continue UI polish on top of the preview/bootstrap/handoff flow
+- AI Task 063 — Stage 8 Figma Product UI Brief Prompt Pack
+- AI Task 064 — Stage 8 Figma Product UI Brief Result Validation
+- AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack
+- AI Task 066 — Stage 8 Figma Information Architecture Result Validation
+- AI Task 067 — Stage 8 Figma Visual System Prompt Pack
+- AI Task 068 — Stage 8 Figma Visual System Result Validation
+- AI Task 069 — Stage 8 Figma Screen Prompt Pack
+- AI Task 070 — Stage 8 Figma Screen Result Validation
+- AI Task 071 — Stage 8 Figma Import And Architecture Sync
+- AI Task 072 — Stage 8 Post-Figma Implementation Plan Refinement
 
 Response rule update:
 - task completion responses must include commit text after acceptance
 - UI-related tasks must include dedicated visual manual-test instructions with explicit visual evidence for validation
+- Figma prompt-generation tasks must require exact prompt blocks and explicit returned design artifacts
+- Figma result-validation tasks must require explicit design artifacts and exact validation checks
 
 Cross-cutting architecture notes:
 - contextJSON maintenance is part of architecture synchronization
@@ -106,3 +122,4 @@ Cross-cutting architecture notes:
 - the latest timestamped context JSON is the authoritative runtime source for the visual application
 - visual state computation must come from JSON, not from markdown parsing
 - coding remains blocked until execution proceeds through numbered AI tasks
+- Stage 8 Figma branch rules: `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`

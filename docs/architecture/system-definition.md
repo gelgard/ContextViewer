@@ -158,6 +158,14 @@ Snapshots are immutable.
 - right inspector panel instead of modal
 - separation of major views
 
+## 11.1 Stage 8 Design Source Workflow
+- the currently validated Stage 8 preview / handoff flow is a transitional implementation checkpoint, not the final authored product UI
+- Stage 8 includes a Figma design branch that refines UI structure, visual language, and implementation sequencing without replacing runtime architecture
+- external design generation must happen through prompt-driven AI tasks: the local agent authors prompt packs for a third-party Figma-generation system, then the returned Figma artifacts are validated and tracked as numbered AI tasks
+- once a Figma artifact is approved and imported back into the workspace, it becomes the authoritative UI design reference for implementation decisions
+- imported Figma artifacts do not replace JSON as runtime truth; they refine presentation, hierarchy, styling, and interaction decisions
+- after Figma import, architecture files, plans, recovery files, and contextJSON summaries must be synchronized before implementation continues
+
 ---
 
 ## 12. Architecture Layers
@@ -180,6 +188,8 @@ Development must follow:
 - test instructions must avoid general phrases and visual actions and must specify what to return for validation
 - every test step must specify the exact execution method
 - when a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence required for validation
+- when a task generates prompts for an external Figma/design workflow, tests must define the exact prompt blocks and the exact design artifacts that must be returned for validation
+- when a task validates returned Figma/design results, tests must define the exact visual artifacts to submit and the exact structural checks that must pass
 - on each Stage transition, explicitly announce the new Stage
 - on each Stage transition, merge current branch into `development` and create `feature/stage<stageNum>` before new stage tasks
 - for command "дай следующую AI task", physically create `ai_tasks/NNN_*.md` before response
@@ -249,6 +259,9 @@ Stage 7 — History
 - timeline
 
 Stage 8 — Polish
+- Stage 8A — validated preview checkpoint
+- Stage 8B — Figma design source generation and validation
+- Stage 8C — Figma-synced implementation refinement
 
 ---
 

@@ -93,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: UI Demo Handoff
+- Substage: Figma Design Branch Planning
 
 Next required action:
-→ define the next Stage 8 AI task
+→ run AI Task 062
 
 
 ---
@@ -135,6 +135,12 @@ Supported commands:
 - before EVERY new AI task, run Fast restore
 - every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
 - if task-to-goal mapping is missing, task is blocked until mapping is added
+- validated preview / handoff state is the current Stage 8 checkpoint and must remain preserved while the Figma design branch is developed
+- the Stage 8 Figma design branch refines the implementation plan and must not replace or invalidate the original architecture / runtime model
+- Figma prompt generation, Figma-result validation, Figma import, and post-Figma implementation refinement must all execute through numbered AI tasks
+- in the Stage 8 Figma design branch, the local agent authors prompt packs for a third-party Figma-generation system; the user then returns the generated Figma artifacts to the workspace for validation, import, and implementation-plan refinement
+- once an approved Figma artifact is returned to the workspace, it becomes the authoritative UI design reference for implementation decisions, but never replaces JSON as runtime truth
+- after Figma artifact import or design sync, architecture files and contextJSON must be synchronized before continuing implementation
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
@@ -174,6 +180,7 @@ Full restore output must include:
 - drift/conflict audit
 - architecture/plan/recovery sync status
 - explicit blockers and required fixes (if any)
+- if the Figma design branch is active, include current design-branch checkpoint, next design tasks, and imported-design sync status when available
 
 Trigger matrix:
 - Fast restore: before each new AI task
@@ -182,6 +189,7 @@ Trigger matrix:
 - Full restore: when desync is suspected
 - Full restore: after long pause
 - Full restore: on explicit `обнови полный контекст`
+- Full restore: after Figma artifact import or design-sync update
 
 Long pause rule:
 - inactivity >= 4 hours OR
@@ -243,6 +251,8 @@ When command is triggered:
 - test instructions must avoid general phrases and visual actions, and must specify exactly what to send back for validation
 - every test step must include the exact execution method; verbs without commands, SQL, inputs, or callable entry points are invalid
 - when an AI task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
+- when an AI task generates prompts for an external Figma/design system, tests must specify the exact prompt blocks to use externally and the exact returned evidence required for validation (for example: Figma link, exported frames, page list, component inventory, screenshots)
+- when an AI task validates returned Figma/design results, tests must specify the exact artifacts the user must send back (link/export/screenshots/page map/component list) and the exact visual/structural checks to confirm
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
 - for "дай следующую AI task", response is valid only in this strict block order:

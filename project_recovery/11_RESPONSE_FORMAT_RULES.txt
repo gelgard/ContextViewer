@@ -12,6 +12,8 @@ RESPONSE FORMAT RULES
 - Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
 - Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
 - If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
+- If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
+- If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
 - For command "дай следующую AI task", the response is valid only if `ai_tasks/NNN_*.md` was created before sending
 - AI task response must include: `AI Task file created: /ai_tasks/NNN_*.md`
@@ -50,6 +52,7 @@ RESPONSE FORMAT RULES
   - after merge/stage transition
   - when desync is suspected
   - after long pause
+  - after Figma artifact import or design-sync update
 - Long pause rule:
   - inactivity >= 4 hours OR
   - new calendar day since last restore OR

@@ -30,36 +30,42 @@ ARCHITECTURE RULES
 14. Test instructions must avoid general phrases and visual actions and must explicitly list what the user should send back for validation.
 15. Every test step must specify the exact execution method, including command, SQL, input, or callable entry point; abstract verbs without execution details are invalid.
 16. If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, the test section must also include a dedicated visual manual-test subsection with explicit viewing steps and exact visual evidence required for validation.
-17. On each Stage transition, the assistant must explicitly announce the new Stage before issuing the next AI task.
-18. Stage transition requires git flow: merge current branch into `development`, then create `feature/stage<stageNum>`.
-19. Stage transition instructions must include exact reproducible git commands.
-20. Architecture sync workflow is workspace-first:
+17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
+18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
+19. The validated Stage 8 preview / handoff state is a preserved checkpoint and must not be replaced by the Figma design branch.
+20. The Stage 8 Figma design branch refines implementation and architecture decisions without replacing runtime truth or the original implementation path.
+21. Prompt generation, design validation, Figma import, and post-Figma implementation refinement must execute through numbered AI tasks only.
+22. After an approved Figma artifact is imported into the workspace, architecture files, plans, recovery files, and contextJSON must be synchronized before further implementation.
+23. On each Stage transition, the assistant must explicitly announce the new Stage before issuing the next AI task.
+24. Stage transition requires git flow: merge current branch into `development`, then create `feature/stage<stageNum>`.
+25. Stage transition instructions must include exact reproducible git commands.
+26. Architecture sync workflow is workspace-first:
    - first use the current project workspace as the sync source
    - then perform full sync directly in workspace
    - if workspace access is unavailable, request current project archive and run archive-based fallback
    - then execute "обнови архитектурные файлы"
-21. Architecture sync is incomplete without regenerated contextJSON outputs.
-22. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
-23. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
-23. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
-24. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
-25. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
-26. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
-27. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).
-28. For command "дай следующую AI task", the response format is a hard gate and must contain, in strict order:
+27. Architecture sync is incomplete without regenerated contextJSON outputs.
+28. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
+29. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
+30. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
+31. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
+32. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
+33. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
+34. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).
+35. For command "дай следующую AI task", the response format is a hard gate and must contain, in strict order:
    - `AI Task file created: /ai_tasks/NNN_*.md`
    - `Cursor prompt (EN)`
    - `Manual Test (exact commands)`
    - `What to send back for validation`
-29. Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option.
-30. If block `Manual Test (exact commands)` is missing, assistant must emit only:
+36. Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option.
+37. If block `Manual Test (exact commands)` is missing, assistant must emit only:
    - `BLOCKED: response format violation, regenerating with full test section.`
-31. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
-32. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
-33. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
-34. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.
-34. Context Restore Policy is mandatory and must be enforced before task execution.
-35. Source priority for restore is strict:
+38. On any next-task response-format violation, assistant must immediately regenerate a fully compliant response before any further output.
+39. Every AI task must be explicitly mapped to product-goal Requirement IDs defined in `docs/plans/product_goal_traceability_matrix.md`.
+40. If an AI task has no Requirement ID mapping, it is out of scope and must be blocked until mapping is added.
+41. Task acceptance must include evidence that mapped Requirement IDs were actually validated by executable tests.
+42. Context Restore Policy is mandatory and must be enforced before task execution.
+43. Source priority for restore is strict:
    - project_recovery/*
    - AGENTS.md
    - docs/architecture/*
@@ -67,22 +73,23 @@ ARCHITECTURE RULES
    - ai_tasks/*
    - contextJSON/json_<latest>.json
    - code/* (validation only)
-36. Fast restore is required before EVERY new AI task.
-37. Fast restore output must be a one-line summary only:
+44. Fast restore is required before EVERY new AI task.
+45. Fast restore output must be a one-line summary only:
    - `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
-38. Full restore is mandatory after:
+46. Full restore is mandatory after:
    - `обнови архитектурные файлы`
    - merge/stage transition
    - suspected desync
    - long pause
    - explicit command `обнови полный контекст`
-39. Command mapping:
+   - Figma artifact import or design-sync update
+47. Command mapping:
    - `обнови контекст` => Fast restore (default)
    - `обнови полный контекст` => Full restore (forced)
-40. Long pause is defined as:
+48. Long pause is defined as:
    - inactivity >= 4 hours OR
    - new calendar day since last restore OR
    - context handoff between agents/users
-41. Blocked policy response format:
+49. Blocked policy response format:
    - `BLOCKED: Context restore policy violation.`
    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`

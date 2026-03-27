@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-27T14:29:41Z",
+    "generated_filename": "json_2026-03-27_16-29-41.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Figma Design Branch Planning",
+    "current_task": "AI Task 062 — Stage 8 Figma Design Branch Charter And Prompt Workflow",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Figma Design Branch Planning",
+    "status": "stage8_active_with_figma_design_branch"
+  },
+  "system": {
+    "summary": "ContextViewer now preserves a validated Stage 8 preview and demo handoff checkpoint while opening a Figma-driven design branch that will refine, validate, import, and then convert approved UI design into implementation tasks without replacing runtime contract truth."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Task 053 UI bootstrap bundle completed",
+      "AI Task 054 UI bootstrap contract smoke suite completed",
+      "AI Task 055 UI bootstrap preview HTML completed",
+      "AI Task 056 UI preview launcher completed",
+      "AI Task 057 UI preview local server completed",
+      "AI Task 058 UI preview delivery smoke suite completed",
+      "AI Task 059 UI preview readiness report completed",
+      "AI Task 060 UI demo handoff bundle completed",
+      "AI Task 061 UI demo handoff smoke suite completed"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "Validated preview / handoff checkpoint preserved as baseline",
+      "Figma design branch planning synchronized in architecture, plan, recovery, and runtime layers"
+    ],
+    "next": [
+      "Run AI Task 062 — Stage 8 Figma design branch charter and prompt workflow",
+      "Generate product brief prompt pack and validate returned Figma design artifacts",
+      "Continue through IA, visual system, screens, import, and post-Figma implementation refinement"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "Stage 8 UI preview / handoff baseline preserved explicitly as a checkpoint before design expansion",
+    "Figma design branch added to authoritative architecture, plan, and recovery layers",
+    "AI task chain 062 through 072 defined for prompt generation, design validation, Figma import, and post-Figma refinement",
+    "Runtime contextJSON snapshot regenerated for the Figma design branch planning state"
+  ],
+  "current_task": {
+    "id": "062",
+    "name": "Stage 8 Figma design branch charter and prompt workflow",
+    "stage": "Stage 8 — Polish",
+    "substage": "Figma Design Branch Planning",
+    "status": "next_defined"
+  },
+  "next_tasks": [
+    { "id": "062", "name": "Stage 8 Figma design branch charter and prompt workflow" },
+    { "id": "063", "name": "Stage 8 Figma product UI brief prompt pack" },
+    { "id": "064", "name": "Stage 8 Figma product UI brief result validation" },
+    { "id": "065", "name": "Stage 8 Figma information architecture prompt pack" },
+    { "id": "066", "name": "Stage 8 Figma information architecture result validation" },
+    { "id": "067", "name": "Stage 8 Figma visual system prompt pack" },
+    { "id": "068", "name": "Stage 8 Figma visual system result validation" },
+    { "id": "069", "name": "Stage 8 Figma screen prompt pack" },
+    { "id": "070", "name": "Stage 8 Figma screen result validation" },
+    { "id": "071", "name": "Stage 8 Figma import and architecture sync" },
+    { "id": "072", "name": "Stage 8 post-Figma implementation plan refinement" }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Figma Design Branch Planning",
+    "state": "active",
+    "next_stage": null,
+    "design_branch": {
+      "status": "planned_and_authoritatively_tracked",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "next_design_tasks": ["062", "063", "064", "065", "066", "067", "068", "069", "070", "071", "072"]
+    }
+  },
+  "ai_task_status": {
+    "last_completed_task": "061",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061"],
+    "next_task": "062",
+    "next_task_status": "defined_and_ready"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented_or_planned",
+      "PG-RT-002": "implemented_or_planned",
+      "PG-OV-001": "implemented_and_design_refinement_planned",
+      "PG-AR-001": "implemented_and_design_refinement_planned",
+      "PG-AR-002": "implemented_and_design_refinement_planned",
+      "PG-HI-001": "implemented_and_design_refinement_planned",
+      "PG-HI-002": "implemented_and_design_refinement_planned",
+      "PG-UX-001": "in_progress_with_design_branch",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": "AI Task 062 — Stage 8 Figma Design Branch Charter And Prompt Workflow"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "full_restore_required_after_architecture_update_has_been_applied"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8 remains active. The validated preview / handoff chain is preserved, and the project has opened a tracked Figma design branch with numbered AI tasks for prompt generation, validation, artifact import, and post-Figma refinement.",
+    "customer_status": "A working preview and handoff baseline already exists. The next effort is to generate and validate a higher-fidelity UI design in Figma, then feed that approved design back into implementation planning.",
+    "last_iteration": "Synchronized architecture, plans, recovery files, task inventory, and runtime context to the Stage 8 Figma design branch planning state."
+  },
+  "generated_at": "2026-03-27T14:29:41Z"
+}

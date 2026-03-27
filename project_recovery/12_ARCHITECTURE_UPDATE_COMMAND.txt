@@ -32,6 +32,13 @@ Rules:
 - preserve and synchronize test-instruction rules requiring exact return payloads for validation
 - preserve and synchronize test-instruction rules requiring exact executable methods for every step
 - preserve and synchronize hard rule: UI/frontend/HTML preview/browser-output tasks must include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence for validation
+- preserve and synchronize hard rule: Figma/design prompt-generation tasks must define exact prompt blocks and exact returned design artifacts for validation
+- preserve and synchronize hard rule: Figma/design result-validation tasks must define exact artifacts to return and exact structural/visual checks to confirm
+- preserve and synchronize Stage 8 design-source workflow:
+  - validated preview / handoff state remains the preserved implementation checkpoint
+  - Figma design branch refines UI decisions without replacing runtime truth
+  - imported approved Figma artifacts become authoritative UI design references for implementation
+  - after Figma import, architecture / plan / recovery / contextJSON must be resynchronized
 - preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
 - preserve and synchronize AI-task creation gate for "дай следующую AI task"
 - preserve and synchronize strict next-task response format gate with block order:
@@ -56,6 +63,7 @@ Rules:
   - Full restore after merge/stage transition
   - Full restore when desync is suspected
   - Full restore after long pause
+  - Full restore after Figma artifact import or design-sync update
   - command mapping:
     - `обнови контекст` => Fast restore (default)
     - `обнови полный контекст` => Full restore (forced)

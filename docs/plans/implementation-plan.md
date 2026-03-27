@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-UI bootstrap, preview generation, preview launch flow, local preview delivery, readiness reporting, and demo handoff
+preserved validated preview / handoff checkpoint; Figma design branch per `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`; external Figma-generation prompts, returned-artifact validation, import, and post-Figma plan refinement (tasks **063**–**072**)
 
 ## Stage Plan
 
@@ -68,6 +68,7 @@ UI bootstrap, preview generation, preview launch flow, local preview delivery, r
 - drill-down
 
 ### Stage 8 — Polish
+- Stage 8A — validated preview checkpoint
 - UX refinement
 - loading states
 - performance
@@ -79,6 +80,22 @@ UI bootstrap, preview generation, preview launch flow, local preview delivery, r
 - preview delivery smoke suite
 - preview readiness report
 - demo handoff bundle
+- demo handoff smoke suite
+- Stage 8B — Figma design source generation and validation
+- local execution in this branch means authoring prompt packs for an external Figma-generation system and then validating returned Figma artifacts after they are brought back into the workspace
+- authoritative charter: `docs/design/figma_design_branch_charter.md`
+- authoritative workflow (tasks 062–072, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
+- product UI brief prompt pack
+- product UI brief result validation
+- information architecture prompt pack
+- information architecture result validation
+- visual system prompt pack
+- visual system result validation
+- screen prompt pack
+- screen result validation
+- Stage 8C — Figma-synced implementation refinement
+- Figma import and architecture sync
+- post-Figma implementation plan refinement
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.
