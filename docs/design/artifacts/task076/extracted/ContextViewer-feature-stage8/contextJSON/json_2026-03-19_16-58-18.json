@@ -1,0 +1,39 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 2",
+    "status": "architecture_synced_agent_root"
+  },
+  "system": {
+    "summary": "Architecture synchronized after moving AGENT.md to project root and updating recovery and architecture links."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "dashboard model",
+      "ingestion model",
+      "data model",
+      "recovery integration",
+      "implementation plan inside inherited template OS",
+      "root-level AGENT execution layer"
+    ],
+    "in_progress": [],
+    "next": [
+      "AI task decomposition for data layer"
+    ]
+  },
+  "changes_since_previous": [
+    "Moved AGENT.md to project root",
+    "Updated recovery loading order",
+    "Linked AGENT.md from architecture and AI context"
+  ],
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ]
+}

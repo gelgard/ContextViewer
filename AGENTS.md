@@ -67,6 +67,7 @@ Never override higher-priority sources.
 - ai_tasks/ → execution layer
 - contextJSON/ → runtime snapshots
 - code/ → validation only
+- docs/design/approved_figma_artifact.md → **authoritative UI design reference** (post–**AI Task 078**); does not override JSON runtime truth
 
 
 ---
@@ -93,10 +94,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Figma Screen Prompt Generation
+- Substage: Post-Figma Implementation Plan Refinement (readiness)
 
 Next required action:
-→ run AI Task 076
+→ run AI Task 079
 
 
 ---

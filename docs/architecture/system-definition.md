@@ -310,3 +310,17 @@ This rule is mandatory for:
 - ordering
 - diff calculation
 - history reconstruction
+
+---
+
+## 20. Authoritative UI design reference (Stage 8 — post-import)
+
+After **AI Task 078 — Figma Import And Architecture Sync**, the **approved** UI design reference for implementation planning and future UI work is:
+
+- **Import record (canonical pointer):** `docs/design/approved_figma_artifact.md`
+- **Artifact package (workspace):** `docs/design/artifacts/task076/` (raw `.fig` / `.pdf` / zip + registry files; cross-references preserved screen exports under `docs/design/artifacts/task064/` where applicable)
+
+**Distinction (locked):**
+- **Runtime truth** remains **latest valid contextJSON** and **JSON-derived feeds** — layout and copy in Figma do **not** redefine snapshot fields or API contracts.
+- **Design truth** is this approved artifact package — **authoritative for visual structure, component naming, and UI handoff** until superseded by a later numbered import/sync task.
+- **Next implementation tasks** that affect UI must reference `docs/design/approved_figma_artifact.md` and the linked paths; they must not invent screens that contradict the certified IA (`docs/design/artifacts/task065/`) or visual system (`docs/design/artifacts/task074/`).

@@ -132,7 +132,13 @@ Current execution state:
 - AI Task 074 completed: visual system prompt pack
 - AI Task 075 validated: visual system review revision recorded `pass / GO` using the Task 074 fallback evidence package from uploaded workspace artifacts
 - visual system is now certified as product-specific, IA-compatible, unified across shell / overview / visualization / history, and sufficient to continue to screen prompt generation
+- AI Task 076 completed: screen prompt pack
+- screen-level prompt coverage is now fixed for shared shell / overview / visualization / history / demo-handoff surfaces
+- uploaded task076 artifact package is now preserved as the current base UI package for the whole application
+- AI Task 077 validated: screen review revision recorded `approve / GO` using the workspace-registered task076 base UI package
 - Stage 8 UI demo handoff chain is validated
+- AI Task 078 completed: Figma import and architecture sync — authoritative UI design reference `docs/design/approved_figma_artifact.md`; primary package `docs/design/artifacts/task076/`; runtime truth remains latest contextJSON + contracts per `docs/architecture/system-definition.md` §20
+- substage readiness: post-Figma implementation plan refinement (`AI Task 079`)
 
 Planned next branch inside Stage 8:
 - local AI tasks in this branch generate prompts for a third-party Figma-generation system rather than generating final UI screens directly
@@ -143,5 +149,5 @@ Planned next branch inside Stage 8:
 - AI Task 075: Figma visual system result validation
 - AI Task 076: Figma screen prompt pack
 - AI Task 077: Figma screen result validation
-- AI Task 078: Figma import and architecture sync
-- AI Task 079: post-Figma implementation plan refinement
+- AI Task 078: Figma import and architecture sync — completed
+- AI Task 079: post-Figma implementation plan refinement — next

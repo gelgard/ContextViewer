@@ -1,0 +1,14 @@
+
+TEMPLATE OPERATING SYSTEM RECOVERY RULE
+
+Recovery in a new chat must restore not only the current project state, but also the template-inherited operating system:
+
+- architecture rules
+- planning rules
+- recovery rules
+- response format rules
+- architecture update procedure
+- contextJSON rules
+- command model
+
+The recovered project must continue inside the same inherited framework, not in a newly improvised one.

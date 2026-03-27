@@ -1,0 +1,157 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-27T22:45:00Z",
+    "generated_filename": "json_2026-03-27_22-45-00.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Post-Figma Implementation Plan Refinement",
+    "current_task": "AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Post-Figma Implementation Plan Refinement",
+    "status": "stage8_active_approved_design_import_synced_plan_refinement_next"
+  },
+  "approved_design_reference": {
+    "import_record_path": "docs/design/approved_figma_artifact.md",
+    "primary_artifact_package": "docs/design/artifacts/task076/",
+    "native_figma_workspace_path": "docs/design/artifacts/task076/raw/ContextViewer.fig",
+    "import_sync_task": "078",
+    "import_recorded_date": "2026-03-27",
+    "evidence_rule": "uploaded_workspace_artifacts_primary_external_urls_optional",
+    "runtime_truth_note": "Latest valid contextJSON and JSON-backed contracts remain authoritative for computed UI state; Figma/design docs are design truth only."
+  },
+  "system": {
+    "summary": "ContextViewer preserves the validated Stage 8 preview/demo handoff checkpoint, certified IA and visual-system baselines, and an approved whole-application UI package under task076. AI Task 078 registered the canonical design import in docs/design/approved_figma_artifact.md and synced architecture §20, plans, recovery, and AGENTS. Runtime truth remains JSON-driven; next anchor is post-Figma implementation plan refinement (079)."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Tasks 053-061 Stage 8 UI bootstrap preview handoff chain completed",
+      "AI Task 062 Figma design branch charter and prompt workflow completed",
+      "AI Task 063-066 product brief and IA prompt/validation completed",
+      "AI Task 073 IA fallback evidence package completed",
+      "AI Task 074-075 visual system prompt and validation completed",
+      "AI Task 076 screen prompt pack completed",
+      "AI Task 077 screen result validation approve GO completed",
+      "AI Task 078 Figma import and architecture sync completed"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "Post-import implementation plan refinement readiness",
+      "Approved UI design reference active for future UI implementation tasks"
+    ],
+    "next": [
+      "Run AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement",
+      "Decompose next UI implementation work per approved artifact without breaking JSON contracts"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "AI Task 078 completed: docs/design/approved_figma_artifact.md created; system-definition.md §20; plans/recovery/AGENTS/data_layer README synced",
+    "Authoritative UI design reference: docs/design/artifacts/task076/ with canonical pointer in approved_figma_artifact.md",
+    "Execution anchor advanced from 078 to 079; substage moved to Post-Figma Implementation Plan Refinement"
+  ],
+  "current_task": {
+    "id": "079",
+    "name": "Stage 8 Post-Figma Implementation Plan Refinement",
+    "stage": "Stage 8 — Polish",
+    "substage": "Post-Figma Implementation Plan Refinement",
+    "status": "next_defined"
+  },
+  "next_tasks": [
+    { "id": "079", "name": "Stage 8 Post-Figma Implementation Plan Refinement" }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Post-Figma Implementation Plan Refinement",
+    "state": "active",
+    "next_stage": null,
+    "design_branch": {
+      "status": "approved_artifact_imported_architecture_synced",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "approved_design_record": "docs/design/approved_figma_artifact.md",
+      "primary_ui_artifact_package": "docs/design/artifacts/task076/",
+      "validated_external_ui_baseline": "docs/design/artifacts/task064/",
+      "validated_ia_baseline": "docs/design/artifacts/task065/",
+      "validated_visual_system_baseline": "docs/design/artifacts/task074/",
+      "screen_validation_status": "approve_go_revision_2",
+      "import_task": "078_completed",
+      "fallback_evidence_rule": "uploaded_workspace_artifacts_only_no_external_figma_link_authority",
+      "legacy_superseded_placeholders": ["067", "068", "069", "070", "071", "072"],
+      "remaining_design_gaps": [
+        "secondary flows (settings/profile, diff viewer) per approved artifact known gaps",
+        "optional richer demo deck polish"
+      ],
+      "next_design_tasks": ["079"]
+    }
+  },
+  "ai_task_status": {
+    "last_completed_design_branch_task": "078",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "073", "066", "074", "075", "076", "077", "078"],
+    "next_task": "079",
+    "next_task_status": "defined_and_ready"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented",
+      "PG-RT-002": "implemented",
+      "PG-OV-001": "implemented_and_design_reference_registered",
+      "PG-AR-001": "implemented_and_design_reference_registered",
+      "PG-AR-002": "implemented_and_design_reference_registered",
+      "PG-HI-001": "implemented_and_design_reference_registered",
+      "PG-HI-002": "implemented_and_design_reference_registered",
+      "PG-PL-001": "pending_refinement_task_079",
+      "PG-UX-001": "in_progress_post_import_plan_refinement",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": "AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "ai_task_078_import_sync_contextjson_regenerated"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8: approved Figma/UI design import recorded; runtime remains contextJSON-driven; refine implementation plan under 079.",
+    "customer_status": "Design reference is official in-repo; next step translates it into executable implementation tasks without breaking snapshot-driven truth.",
+    "last_iteration": "AI Task 078 import/sync: approved_figma_artifact.md, system-definition §20, plans, recovery, contextJSON."
+  },
+  "generated_at": "2026-03-27T22:45:00Z"
+}

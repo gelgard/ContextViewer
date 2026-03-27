@@ -183,5 +183,5 @@ Support **investor**, **customer**, or **internal demo** storytelling: guided cl
 ## Reference (human operator)
 
 - Charter: `docs/design/figma_design_branch_charter.md`
-- Workflow: `docs/design/figma_prompt_workflow.md` — next validation **AI Task 077**
+- Workflow: `docs/design/figma_prompt_workflow.md` — next validation **AI Task 077** → `docs/design/reviews/figma_screen_validation.md`
 - Submission: `docs/design/prompts/figma_screen_prompt_submission_checklist.md`

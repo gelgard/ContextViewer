@@ -80,6 +80,11 @@ Completed:
 - AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack
 - AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package
 - AI Task 066 — Stage 8 Figma Information Architecture Result Validation
+- AI Task 074 — Stage 8 Figma Visual System Prompt Pack
+- AI Task 075 — Stage 8 Figma Visual System Result Validation
+- AI Task 076 — Stage 8 Figma Screen Prompt Pack
+- AI Task 077 — Stage 8 Figma Screen Result Validation
+- AI Task 078 — Stage 8 Figma Import And Architecture Sync
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -101,7 +106,7 @@ Execution status:
 - Figma branch charter and prompt workflow published: `docs/design/figma_design_branch_charter.md`, `docs/design/figma_prompt_workflow.md` (AI Task 062)
 - external product-brief artifacts preserved in-repo: `docs/design/artifacts/task064/`
 - product brief result validated in `docs/design/reviews/figma_product_ui_brief_validation.md` (AI Task 064, verdict `pass`)
-- current design baseline: near-complete core UI for overview / visualization / history, but not yet final import-ready exhaustive UI
+- current design baseline: **approved** whole-application UI reference — `docs/design/approved_figma_artifact.md` (package `docs/design/artifacts/task076/`); secondary lineage under `task064/`; known gaps listed in import record
 - AI Task 065 completed: information architecture prompt pack published for external generation
 - AI Task 073 completed: architecture-derived IA fallback evidence package assembled from uploaded workspace artifacts only
 - AI Task 066 re-opened and passed / GO using the completed Task 073 fallback evidence package
@@ -109,15 +114,17 @@ Execution status:
 - AI Task 074 completed: visual-system prompt pack published for external generation
 - AI Task 075 validated: visual-system review revision passed / GO using workspace-registered fallback evidence under `docs/design/artifacts/task074/`
 - visual system is certified as product-specific, unified, and IA-compatible for continuation to screen prompt generation
-- required next refinements remain: deeper screen/flow coverage and stronger final import-ready artifact identity
+- AI Task 076 completed: screen prompt pack published for external generation
+- screen-level prompt coverage now exists for shell, overview, visualization, history, and demo / handoff surfaces
+- workspace-registered package `docs/design/artifacts/task076/` is now preserved as the current base UI artifact set for the whole application
+- AI Task 077 validated: screen review revision approved / GO using the workspace-registered package `docs/design/artifacts/task076/`
+- AI Task 078 completed: Figma import and architecture sync — **authoritative UI design reference** recorded at `docs/design/approved_figma_artifact.md`; artifact package `docs/design/artifacts/task076/` registered as the current whole-application base UI reference; `docs/architecture/system-definition.md` §20 and recovery/plans/contextJSON synchronized
+- runtime truth remains contextJSON + JSON contracts; design truth is the approved artifact record until superseded
 
 Current:
-- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; IA prompt pack completed; fallback evidence package completed; IA validation re-opened and passed; visual-system prompt and validation completed; numbering correction applied; current execution anchor is **AI Task 076** for screen prompt generation
+- Stage 8 active — post-import: validated preview / handoff checkpoint preserved; approved design package `task076/` + import record; substage readiness for **post-Figma implementation plan refinement**; current execution anchor is **AI Task 079**
 
 Next:
-- AI Task 076 — Stage 8 Figma Screen Prompt Pack
-- AI Task 077 — Stage 8 Figma Screen Result Validation
-- AI Task 078 — Stage 8 Figma Import And Architecture Sync
 - AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement
 
 Response rule update:
@@ -134,3 +141,4 @@ Cross-cutting architecture notes:
 - coding remains blocked until execution proceeds through numbered AI tasks
 - Stage 8 Figma branch rules: `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`
 - current validated external artifact registry: `docs/design/artifacts/task064/README.md`
+- **approved UI design reference (import):** `docs/design/approved_figma_artifact.md` (primary package `docs/design/artifacts/task076/`)

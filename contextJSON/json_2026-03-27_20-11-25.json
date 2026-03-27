@@ -1,0 +1,235 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-27T18:11:25Z",
+    "generated_filename": "json_2026-03-27_20-11-25.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Figma Import And Architecture Sync",
+    "current_task": "AI Task 078 — Stage 8 Figma Import And Architecture Sync",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Figma Import And Architecture Sync",
+    "status": "stage8_active_with_whole_app_base_ui_package_approved_and_import_next"
+  },
+  "system": {
+    "summary": "ContextViewer preserves a validated Stage 8 preview and demo handoff checkpoint, a validated external near-complete core UI baseline, a certified IA baseline, a certified visual-system baseline, and an approved whole-application base UI artifact package under task076. The next execution anchor is Figma import and architecture sync."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Task 053 UI bootstrap bundle completed",
+      "AI Task 054 UI bootstrap contract smoke suite completed",
+      "AI Task 055 UI bootstrap preview HTML completed",
+      "AI Task 056 UI preview launcher completed",
+      "AI Task 057 UI preview local server completed",
+      "AI Task 058 UI preview delivery smoke suite completed",
+      "AI Task 059 UI preview readiness report completed",
+      "AI Task 060 UI demo handoff bundle completed",
+      "AI Task 061 UI demo handoff smoke suite completed",
+      "AI Task 062 Figma design branch charter and prompt workflow completed",
+      "AI Task 063 Figma product UI brief prompt pack completed",
+      "AI Task 064 Figma product UI brief result validation completed",
+      "AI Task 065 Figma information architecture prompt pack completed",
+      "AI Task 073 architecture-derived IA fallback package completed",
+      "AI Task 066 Figma information architecture validation re-opened and passed",
+      "AI Task 074 Figma visual system prompt pack completed",
+      "AI Task 075 Figma visual system validation passed",
+      "AI Task 076 Figma screen prompt pack completed",
+      "AI Task 077 Figma screen validation approved"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "Validated preview / handoff checkpoint preserved as baseline",
+      "External near-complete core UI baseline preserved from product-brief validation",
+      "IA structure certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure",
+      "Visual system certified as product-specific, unified across shell/workspaces, and sufficient for screen prompt generation",
+      "Base UI artifact package for the whole application preserved and approved under docs/design/artifacts/task076/"
+    ],
+    "next": [
+      "Run AI Task 078 — Stage 8 Figma import and architecture sync",
+      "Run AI Task 079 — Stage 8 post-Figma implementation plan refinement"
+    ]
+  },
+  "roadmap": [
+    {
+      "stage": "Stage 1",
+      "name": "Foundation",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 2",
+      "name": "Data Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 3",
+      "name": "Ingestion Engine",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 4",
+      "name": "Interpretation Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 5",
+      "name": "Dashboard Core",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 6",
+      "name": "Visualization",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 7",
+      "name": "History Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 8",
+      "name": "Polish",
+      "status": "active"
+    }
+  ],
+  "changes_since_previous": [
+    "AI Task 077 approved the screen-level review and recorded GO for AI Task 078",
+    "The task076 artifact package is now preserved as the whole-application base UI package",
+    "The current execution anchor moved from screen result validation to AI Task 078 import and architecture sync"
+  ],
+  "current_task": {
+    "id": "078",
+    "name": "Stage 8 Figma import and architecture sync",
+    "stage": "Stage 8 — Polish",
+    "substage": "Figma Import And Architecture Sync",
+    "status": "next_defined"
+  },
+  "next_tasks": [
+    {
+      "id": "078",
+      "name": "Stage 8 Figma import and architecture sync"
+    },
+    {
+      "id": "079",
+      "name": "Stage 8 post-Figma implementation plan refinement"
+    }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Figma Import And Architecture Sync",
+    "state": "active",
+    "next_stage": null,
+    "design_branch": {
+      "status": "whole_app_base_ui_package_approved_import_next",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "validated_external_ui_baseline": "docs/design/artifacts/task064/",
+      "validated_ia_baseline": "docs/design/artifacts/task065/",
+      "validated_visual_system_baseline": "docs/design/artifacts/task074/",
+      "screen_prompt_pack": "docs/design/prompts/figma_screen_prompts.md",
+      "screen_submission_checklist": "docs/design/prompts/figma_screen_prompt_submission_checklist.md",
+      "approved_screen_validation_review": "docs/design/reviews/figma_screen_validation.md",
+      "base_ui_artifact_package": "docs/design/artifacts/task076/",
+      "base_ui_artifact_role": "current whole-application UI baseline until superseded by a later approved import",
+      "ia_validation_status": "pass_go_reopened_revision",
+      "visual_system_validation_status": "pass_go_workspace_registered_fallback_evidence",
+      "screen_validation_status": "approve_go_workspace_registered_base_ui_package",
+      "fallback_task": "073_completed",
+      "fallback_evidence_rule": "uploaded_workspace_artifacts_only_no_external_figma_link_authority",
+      "legacy_superseded_placeholders": [
+        "067",
+        "068",
+        "069",
+        "070",
+        "071",
+        "072"
+      ],
+      "remaining_design_gaps": [
+        "final import-ready artifact identity",
+        "post-import implementation refinement"
+      ],
+      "next_design_tasks": [
+        "078",
+        "079"
+      ]
+    }
+  },
+  "ai_task_status": {
+    "last_completed_task": "077",
+    "completed_in_stage_8": [
+      "053",
+      "054",
+      "055",
+      "056",
+      "057",
+      "058",
+      "059",
+      "060",
+      "061",
+      "062",
+      "063",
+      "064",
+      "065",
+      "073",
+      "066",
+      "074",
+      "075",
+      "076",
+      "077"
+    ],
+    "next_task": "078",
+    "next_task_status": "defined_and_ready"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented_or_planned",
+      "PG-RT-002": "implemented_or_planned",
+      "PG-OV-001": "implemented_and_design_refinement_in_progress",
+      "PG-AR-001": "implemented_and_design_refinement_in_progress",
+      "PG-AR-002": "implemented_and_design_refinement_in_progress",
+      "PG-HI-001": "implemented_and_design_refinement_in_progress",
+      "PG-HI-002": "implemented_and_design_refinement_in_progress",
+      "PG-UX-001": "in_progress_with_whole_app_base_ui_package_approved_and_import_next",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": "AI Task 078 — Stage 8 Figma Import And Architecture Sync"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "architecture_update_applied_contextjson_regenerated"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8 remains active. The project now preserves a validated preview/handoff checkpoint, a validated external UI brief baseline, a certified IA baseline, a certified visual-system baseline, and an approved whole-application base UI package under task076. The next anchor is AI Task 078 for import and architecture sync.",
+    "customer_status": "The design branch now has an approved whole-application base UI package and is ready for import into the architecture/planning layers before final refinement.",
+    "last_iteration": "Synchronized authority after AI Task 077 approval and advanced the current execution anchor to AI Task 078."
+  },
+  "generated_at": "2026-03-27T18:11:25Z"
+}

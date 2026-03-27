@@ -98,7 +98,7 @@ Primary user outcomes:
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
 | PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036-079 (062 charter/workflow delivered; 063-066, 073-079 active design branch/fallback; 067-072 legacy superseded placeholders) | in_progress |
+| PG-UX-001 | Stage 6-8 | 036-079 (062 charter/workflow; 063-078 design branch complete through import sync; 079 plan refinement; 067-072 legacy superseded) | in_progress (design reference registered post-078) |
 | PG-EX-001 | Stage 2-8 | 001-079 (062-066, 073-079 active design branch/fallback; 067-072 legacy superseded placeholders) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
@@ -120,13 +120,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - Numbering correction applied after fallback insertion: legacy placeholder files `067–072` remain in-repo but are superseded and are not valid execution anchors.
 - `AI Task 074` is completed.
 - `AI Task 075` is validated as `pass / GO` using the completed Task 074 fallback evidence package under `docs/design/artifacts/task074/`.
-- Next executable design-branch task: `AI Task 076 — Stage 8 Figma Screen Prompt Pack`
-- Requirement mapping for **076**:
-  - `PG-OV-001`
-  - `PG-AR-001`
-  - `PG-AR-002`
-  - `PG-HI-001`
-  - `PG-HI-002`
+- `AI Task 076` is completed.
+- `docs/design/artifacts/task076/` is preserved as the current base UI artifact package for the whole application and may be used as the default visual reference in future branch tasks until superseded by a later approved import.
+- `AI Task 077` is validated as `approve / GO` using the workspace-registered package under `docs/design/artifacts/task076/`.
+- `AI Task 078` is completed: authoritative UI design reference recorded at `docs/design/approved_figma_artifact.md`; `docs/architecture/system-definition.md` §20; primary package `docs/design/artifacts/task076/`; runtime truth unchanged (contextJSON / contracts).
+- Next executable design-branch task: `AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement`
+- Requirement mapping for **079**:
+  - `PG-PL-001`
   - `PG-UX-001`
   - `PG-EX-001`
 
@@ -214,6 +214,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `076` — Stage 8 Figma Screen Prompt Pack
+  - **completed**
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -222,6 +223,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `077` — Stage 8 Figma Screen Result Validation
+  - **completed** (`approve / GO` using workspace-registered package `docs/design/artifacts/task076/`)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -230,6 +232,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `078` — Stage 8 Figma Import And Architecture Sync
+  - **completed** (`docs/design/approved_figma_artifact.md` + architecture/recovery/plan/contextJSON sync)
   - `PG-RT-001`
   - `PG-RT-002`
   - `PG-UX-001`

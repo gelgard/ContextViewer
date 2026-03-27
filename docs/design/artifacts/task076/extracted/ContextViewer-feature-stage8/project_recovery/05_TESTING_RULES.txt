@@ -1,0 +1,6 @@
+TESTING RULES
+
+- every task must include testing instructions
+- terminal tests must be fully executable from terminal
+- prefer deterministic outputs
+- clean up temporary files after testing

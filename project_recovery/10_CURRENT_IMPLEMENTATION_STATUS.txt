@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Figma Screen Prompt Generation
+Post-Figma Implementation Plan Refinement
 
 STATUS:
 - Architecture synced with latest rules
@@ -98,12 +98,17 @@ STATUS:
 - AI Task 074 completed: visual system prompt pack published
 - AI Task 075 validated: visual system review revision passed / GO using the Task 074 fallback evidence package from uploaded workspace artifacts
 - visual system is now certified as product-specific, IA-compatible, unified across shell / overview / visualization / history, and sufficient for screen prompt generation
-- required next refinements are: deeper screen/flow coverage and stronger import-ready artifact identity
+- AI Task 076 completed: screen prompt pack published for external generation
+- screen prompt coverage now exists for shared shell / navigation, overview, visualization workspace, history workspace, and demo / handoff mode
+- uploaded workspace artifacts under `docs/design/artifacts/task076/` are now the preserved base UI package for the whole application until superseded by a later approved import
+- AI Task 077 validated: screen review revision approved / GO using the workspace-registered task076 package
+- AI Task 078 completed: approved Figma/UI design reference recorded at `docs/design/approved_figma_artifact.md`; primary artifact package `docs/design/artifacts/task076/`; `docs/architecture/system-definition.md` §20; plans/recovery/contextJSON aligned — design authority separate from runtime truth (latest contextJSON)
+- required next refinements: post-Figma implementation plan refinement (`079`), secondary flows / import-ready polish as tracked in approved artifact known gaps
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 076 — Stage 8 Figma screen prompt pack
+Run AI Task 079 — Stage 8 post-Figma implementation plan refinement
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

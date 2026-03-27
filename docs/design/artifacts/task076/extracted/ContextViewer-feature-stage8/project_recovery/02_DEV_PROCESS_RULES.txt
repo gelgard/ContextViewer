@@ -1,0 +1,7 @@
+DEV PROCESS RULES
+
+1. Architecture first, then code
+2. Work only through small AI tasks
+3. Test every task immediately
+4. Keep architecture files synchronized
+5. Preserve ability to recover context in a new chat

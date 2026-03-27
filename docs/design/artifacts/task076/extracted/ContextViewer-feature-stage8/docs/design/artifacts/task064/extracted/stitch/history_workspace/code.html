@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextViewer - History Workspace</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#4a5268",
+              "on-error-container": "#752121",
+              "surface-dim": "#cfdce3",
+              "tertiary-fixed": "#69f6b8",
+              "surface-container-high": "#e1e9ee",
+              "on-surface": "#2a3439",
+              "surface-container-low": "#f0f4f7",
+              "tertiary-fixed-dim": "#58e7ab",
+              "outline-variant": "#a9b4b9",
+              "inverse-primary": "#dae2fd",
+              "on-secondary-fixed-variant": "#4d5d73",
+              "error-dim": "#4e0309",
+              "surface-variant": "#d9e4ea",
+              "tertiary-dim": "#005f40",
+              "primary-fixed": "#dae2fd",
+              "on-primary-container": "#4a5167",
+              "secondary": "#506076",
+              "error": "#9f403d",
+              "secondary-fixed": "#d3e4fe",
+              "surface-container-highest": "#d9e4ea",
+              "inverse-surface": "#0b0f10",
+              "tertiary-container": "#69f6b8",
+              "surface": "#f7f9fb",
+              "on-surface-variant": "#566166",
+              "on-secondary-container": "#435368",
+              "on-primary": "#f7f7ff",
+              "on-tertiary-fixed": "#00452d",
+              "secondary-container": "#d3e4fe",
+              "on-tertiary": "#e6ffee",
+              "primary-fixed-dim": "#ccd4ee",
+              "secondary-fixed-dim": "#c5d6f0",
+              "on-primary-fixed-variant": "#535b71",
+              "primary-container": "#dae2fd",
+              "on-tertiary-container": "#005a3c",
+              "on-background": "#2a3439",
+              "surface-tint": "#565e74",
+              "on-primary-fixed": "#373f54",
+              "on-secondary": "#f7f9ff",
+              "secondary-dim": "#44546a",
+              "background": "#f7f9fb",
+              "outline": "#717c82",
+              "on-tertiary-fixed-variant": "#006544",
+              "tertiary": "#006d4a",
+              "surface-bright": "#f7f9fb",
+              "on-secondary-fixed": "#314055",
+              "primary": "#565e74",
+              "on-error": "#fff7f6",
+              "error-container": "#fe8983",
+              "surface-container": "#e8eff3",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#9a9d9f"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-5 h-14 bg-[#f7f9fb] dark:bg-[#0f172a] border-b border-[#a9b4b9]/10 dark:border-slate-800 font-['Inter'] text-sm tracking-tight">
+<div class="flex items-center gap-4">
+<span class="text-lg font-semibold text-[#2a3439] dark:text-[#f1f5f9]">ContextViewer</span>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<span class="text-[#565e74] dark:text-[#f1f5f9] font-medium">Stage 8 — Polish</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined text-[#565e74] dark:text-[#94a3b8]">swap_horiz</span>
+</button>
+<button class="p-2 hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined text-[#565e74] dark:text-[#94a3b8]">notifications</span>
+</button>
+<button class="p-2 hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined text-[#565e74] dark:text-[#94a3b8]">settings</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Left) -->
+<nav class="fixed left-0 top-14 bottom-0 flex flex-col py-4 px-3 gap-2 bg-[#f0f4f7] dark:bg-[#1e293b] w-64 border-r border-[#a9b4b9]/10 font-['Inter'] text-[0.875rem]">
+<div class="mb-4 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-sm bg-primary flex items-center justify-center text-on-primary font-bold text-xs">CV</div>
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold leading-tight">ContextViewer</span>
+<span class="text-on-surface-variant text-[11px] uppercase tracking-wider">System Architecture</span>
+</div>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span>Visualization</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-[#ffffff] dark:bg-[#0f172a] text-[#2a3439] dark:text-[#f8fafc] font-medium shadow-sm rounded-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span>History</span>
+</a>
+<div class="mt-auto pt-4 border-t border-outline-variant/10">
+<div class="px-3 py-2 flex items-center gap-3">
+<div class="w-6 h-6 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User" data-alt="professional portrait of a system architect with neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYDBc4I3i6nbOJkd-kMSVHQjz0Fuvs7XP139jwB0CR7P_eCG850ruuIT3hvIcqyLKLHaT7nho0NPJwXKePJEHJ7dfGKNmIudlfjMOwbLKj7oTYzLGEY6gDUBVAPAPkJVX07Dh-7t7eTgCCl3gurBZ0gWa4fH6rlEUshKM6yZgUrxwbSGmZCO2HiybHZYpNqkdGwewaoiU6fQaesoGOV5Hn7T_Acr910YIFx50m2klN6mg-O4eBFJ8khX_z8zYmSQsKdA6Msro_LEJe"/>
+</div>
+<span class="text-on-surface font-medium text-xs">Alex Chen</span>
+</div>
+</div>
+</nav>
+<!-- Main Content Workspace -->
+<main class="ml-64 mr-80 mt-14 p-0 flex flex-col w-full bg-surface min-h-[calc(100vh-3.5rem)]">
+<!-- Timeline Scrubber Section -->
+<div class="bg-surface-container-lowest border-b border-outline-variant/10 px-8 py-6 sticky top-14 z-30">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h1 class="text-headline-sm font-semibold text-on-surface">History Workspace</h1>
+<p class="text-body-md text-on-surface-variant">Navigating 142 snapshots across the last 30 days.</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 bg-surface-container text-on-surface-variant text-xs font-medium rounded hover:bg-surface-variant transition-colors">Export Log</button>
+<button class="px-4 py-1.5 bg-primary text-on-primary text-xs font-medium rounded shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">bookmark</span>
+                        Pin Current State
+                    </button>
+</div>
+</div>
+<!-- Visual Timeline -->
+<div class="relative h-24 w-full bg-surface-container-low rounded-lg p-4 flex items-end gap-1 overflow-x-auto">
+<!-- Bar Chart Representation of Activity -->
+<div class="flex-1 h-4 bg-outline-variant/20 rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer" title="Oct 12"></div>
+<div class="flex-1 h-8 bg-outline-variant/20 rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer" title="Oct 13"></div>
+<div class="flex-1 h-6 bg-outline-variant/20 rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer" title="Oct 14"></div>
+<div class="flex-1 h-12 bg-outline-variant/20 rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer" title="Oct 15"></div>
+<div class="flex-1 h-5 bg-outline-variant/20 rounded-t-sm hover:bg-primary/40 transition-colors cursor-pointer" title="Oct 16"></div>
+<div class="flex-1 h-14 bg-primary rounded-t-sm relative group cursor-pointer" title="Oct 17 (Today)">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary">TODAY</div>
+</div>
+<div class="flex-1 h-0 bg-outline-variant/10 rounded-t-sm opacity-50"></div>
+<div class="flex-1 h-0 bg-outline-variant/10 rounded-t-sm opacity-50"></div>
+<div class="flex-1 h-0 bg-outline-variant/10 rounded-t-sm opacity-50"></div>
+<!-- Range Selector Overlay (Simulated) -->
+<div class="absolute inset-x-0 bottom-0 h-1 bg-outline-variant/10"></div>
+<div class="absolute left-1/2 bottom-0 w-32 h-1 bg-primary -translate-x-1/2 rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">
+<span>Oct 01</span>
+<span>Oct 15</span>
+<span>Today</span>
+<span>Oct 30</span>
+</div>
+</div>
+<!-- Snapshots Feed -->
+<div class="p-8 space-y-12 max-w-5xl mx-auto w-full">
+<!-- Group: Today -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<h2 class="text-title-sm font-semibold text-on-surface">Today, Oct 17</h2>
+<div class="h-[1px] flex-1 bg-outline-variant/10"></div>
+<span class="label-sm px-2 py-0.5 bg-tertiary-container text-on-tertiary-container rounded">4 Snapshots</span>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Snapshot Card: Active/Newest -->
+<div class="group relative flex gap-6 p-4 bg-surface-container-lowest border border-primary/20 rounded shadow-sm hover:shadow-md transition-all">
+<div class="flex flex-col items-center gap-2 w-12 pt-1">
+<span class="text-[10px] font-bold text-primary">14:20</span>
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<div class="w-[1px] flex-1 bg-outline-variant/20"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-medium text-on-surface">Auto-Save: Stage 8 Refinement</h3>
+<p class="text-xs text-on-surface-variant mt-1">Regenerated visual nodes for the Inspector sub-module.</p>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant/50">v1.42.0</span>
+</div>
+<div class="flex gap-3">
+<div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+<span>Regenerated</span>
+</div>
+<div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">account_tree</span>
+<span>+12 Nodes</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container rounded text-primary" title="Restore"><span class="material-symbols-outlined">restore</span></button>
+<button class="p-2 hover:bg-surface-container rounded text-on-surface-variant" title="Compare"><span class="material-symbols-outlined">difference</span></button>
+</div>
+</div>
+<!-- Snapshot Card: Minor -->
+<div class="group relative flex gap-6 p-4 bg-surface-container-low/50 border border-transparent hover:border-outline-variant/20 rounded transition-all">
+<div class="flex flex-col items-center gap-2 w-12 pt-1">
+<span class="text-[10px] font-bold text-on-surface-variant">11:05</span>
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<div class="w-[1px] flex-1 bg-outline-variant/20"></div>
+</div>
+<div class="flex-1">
+<h3 class="font-medium text-on-surface">Checkpoint Preserved</h3>
+<p class="text-xs text-on-surface-variant mt-1">Manual capture prior to schema migration.</p>
+<div class="mt-3">
+<div class="inline-flex items-center gap-1.5 text-[11px] text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Locked</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Group: Yesterday -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<h2 class="text-title-sm font-semibold text-on-surface">Yesterday, Oct 16</h2>
+<div class="h-[1px] flex-1 bg-outline-variant/10"></div>
+<span class="label-sm px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded">1 Snapshot</span>
+</div>
+<div class="group relative flex gap-6 p-4 bg-surface-container-low/50 border border-transparent rounded transition-all">
+<div class="flex flex-col items-center gap-2 w-12 pt-1">
+<span class="text-[10px] font-bold text-on-surface-variant">18:45</span>
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+</div>
+<div class="flex-1">
+<h3 class="font-medium text-on-surface">Project Initialization Complete</h3>
+<p class="text-xs text-on-surface-variant mt-1">Baseline architecture established for Stage 8.</p>
+</div>
+</div>
+</section>
+<!-- Group: Older -->
+<section class="opacity-75">
+<div class="flex items-center gap-4 mb-6">
+<h2 class="text-title-sm font-semibold text-on-surface">Oct 14</h2>
+<div class="h-[1px] flex-1 bg-outline-variant/10"></div>
+<span class="label-sm px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded">Archive</span>
+</div>
+<div class="flex items-center justify-center p-8 border-2 border-dashed border-outline-variant/20 rounded-lg">
+<button class="text-xs font-bold text-primary uppercase tracking-widest hover:underline flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">expand_more</span>
+                        Load 12 Archived Snapshots
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<!-- SideNavBar (Right) - Inspector / Node Details -->
+<aside class="fixed right-0 top-14 bottom-0 z-40 w-80 bg-[#f0f4f7]/85 dark:bg-[#1e293b]/85 backdrop-blur-xl border-l border-[#a9b4b9]/10 dark:border-slate-800 flex flex-col font-['Inter'] text-[0.875rem]">
+<div class="p-5 border-b border-outline-variant/10 flex justify-between items-center">
+<div>
+<span class="text-xs font-bold uppercase tracking-widest text-[#566166]">Inspector</span>
+<h4 class="text-on-surface font-semibold">Snapshot Details</h4>
+</div>
+<button class="text-xs text-primary hover:underline">Collapse</button>
+</div>
+<div class="flex-1 overflow-y-auto p-5 space-y-8">
+<!-- Metadata Section -->
+<section>
+<h5 class="text-title-sm font-medium text-on-surface mb-3">General Information</h5>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">ID</span>
+<span class="text-xs font-mono font-bold text-on-surface">sha-82f10d</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">Created By</span>
+<span class="text-xs font-medium text-on-surface">Alex Chen</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">Environment</span>
+<span class="label-sm px-1.5 py-0.5 bg-secondary-container text-on-secondary-container rounded">Staging</span>
+</div>
+</div>
+</section>
+<!-- Visual Diff Section -->
+<section>
+<div class="flex justify-between items-center mb-3">
+<h5 class="text-title-sm font-medium text-on-surface">Graph Comparison</h5>
+<span class="text-[10px] text-primary font-bold">LIVE</span>
+</div>
+<div class="aspect-video bg-surface-container rounded border border-outline-variant/10 relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-50 grayscale" data-alt="abstract technical visualization of a node-based architecture graph with glowing blue connections and data points" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPb0AZEyvYXTWO6ux3Hga5JtOsKuR5HTG_NQuyXRk9dSuBLX-QF0Fpx7CqioD774hnCVRbeaxpGtUDvNvfRV3ADGnCtfDVUrdsfzcEJdp68vdFarhIVp15UbrOgJKkovlUDrh8FdbMsKJjQvQ75P9ZoXfIP9BboKP4nobOOpyTtiGAE_ErzoYKe9zEoKk9oC99TI7HzeOUnWxCR5C1DGtDq5yJ9XndzC0UdkjO2DwDIZCtAV6Q99D78pr0y74eyG8E0p3KFjas1Xbn"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-surface-container-lowest/90 backdrop-blur p-3 rounded shadow-lg text-center">
+<span class="material-symbols-outlined text-primary mb-1">visibility</span>
+<p class="text-[10px] font-bold text-on-surface uppercase tracking-tight">Open Diff Viewer</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Activity Log -->
+<section>
+<h5 class="text-title-sm font-medium text-on-surface mb-3">Change Log</h5>
+<ul class="space-y-3">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-[16px] text-tertiary mt-0.5">add_circle</span>
+<div>
+<p class="text-xs font-medium text-on-surface">Added 12 Visual Nodes</p>
+<p class="text-[10px] text-on-surface-variant">Inspector UI updates</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">edit</span>
+<div>
+<p class="text-xs font-medium text-on-surface">Updated Edge Weight</p>
+<p class="text-[10px] text-on-surface-variant">Global connection stroke</p>
+</div>
+</li>
+</ul>
+</section>
+</div>
+<div class="p-5 bg-surface-container-low border-t border-outline-variant/10">
+<button class="w-full py-2.5 bg-primary text-on-primary text-sm font-semibold rounded shadow-sm hover:opacity-90 transition-opacity">
+                Restore this Version
+            </button>
+</div>
+</aside>
+</body></html>

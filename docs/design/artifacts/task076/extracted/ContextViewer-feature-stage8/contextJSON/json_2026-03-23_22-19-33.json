@@ -1,0 +1,129 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 7",
+    "substage": "Daily Aggregation API",
+    "status": "history_in_progress"
+  },
+  "system": {
+    "summary": "ContextViewer visualizes AI-project state and evolution from immutable contextJSON snapshots, with latest valid snapshot as runtime truth."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion Engine completed",
+      "Stage 4 Interpretation Layer completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "AI Task 047 Stage 7 history daily rollup feed completed"
+    ],
+    "in_progress": [
+      "Stage 7 History Layer implementation",
+      "Goal Traceability Layer governance rollout"
+    ],
+    "next": [
+      "AI Task 048 Stage 7 history continuation",
+      "History timeline and drill-down contracts",
+      "Stage 7 home/history aggregation endpoints"
+    ]
+  },
+  "roadmap": [
+    {
+      "stage": "Stage 1",
+      "name": "Foundation",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 2",
+      "name": "Data Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 3",
+      "name": "Ingestion Engine",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 4",
+      "name": "Interpretation Layer",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 5",
+      "name": "Dashboard Core",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 6",
+      "name": "Visualization",
+      "status": "completed"
+    },
+    {
+      "stage": "Stage 7",
+      "name": "History Layer",
+      "status": "in_progress"
+    },
+    {
+      "stage": "Stage 8",
+      "name": "Polish",
+      "status": "pending"
+    }
+  ],
+  "changes_since_previous": [
+    "Architecture sync protocol switched to workspace-first with archive fallback",
+    "Goal Traceability Layer added via docs/plans/product_goal_traceability_matrix.md",
+    "AI Task 047 mapped to product-goal Requirement IDs with measurable acceptance evidence",
+    "Recovery and plan files synchronized to Stage 7 current state"
+  ],
+  "current_task": {
+    "id": "048",
+    "name": "Stage 7 history continuation",
+    "stage": "Stage 7 — History Layer",
+    "substage": "Timeline and drill-down contracts"
+  },
+  "next_tasks": [
+    {
+      "id": "048",
+      "name": "Stage 7 history continuation"
+    },
+    {
+      "id": "049",
+      "name": "Stage 7 history timeline feed"
+    },
+    {
+      "id": "050",
+      "name": "Stage 7 history drill-down bundle"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "sync_mode": "workspace_first_with_archive_fallback"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "explicit_step_by_step",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "announce_stage_transition": true,
+    "stage_transition_git_flow": "merge_to_development_then_create_feature_stage_branch",
+    "next_ai_task_requires_physical_task_file": true,
+    "next_ai_task_must_include_created_file_line": true,
+    "next_ai_task_required_blocks_order": [
+      "AI Task file created",
+      "Cursor prompt (EN)",
+      "Manual Test (exact commands)",
+      "What to send back for validation"
+    ],
+    "ai_task_response_requires_self_check": true,
+    "missing_ai_task_file_blocked_output": "BLOCKED: AI task file missing, creating it now.",
+    "missing_manual_test_blocked_output": "BLOCKED: response format violation, regenerating with full test section.",
+    "missing_goal_mapping_blocked_output": "BLOCKED: AI task has no product-goal mapping, add Requirement IDs first.",
+    "next_task_format_violation_retry": "mandatory_immediate_regeneration",
+    "changed_files_auto_check": "git status --short with scope validation"
+  },
+  "generated_at": "2026-03-23T22:19:33Z"
+}

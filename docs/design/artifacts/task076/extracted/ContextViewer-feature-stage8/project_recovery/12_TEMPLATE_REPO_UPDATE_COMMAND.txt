@@ -1,0 +1,16 @@
+TEMPLATE REPO UPDATE COMMAND
+
+Command:
+"обнови template-repo"
+
+Purpose:
+Safely synchronize the universal template repository with methodology-level changes discovered in the current real project.
+
+Use this command only when the template repository already exists in a mature form
+and needs an incremental methodology-level update.
+
+Methodology-level additions may include:
+- new source-of-truth files
+- new recovery rules
+- new reporting / projection rules
+- new contextJSON generation rules

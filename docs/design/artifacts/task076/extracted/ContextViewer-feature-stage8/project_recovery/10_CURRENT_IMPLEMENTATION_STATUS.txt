@@ -1,0 +1,101 @@
+PROJECT: ContextViewer
+
+CURRENT STAGE:
+Stage 8 — Polish
+
+CURRENT SUBSTAGE:
+Figma Information Architecture Prompt Generation
+
+STATUS:
+- Architecture synced with latest rules
+- AGENTS.md moved to project root
+- Recovery updated to load AGENTS.md first
+- JSON naming rule enforced
+- Recovery aligned
+- AI task system initialized for Stage 2
+- Execution started through AI Task 001
+- Active documents normalized through AI Task 002
+- Stage 2 execution backlog decomposed through AI Task 003
+- AI Task 004 completed: base schema created
+- AI Task 005 completed: storage constraints verified on Neon
+- AI Task 006 completed: snapshot validation rules enforced
+- AI Task 007 completed: deduplication entry point implemented
+- AI Task 008 completed: import log table and insert function implemented
+- Stage 2 scope completed
+- AI Task 009 completed: GitHub contextJSON connector implemented
+- AI Task 010 completed: contextJSON file scanner implemented
+- AI Task 011 completed: import pipeline
+- AI Task 012 completed: refresh trigger wiring
+- AI Task 013 completed: import status integration
+- AI Task 014 completed: ingestion contract smoke suite
+- Stage 3 scope completed
+- AI Task 015 completed: latest valid snapshot projection endpoint
+- AI Task 016 completed: latest two valid snapshots diff summary endpoint
+- AI Task 017 completed: changes-since-previous projection endpoint
+- AI Task 018 completed: roadmap/progress projection endpoint
+- AI Task 019 completed: current status projection endpoint
+- AI Task 020 completed: valid snapshot timeline projection endpoint
+- AI Task 021 completed: interpretation bundle projection endpoint
+- AI Task 022 completed: dashboard feed projection endpoint
+- AI Task 023 completed: interpretation contract smoke suite
+- Stage 4 scope completed
+- AI Task 024 completed: project list overview feed
+- AI Task 025 completed: project overview feed by id
+- AI Task 026 completed: dashboard home feed
+- AI Task 027 completed: project dashboard feed by id
+- AI Task 028 completed: dashboard contract smoke suite
+- AI Task 029 completed: dashboard API contract bundle
+- Stage 5 scope completed
+- AI Task 030 completed: architecture tree feed
+- AI Task 031 completed: architecture graph feed
+- AI Task 032 completed: visualization contract smoke suite
+- AI Task 033 completed: visualization bundle feed
+- AI Task 034 completed: visualization API contract bundle
+- AI Task 035 completed: visualization API contract smoke suite
+- AI Task 036 completed: project visualization feed
+- AI Task 037 completed: visualization home feed
+- AI Task 038 completed: visualization home contract smoke suite
+- AI Task 039 completed: visualization workspace contract bundle
+- AI Task 040 completed: visualization workspace contract smoke suite
+- AI Task 041 completed: visualization latency benchmark baseline
+- AI Task 042 completed: visualization latency guardrails
+- AI Task 043 completed: visualization runtime feed
+- AI Task 044 completed: visualization runtime contract smoke suite
+- AI Task 045 completed: Stage 6 visualization readiness report
+- AI Task 046 completed: Stage 6 completion gate report
+- Stage 6 scope completed
+- AI Task 047 completed: Stage 7 history daily rollup feed
+- AI Task 048 completed: Stage 7 history timeline feed
+- AI Task 049 completed: Stage 7 project history bundle feed
+- AI Task 050 completed: Stage 7 history API contract smoke suite
+- AI Task 051 completed: Stage 7 history home feed
+- AI Task 052 completed: Stage 7 history workspace contract bundle
+- Stage 7 history layer completed
+- AI Task 053 completed: Stage 8 UI bootstrap bundle
+- AI Task 054 completed: Stage 8 UI bootstrap contract smoke suite
+- AI Task 055 completed: Stage 8 UI bootstrap preview HTML
+- AI Task 056 completed: Stage 8 UI preview launcher
+- AI Task 057 completed: Stage 8 UI preview local server
+- AI Task 058 completed: Stage 8 UI preview delivery smoke suite
+- AI Task 059 completed: Stage 8 UI preview readiness report
+- AI Task 060 completed: Stage 8 UI demo handoff bundle
+- AI Task 061 completed: Stage 8 UI demo handoff smoke suite
+- AI Task 062 completed: Stage 8 Figma design branch charter and prompt workflow
+- AI Task 063 completed: Stage 8 Figma product UI brief prompt pack
+- AI Task 064 completed: Stage 8 Figma product UI brief result validation
+- Stage 8 UI bootstrap / preview / handoff chain is validated through smoke coverage
+- validated preview / handoff state is fixed as the baseline checkpoint before design-source expansion
+- Stage 8 Figma design branch is planned as a refinement path, not a replacement for runtime or implementation architecture
+- current branch operating rule: local tasks generate prompts for an external Figma-generation system, the generated Figma artifacts are returned into the workspace, and only then are they validated and imported into the implementation plan
+- external product-brief artifacts are now preserved in `docs/design/artifacts/task064/`
+- formal validation result for the external brief is `pass`; this produces a near-complete core UI baseline, but not yet the final exhaustive import-ready UI artifact
+- required next refinements are: tighter information architecture, broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
+- Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
+- AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
+
+NEXT ACTION:
+Run AI Task 065 — Stage 8 Figma information architecture prompt pack
+
+CRITICAL:
+UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements
+Figma prompt-generation and Figma-result-validation tasks must specify exact prompt blocks and exact returned design artifacts for validation

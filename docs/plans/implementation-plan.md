@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed; the fallback evidence package (`073`) is completed; IA validation (`066`) is re-opened and passed; numbering correction is applied; visual-system prompt generation (`074`) and visual-system validation (`075`) are completed; the active continuation now moves to screen prompt generation (`076`), then screen validation, import, and post-Figma plan refinement
+preserved validated preview / handoff checkpoint; approved **UI design reference** recorded in `docs/design/approved_figma_artifact.md` with primary package `docs/design/artifacts/task076/`; IA (`065`/`066`/`073`), visual system (`074`/`075`), and screens (`076`/`077`) gates completed; **AI Task 078** import/architecture sync completed — **runtime truth** remains contextJSON/contracts; **next:** **AI Task 079** post-Figma implementation plan refinement
 
 ## Stage Plan
 

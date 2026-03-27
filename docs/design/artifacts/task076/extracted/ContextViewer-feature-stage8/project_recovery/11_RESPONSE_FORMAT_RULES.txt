@@ -1,0 +1,79 @@
+RESPONSE FORMAT RULES
+
+- Always follow AI Task structure
+- Always include terminal testing instructions when terminal testing is involved
+- Always include:
+  - changed files
+  - full file content
+  - test output
+- Always include commit step after successful testing
+- Always provide commit text after a task is accepted as completed
+- Tests must be concise, informative, and describe each required step explicitly
+- Test instructions must avoid general phrases and visual actions and must state exactly what to send back for validation
+- Every test step must include the exact execution method; abstract verbs without executable instructions are invalid
+- If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
+- If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
+- If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
+- On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
+- For command "дай следующую AI task", the response is valid only if `ai_tasks/NNN_*.md` was created before sending
+- AI task response must include: `AI Task file created: /ai_tasks/NNN_*.md`
+- For command "дай следующую AI task", response must use strict block order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
+- Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
+- Missing block `Manual Test (exact commands)` is a hard failure; output only:
+  - `BLOCKED: response format violation, regenerating with full test section.`
+- On next-task format violation, assistant must immediately regenerate full compliant response before any other output
+- After user sends test results, assistant must generate `List of changed files` automatically from `git status --short`
+- Assistant must validate that changed files belong to current AI task scope and explicitly flag unrelated changes
+- Changed-files auto-check must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- Before sending AI task response, run self-check for:
+  - file existence in `ai_tasks/`
+  - numbering continuity
+  - stage/substage sync
+  - executable test steps with exact commands
+  - Requirement ID mapping to `docs/plans/product_goal_traceability_matrix.md`
+- If self-check fails because file is missing, output only:
+  - `BLOCKED: AI task file missing, creating it now.`
+- If self-check fails because Requirement ID mapping is missing, output only:
+  - `BLOCKED: AI task has no product-goal mapping, add Requirement IDs first.`
+- Context restore gate:
+  - before every new AI task, execute Fast restore
+  - if Full restore trigger occurred, Fast restore alone is invalid
+  - Fast restore response must be one-line only:
+    `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
+- Command mapping for restore:
+  - `обнови контекст` => Fast restore (default)
+  - `обнови полный контекст` => Full restore (forced)
+- Full restore triggers:
+  - after `обнови архитектурные файлы`
+  - after merge/stage transition
+  - when desync is suspected
+  - after long pause
+  - after Figma artifact import or design-sync update
+- Long pause rule:
+  - inactivity >= 4 hours OR
+  - new calendar day since last restore OR
+  - context handoff between agents/users
+- On Context Restore Policy violation, output only:
+  - `BLOCKED: Context restore policy violation.`
+  - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
+- Do not skip numbering
+- No large unstructured responses
+
+Architecture sync rule:
+When the user asks "обнови архитектурные файлы":
+1. use current project workspace as the primary synchronization source
+2. perform full sync directly in workspace
+3. only if workspace is unavailable, request archive and perform archive-based fallback sync
+4. then execute architecture synchronization
+5. include:
+   - contextJSON/json_spec.md
+   - a new populated contextJSON/json_<timestamp>.json
+
+The generated context JSON must contain aggregated and structured information, not an empty schema stub.
+
+The newest timestamped JSON must be treated as the authoritative runtime source for the visual application.
+Markdown files are referenced by path for raw content display only.

@@ -1,0 +1,90 @@
+ARCHITECTURE UPDATE COMMAND
+
+Command:
+"обнови архитектурные файлы"
+
+Behavior:
+- triggers safe architecture / plan / recovery synchronization
+- uses priority:
+  1. project_recovery
+  2. docs/architecture
+  3. docs/plans
+  4. ai_tasks
+  5. code
+
+Workspace-first workflow:
+1. detect that architecture sync is needed
+2. use the current project workspace as the synchronization source
+3. perform full synchronization directly in workspace
+4. if workspace access is unavailable, request project archive and perform archive-based fallback sync
+5. execute the architecture update command
+
+Rules:
+- no full rewrites unless explicitly requested
+- only pointwise updates
+- preserve all valid data
+- sync stage, tasks, next steps
+- sync real-time / API layers
+- update recovery files
+- regenerate contextJSON outputs
+- preserve and synchronize response rules, including commit text after accepted task completion
+- preserve and synchronize test-instruction rules requiring concise step-by-step guidance
+- preserve and synchronize test-instruction rules requiring exact return payloads for validation
+- preserve and synchronize test-instruction rules requiring exact executable methods for every step
+- preserve and synchronize hard rule: UI/frontend/HTML preview/browser-output tasks must include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence for validation
+- preserve and synchronize hard rule: Figma/design prompt-generation tasks must define exact prompt blocks and exact returned design artifacts for validation
+- preserve and synchronize hard rule: Figma/design result-validation tasks must define exact artifacts to return and exact structural/visual checks to confirm
+- preserve and synchronize Stage 8 design-source workflow:
+  - validated preview / handoff state remains the preserved implementation checkpoint
+  - Figma design branch refines UI decisions without replacing runtime truth
+  - imported approved Figma artifacts become authoritative UI design references for implementation
+  - after Figma import, architecture / plan / recovery / contextJSON must be resynchronized
+- preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
+- preserve and synchronize AI-task creation gate for "дай следующую AI task"
+- preserve and synchronize strict next-task response format gate with block order:
+  1) `AI Task file created: /ai_tasks/NNN_*.md`
+  2) `Cursor prompt (EN)`
+  3) `Manual Test (exact commands)`
+  4) `What to send back for validation`
+- preserve and synchronize hard rule: block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
+- preserve and synchronize self-check gate before AI-task response (file exists, numbering, stage/substage, executable tests)
+- if a missing expected AI task file is detected during sync, create the missing `ai_tasks/NNN_*.md` before continuing updates
+- preserve and synchronize blocked-output rule: `BLOCKED: AI task file missing, creating it now.`
+- preserve and synchronize blocked-output rule for response-format failure: `BLOCKED: response format violation, regenerating with full test section.`
+- preserve and synchronize mandatory immediate-regeneration rule on next-task format violation
+- preserve and synchronize post-test auto-check rule: assistant generates `List of changed files` from `git status --short`
+- preserve and synchronize changed-scope validation rule for current AI task (flag unrelated changes)
+- preserve and synchronize transient-artifact exclusion rule for changed-files auto-check (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- enforce Context Restore Policy:
+  - Fast restore before each new AI task
+  - Fast restore response must be one-line only:
+    `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
+  - Full restore after architecture update command execution
+  - Full restore after merge/stage transition
+  - Full restore when desync is suspected
+  - Full restore after long pause
+  - Full restore after Figma artifact import or design-sync update
+  - command mapping:
+    - `обнови контекст` => Fast restore (default)
+    - `обнови полный контекст` => Full restore (forced)
+  - long pause definition:
+    - inactivity >= 4 hours OR new calendar day OR context handoff
+  - blocked output on violation:
+    - `BLOCKED: Context restore policy violation.`
+    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
+
+Mandatory contextJSON outputs:
+1. contextJSON/json_spec.md
+2. contextJSON/json_<timestamp>.json
+
+JSON requirements:
+- must be populated with aggregated and structured project information
+- must be sufficient for external visualization and reporting
+- must include timestamp for history tracking
+- the newest timestamped JSON becomes the authoritative runtime source for the visual application
+
+Visual app rule:
+- use the newest JSON for structure, status, roadmap, graph, and summaries
+- use markdown paths only for raw content display
+
+Architecture sync is incomplete without these outputs being generated in workspace (or included in fallback update archive).

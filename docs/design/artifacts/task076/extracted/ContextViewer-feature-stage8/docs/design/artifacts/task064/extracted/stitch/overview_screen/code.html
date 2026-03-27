@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ContextViewer | Stage 8 — Polish</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-dim": "#4a5268",
+                        "on-error-container": "#752121",
+                        "surface-dim": "#cfdce3",
+                        "tertiary-fixed": "#69f6b8",
+                        "surface-container-high": "#e1e9ee",
+                        "on-surface": "#2a3439",
+                        "surface-container-low": "#f0f4f7",
+                        "tertiary-fixed-dim": "#58e7ab",
+                        "outline-variant": "#a9b4b9",
+                        "inverse-primary": "#dae2fd",
+                        "on-secondary-fixed-variant": "#4d5d73",
+                        "error-dim": "#4e0309",
+                        "surface-variant": "#d9e4ea",
+                        "tertiary-dim": "#005f40",
+                        "primary-fixed": "#dae2fd",
+                        "on-primary-container": "#4a5167",
+                        "secondary": "#506076",
+                        "error": "#9f403d",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-container-highest": "#d9e4ea",
+                        "inverse-surface": "#0b0f10",
+                        "tertiary-container": "#69f6b8",
+                        "surface": "#f7f9fb",
+                        "on-surface-variant": "#566166",
+                        "on-secondary-container": "#435368",
+                        "on-primary": "#f7f7ff",
+                        "on-tertiary-fixed": "#00452d",
+                        "secondary-container": "#d3e4fe",
+                        "on-tertiary": "#e6ffee",
+                        "primary-fixed-dim": "#ccd4ee",
+                        "secondary-fixed-dim": "#c5d6f0",
+                        "on-primary-fixed-variant": "#535b71",
+                        "primary-container": "#dae2fd",
+                        "on-tertiary-container": "#005a3c",
+                        "on-background": "#2a3439",
+                        "surface-tint": "#565e74",
+                        "on-primary-fixed": "#373f54",
+                        "on-secondary": "#f7f9ff",
+                        "secondary-dim": "#44546a",
+                        "background": "#f7f9fb",
+                        "outline": "#717c82",
+                        "on-tertiary-fixed-variant": "#006544",
+                        "tertiary": "#006d4a",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed": "#314055",
+                        "primary": "#565e74",
+                        "on-error": "#fff7f6",
+                        "error-container": "#fe8983",
+                        "surface-container": "#e8eff3",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#9a9d9f"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="flex justify-between items-center w-full px-5 h-14 bg-[#f7f9fb] dark:bg-[#0f172a] font-['Inter'] text-sm tracking-tight fixed top-0 z-50 border-b border-[#a9b4b9]/10 dark:border-slate-800">
+<div class="flex items-center gap-6">
+<span class="text-lg font-semibold text-[#2a3439] dark:text-[#f1f5f9]">ContextViewer</span>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<div class="flex gap-4">
+<span class="text-[#565e74] dark:text-[#f1f5f9] font-medium">Stage 8 — Polish</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-[#565e74] dark:text-[#94a3b8] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="p-2 text-[#565e74] dark:text-[#94a3b8] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#565e74] dark:text-[#94a3b8] hover:bg-[#f0f4f7] dark:hover:bg-slate-800/50 transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</nav>
+<!-- SideNavBar (Left) -->
+<aside class="fixed left-0 top-14 bottom-0 flex flex-col py-4 px-3 gap-2 bg-[#f0f4f7] dark:bg-[#1e293b] font-['Inter'] text-[0.875rem] w-64 border-r border-[#a9b4b9]/10">
+<div class="mb-6 px-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold">CV</div>
+<div>
+<div class="font-semibold text-on-surface">ContextViewer</div>
+<div class="text-[0.6875rem] text-on-surface-variant font-bold uppercase tracking-wider">System Architecture</div>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded bg-[#ffffff] dark:bg-[#0f172a] text-[#2a3439] dark:text-[#f8fafc] font-medium shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_tree">account_tree</span>
+<span>Visualization</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-[#566166] dark:text-[#94a3b8] hover:bg-[#d9e4ea]/50 dark:hover:bg-slate-800 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+<span>History</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mr-80 pt-14 min-h-screen">
+<div class="p-8 max-w-6xl mx-auto">
+<!-- Project Identity Block -->
+<header class="mb-10">
+<div class="flex items-center justify-between mb-4">
+<h1 class="text-2xl font-semibold tracking-tight text-on-surface">Overview</h1>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 text-[10px] font-bold tracking-widest uppercase bg-tertiary-container text-on-tertiary-container rounded">Stage 8 — Polish</span>
+<span class="px-2 py-0.5 text-[10px] font-bold tracking-widest uppercase bg-secondary-container text-on-secondary-container rounded">v2.4.0</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-4 bg-surface-container-lowest rounded-lg">
+<div class="text-[10px] font-bold uppercase text-on-surface-variant mb-1">Active Context</div>
+<div class="text-sm font-medium">Figma Design Branch Planning</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg">
+<div class="text-[10px] font-bold uppercase text-on-surface-variant mb-1">Current Task</div>
+<div class="text-sm font-medium text-primary">AI Task 062</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg">
+<div class="text-[10px] font-bold uppercase text-on-surface-variant mb-1">Branch Status</div>
+<div class="text-sm font-medium flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>authoritatively_tracked</span>
+</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg">
+<div class="text-[10px] font-bold uppercase text-on-surface-variant mb-1">Checkpoint</div>
+<div class="text-sm font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="security">security</span>
+<span>Preserved</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Current Status (3-Column Layout inside) -->
+<section class="col-span-12 lg:col-span-8 space-y-8">
+<div class="grid grid-cols-3 gap-6">
+<!-- Implemented -->
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">Implemented</span>
+</div>
+<ul class="space-y-3 text-[13px]">
+<li class="text-on-surface/80 border-l-2 border-tertiary pl-3 py-0.5">Stage 1–7 Completion</li>
+<li class="text-on-surface/80 border-l-2 border-tertiary pl-3 py-0.5">UI bootstrap tasks 053–061</li>
+<li class="text-on-surface/80 border-l-2 border-tertiary pl-3 py-0.5">Core rendering engine</li>
+</ul>
+</div>
+<!-- In Progress -->
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="pending">pending</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">In Progress</span>
+</div>
+<ul class="space-y-3 text-[13px]">
+<li class="text-on-surface border-l-2 border-primary pl-3 py-0.5 font-medium">Stage 8 Polish</li>
+<li class="text-on-surface/80 border-l-2 border-primary/30 pl-3 py-0.5">Figma design branch</li>
+<li class="text-on-surface/80 border-l-2 border-primary/30 pl-3 py-0.5">AI Task 062 refinement</li>
+</ul>
+</div>
+<!-- Next -->
+<div class="space-y-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">Next</span>
+</div>
+<ul class="space-y-3 text-[13px]">
+<li class="text-on-surface/60 border-l-2 border-outline-variant pl-3 py-0.5">Tasks 063–072</li>
+<li class="text-on-surface/60 border-l-2 border-outline-variant pl-3 py-0.5">Deployment scripts</li>
+<li class="text-on-surface/60 border-l-2 border-outline-variant pl-3 py-0.5">User feedback loop</li>
+</ul>
+</div>
+</div>
+<!-- Architecture Summary (Thumbnail Preview) -->
+<div class="bg-surface-container-low p-6 rounded-lg group cursor-pointer border border-transparent hover:border-outline-variant/20 transition-all">
+<div class="flex items-center justify-between mb-4">
+<div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Architecture Structure</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="h-48 relative overflow-hidden bg-surface-container-lowest rounded flex items-center justify-center">
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#2a3439 0.5px, transparent 0.5px); background-size: 16px 16px;"></div>
+<div class="flex gap-8 items-center z-10">
+<div class="w-24 h-12 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center text-[10px] font-mono">Core.Engine</div>
+<span class="material-symbols-outlined text-outline" data-icon="trending_flat">trending_flat</span>
+<div class="w-24 h-12 bg-surface-container border border-outline-variant/30 rounded flex items-center justify-center text-[10px] font-mono">UI.Interface</div>
+<span class="material-symbols-outlined text-outline" data-icon="trending_flat">trending_flat</span>
+<div class="w-24 h-12 bg-surface-container-highest border border-primary/20 rounded flex items-center justify-center text-[10px] font-mono">State.Branch</div>
+</div>
+</div>
+</div>
+<!-- Recent Changes Feed -->
+<div class="space-y-4">
+<div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Recent Changes</div>
+<div class="space-y-0.5 bg-surface-container-lowest rounded overflow-hidden">
+<div class="flex items-center justify-between px-4 py-3 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-[11px] font-mono text-on-surface-variant w-16">14:22</span>
+<span class="text-sm">Design branch added to planning stage</span>
+</div>
+<span class="text-[11px] px-2 py-0.5 bg-surface-container rounded text-on-surface-variant">DESIGN</span>
+</div>
+<div class="flex items-center justify-between px-4 py-3 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-[11px] font-mono text-on-surface-variant w-16">12:05</span>
+<span class="text-sm">Checkpoint preserved: `v2.4.0-stable`</span>
+</div>
+<span class="text-[11px] px-2 py-0.5 bg-tertiary/10 text-tertiary rounded">SYSTEM</span>
+</div>
+<div class="flex items-center justify-between px-4 py-3 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-[11px] font-mono text-on-surface-variant w-16">09:40</span>
+<span class="text-sm">Snapshot regenerated for task AI-062</span>
+</div>
+<span class="text-[11px] px-2 py-0.5 bg-surface-container rounded text-on-surface-variant">SNAPSHOT</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Roadmap & Focus -->
+<aside class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Roadmap Progress (Vertical Stepper) -->
+<div class="bg-surface-container-low p-6 rounded-lg">
+<div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mb-6">Roadmap Progress</div>
+<div class="relative space-y-6">
+<div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-outline-variant/20"></div>
+<!-- Completed Stage -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-6 h-6 rounded-full bg-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" data-icon="check">check</span>
+</div>
+<div class="pt-0.5">
+<div class="text-[13px] font-semibold">Stage 1–6: Foundation</div>
+<div class="text-[11px] text-on-surface-variant">Architecture &amp; Core logic</div>
+</div>
+</div>
+<!-- Completed Stage -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-6 h-6 rounded-full bg-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" data-icon="check">check</span>
+</div>
+<div class="pt-0.5">
+<div class="text-[13px] font-semibold">Stage 7: Integration</div>
+<div class="text-[11px] text-on-surface-variant">API surface &amp; Shell</div>
+</div>
+</div>
+<!-- Active Stage -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-6 h-6 rounded-full bg-primary flex items-center justify-center ring-4 ring-primary-container">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+</div>
+<div class="pt-0.5">
+<div class="text-[13px] font-semibold text-primary">Stage 8: Polish</div>
+<div class="text-[11px] text-primary">UI refinement &amp; UX audit</div>
+</div>
+</div>
+<!-- Future Stage -->
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-6 h-6 rounded-full bg-outline-variant/30 flex items-center justify-center">
+</div>
+<div class="pt-0.5 opacity-40">
+<div class="text-[13px] font-semibold">Stage 9: Release</div>
+<div class="text-[11px] text-on-surface-variant">Production deployment</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Active + Upcoming Tasks -->
+<div class="space-y-4">
+<div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Active Task</div>
+<div class="p-4 bg-primary text-on-primary rounded border-l-4 border-primary-dim">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-bold uppercase opacity-70">AI TASK 062</span>
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+</div>
+<div class="text-sm font-medium leading-snug">Refine node interaction feedback and visual state persistence.</div>
+</div>
+<div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant mt-6">Upcoming</div>
+<div class="space-y-2">
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded border border-outline-variant/10">
+<span class="text-[10px] font-mono text-on-surface-variant">063</span>
+<span class="text-xs">Edge case validation for recursive loops</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded border border-outline-variant/10">
+<span class="text-[10px] font-mono text-on-surface-variant">064</span>
+<span class="text-xs">Animation transition smoothing</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest rounded border border-outline-variant/10">
+<span class="text-[10px] font-mono text-on-surface-variant">065</span>
+<span class="text-xs">Export visualization to SVG/PDF</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- SideNavBar (Inspector - Right) -->
+<aside class="fixed right-0 top-14 bottom-0 z-40 w-80 bg-[#f0f4f7]/85 dark:bg-[#1e293b]/85 backdrop-blur-xl font-['Inter'] text-[0.875rem] border-l border-[#a9b4b9]/10 shadow-[-12px_0_32px_-4px_rgba(42,52,57,0.08)]">
+<div class="p-5 flex flex-col h-full">
+<div class="flex items-center justify-between mb-8">
+<div>
+<div class="text-xs font-bold uppercase tracking-widest text-[#566166]">Inspector</div>
+<div class="text-[0.75rem] text-on-surface-variant">Node Details</div>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">Collapse</button>
+</div>
+<div class="space-y-8 overflow-y-auto pr-2">
+<section>
+<h3 class="text-sm font-semibold text-[#2a3439] dark:text-white mb-4">Design Branch Context</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Status</span>
+<div class="text-sm py-1.5 px-3 bg-surface rounded border border-outline-variant/20 font-mono">planned_and_authoritatively_tracked</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Branch ID</span>
+<div class="text-sm py-1.5 px-3 bg-surface rounded border border-outline-variant/20 font-mono">figma-main-polish-08</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant">Source Snapshot</span>
+<div class="text-sm py-1.5 px-3 bg-surface rounded border border-outline-variant/20 font-mono">snap_9921_bc</div>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-sm font-semibold text-[#2a3439] dark:text-white mb-4">Execution Summary</h3>
+<div class="p-4 bg-surface rounded border border-outline-variant/10 space-y-3">
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">Complexity Index</span>
+<span class="font-bold">0.82 High</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 82%"></div>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">Resource Load</span>
+<span class="font-bold">24% Stable</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 24%"></div>
+</div>
+</div>
+</section>
+<div class="mt-auto pt-8">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded-lg font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Generate New Snapshot
+                    </button>
+</div>
+</div>
+</div>
+</aside>
+</body></html>

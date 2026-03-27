@@ -1,0 +1,85 @@
+{
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 3",
+    "substage": "Import Pipeline",
+    "status": "ingestion_engine_in_progress"
+  },
+  "system": {
+    "summary": "Architecture rules synchronized with a strict AI-task file creation gate, mandatory pre-response self-check, and blocked-output behavior for missing task files."
+  },
+  "progress": {
+    "implemented": [
+      "architecture definition",
+      "recovery integration",
+      "AI task execution layer",
+      "Stage 2 task decomposition",
+      "project and snapshot base schema",
+      "snapshot storage constraints",
+      "snapshot validation rules",
+      "snapshot deduplication entry point",
+      "snapshot import log table and insert function",
+      "read-only GitHub contextJSON connector",
+      "contextJSON file scanner",
+      "architecture rule: strict ai_task file creation gate"
+    ],
+    "in_progress": [
+      "Stage 3 import pipeline"
+    ],
+    "next": [
+      "AI Task 011 — Stage 3 import pipeline validation and closure",
+      "AI Task 012 — Stage 3 refresh trigger wiring",
+      "AI Task 013 — Stage 3 import status integration"
+    ]
+  },
+  "roadmap": [
+    "foundation",
+    "data_layer",
+    "ingestion",
+    "interpretation",
+    "dashboard",
+    "visualization",
+    "history",
+    "polish"
+  ],
+  "changes_since_previous": [
+    "Added blocking rule: next AI task response requires physical ai_tasks/NNN_*.md file creation",
+    "Added mandatory pre-response self-check for AI task responses",
+    "Added blocked-output fallback phrase for missing AI task file",
+    "Synchronized architecture update command with auto-remediation of missing ai_tasks files"
+  ],
+  "current_task": {
+    "id": "011",
+    "name": "Stage 3 import pipeline",
+    "stage": "Stage 3 — Ingestion Engine",
+    "substage": "Import Pipeline"
+  },
+  "next_tasks": [
+    {
+      "id": "012",
+      "name": "Stage 3 refresh trigger wiring"
+    },
+    {
+      "id": "013",
+      "name": "Stage 3 import status integration"
+    }
+  ],
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks"
+  },
+  "response_rules": {
+    "cursor_prompts_language": "english",
+    "include_commit_text_after_accepted_task_completion": true,
+    "tests_format": "concise_step_by_step_executable",
+    "tests_must_specify_return_payload": true,
+    "tests_require_exact_execution_method": true,
+    "announce_stage_transition": true,
+    "stage_transition_git_flow": "merge_to_development_then_create_feature_stage_branch",
+    "next_ai_task_requires_physical_task_file": true,
+    "next_ai_task_must_include_created_file_line": true,
+    "ai_task_response_requires_self_check": true,
+    "missing_ai_task_file_blocked_output": "BLOCKED: AI task file missing, creating it now."
+  }
+}

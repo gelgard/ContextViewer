@@ -66,6 +66,10 @@ For **064, 066, 075, 077**, the validation reply must include **all** of the fol
 5. **Component/system summary** — Short inventory: components, styles, or patterns delivered (as applicable to the validation scope).
 6. **Gaps / defects / corrections needed** — Explicit list: pass/fail per requirement, and what must change before **078** (import/sync; legacy **071** superseded).
 
+When a validation task closes with an approved workspace-registered artifact package, that package may also be promoted into the branch’s current **base UI artifact set** for future tasks. For the current Stage 8 branch, the active base UI package is:
+
+- `docs/design/artifacts/task076/`
+
 **078** and **079** define their own evidence lists in their AI task files; they are not “design validation” in the same sense as 064–077 but still require **executable checks** per `PG-EX-001`.
 
 ## UI-related validation: visual manual tests

@@ -40,6 +40,8 @@ Direct generation of production React/layout code as a substitute for the Figma 
 
 After successful validation (**AI Tasks 064, 066, 075, 077** as applicable) and import (**AI Task 078**), the **approved Figma artifact** becomes the **authoritative design reference** for subsequent **UI implementation** tasks (layout, styling, component structure, copy placement). It still does **not** override JSON field semantics or API contracts unless those are explicitly changed via implementation tasks. (Legacy **068–072** task files remain in-repo as superseded placeholders.)
 
+**Canonical record (post–078):** `docs/design/approved_figma_artifact.md` — primary workspace package **`docs/design/artifacts/task076/`** (raw `.fig` / exports under `raw/`, inventories in package root). **Uploaded workspace paths** are primary evidence; external Figma URLs remain optional metadata only.
+
 ## Governance
 
 - All Figma branch work runs through **numbered AI tasks** (`062`–`066`, optional fallback `073`, then active continuation `074`–`079`) with Goal Alignment and executable validation steps (`PG-EX-001`).
