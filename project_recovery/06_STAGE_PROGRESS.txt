@@ -128,7 +128,7 @@ Current execution state:
 - AI Task 073 completed: architecture-derived IA fallback package from uploaded workspace artifacts
 - AI Task 066 re-opened review revision recorded `pass / GO` using the Task 073 fallback evidence package
 - IA structure is now certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
-- numbering correction applied after fallback insertion: future active design tasks are renumbered to `074–079`; legacy files `067–072` remain in-repo as superseded placeholders and must not be used as execution anchors
+- numbering correction applied after fallback insertion: Figma **design-sync** tasks are `074–079` (complete); **production UI** continues at `080+`; legacy files `067–072` remain in-repo as superseded placeholders and must not be used as execution anchors
 - AI Task 074 completed: visual system prompt pack
 - AI Task 075 validated: visual system review revision recorded `pass / GO` using the Task 074 fallback evidence package from uploaded workspace artifacts
 - visual system is now certified as product-specific, IA-compatible, unified across shell / overview / visualization / history, and sufficient to continue to screen prompt generation
@@ -138,16 +138,12 @@ Current execution state:
 - AI Task 077 validated: screen review revision recorded `approve / GO` using the workspace-registered task076 base UI package
 - Stage 8 UI demo handoff chain is validated
 - AI Task 078 completed: Figma import and architecture sync — authoritative UI design reference `docs/design/approved_figma_artifact.md`; primary package `docs/design/artifacts/task076/`; runtime truth remains latest contextJSON + contracts per `docs/architecture/system-definition.md` §20
-- substage readiness: post-Figma implementation plan refinement (`AI Task 079`)
+- AI Task 079 completed: post-Figma implementation plan refinement — **production UI** roadmap **080–083** recorded in `docs/plans/implementation-plan.md`; **design-sync** track **062–079** closed; **preserved checkpoint** remains JSON preview / demo handoff through **061**
 
-Planned next branch inside Stage 8:
-- local AI tasks in this branch generate prompts for a third-party Figma-generation system rather than generating final UI screens directly
-- generated Figma files / exports are returned to the workspace for validation, import, and post-Figma implementation refinement
-- AI Task 065: Figma information architecture prompt pack
-- AI Task 066: Figma information architecture result validation
-- AI Task 074: Figma visual system prompt pack
-- AI Task 075: Figma visual system result validation
-- AI Task 076: Figma screen prompt pack
-- AI Task 077: Figma screen result validation
-- AI Task 078: Figma import and architecture sync — completed
-- AI Task 079: post-Figma implementation plan refinement — next
+Stage 8 — **post-Figma production UI** (current):
+- **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`** (charter: `docs/design/figma_design_branch_charter.md`)
+- **Implementation baseline (non-negotiable):** validated UI bootstrap / preview / handoff through **AI Task 061**
+- **Next execution anchor:** **AI Task 080** — apply approved shell + visual tokens to bootstrap/preview surfaces (first slice; see system + implementation plans)
+- **081** — Overview UI fidelity vs dashboard/bootstrap feeds
+- **082** — Visualization workspace UI vs Stage 6 workspace bundle
+- **083** — History workspace UI + **061-class** demo handoff smoke with approved styling

@@ -21,7 +21,22 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; approved **UI design reference** recorded in `docs/design/approved_figma_artifact.md` with primary package `docs/design/artifacts/task076/`; IA (`065`/`066`/`073`), visual system (`074`/`075`), and screens (`076`/`077`) gates completed; **AI Task 078** import/architecture sync completed — **runtime truth** remains contextJSON/contracts; **next:** **AI Task 079** post-Figma implementation plan refinement
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Design-sync track** **062–079** complete (IA → visual system → screens → import/sync → **079** plan refinement). **Runtime truth** remains latest **contextJSON** + JSON/API **contracts** — production UI must not silently change field semantics. **Next:** **AI Task 080** (first production UI slice).
+
+## Post-Figma roadmap (production UI — Tasks 080–083)
+
+| Task | Slice | Depends on | Primary UI surface | Validation (contract + visual) |
+|------|--------|------------|--------------------|--------------------------------|
+| **080** | Shared **shell + tokens** applied to bootstrap/preview HTML | 061 baseline, 078 import/sync, approved `task076` | Global chrome, nav from IA, typography/color/spacing vs visual system | `bash code/ui/verify_stage8_ui_bootstrap_contracts.sh --project-id <id>`; `bash code/ui/verify_stage8_ui_preview_delivery.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: open `prepare_ui_preview_launch.sh` output, compare chrome/tokens to `docs/design/artifacts/task074/` + `docs/design/artifacts/task076/` PDF/exports; **no** feed/JSON field semantic changes without a new contract task |
+| **081** | **Overview** region fidelity (still feed-driven) | **080** | Overview / dashboard section per IA | `bash code/dashboard/verify_stage5_dashboard_contracts.sh --project-id <id>`; `bash code/ui/get_ui_bootstrap_bundle.sh --project-id <id> > /tmp/bootstrap_overview_slice.json` then `jq` assert `.ui_sections.overview.dashboard_feed`; manual: parity vs `docs/design/artifacts/task064/extracted/stitch/` + `task076` overview evidence |
+| **082** | **Visualization workspace** (tree + graph + inspector in one surface) | **080** | Viz workspace panels | `bash code/visualization/verify_stage6_visualization_workspace_contracts.sh --project-id <id>`; manual: tree/graph/inspector layout vs `docs/design/artifacts/task076/visible_screen_list.md` + viz export/`task064` stitch |
+| **083** | **History workspace** + **061-class** cross-surface handoff | **080**; full product path needs **081** and **082** | History panels + nav between workspaces | `bash code/history/get_history_workspace_contract_bundle.sh --project-id <id> > /tmp/history_ws_slice.json`; `bash code/ui/verify_stage8_ui_demo_handoff_bundle.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: history vs `task076` history evidence + confirm overview/viz/history markers in served HTML still match **061** expectations |
+
+**Dependencies (summary):** **080** gates all visual alignment; **081** and **082** can follow **080** in parallel once shell is stable; **083** integrates all routes and confirms handoff readiness.
+
+**Design-sync vs production (explicit):**
+- **Completed (062–079):** prompt packs, external Figma generation, **066/075/077** validation, **078** import, **079** roadmap — **documentation and artifact authority only**.
+- **Upcoming (080+):** HTML/CSS/JS (or template) changes in **`code/ui` / preview bootstrap** driven by **approved** package `task076/` and charter `docs/design/figma_design_branch_charter.md`.
 
 ## Stage Plan
 
@@ -84,7 +99,7 @@ preserved validated preview / handoff checkpoint; approved **UI design reference
 - Stage 8B — Figma design source generation and validation
 - local execution in this branch means authoring prompt packs for an external Figma-generation system and then validating returned Figma artifacts after they are brought back into the workspace
 - authoritative charter: `docs/design/figma_design_branch_charter.md`
-- authoritative workflow (tasks 062–066, optional 073 fallback, active continuation 074–079, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
+- authoritative workflow (tasks 062–066, optional 073 fallback, design branch completion 074–079, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
 - product UI brief prompt pack
 - product UI brief result validation
 - preserve validated external artifacts in-repo per task
@@ -105,8 +120,8 @@ preserved validated preview / handoff checkpoint; approved **UI design reference
 - screen prompt pack
 - screen result validation
 - Stage 8C — Figma-synced implementation refinement
-- Figma import and architecture sync
-- post-Figma implementation plan refinement
+  - **completed (design authority locked):** Figma import and architecture sync (**078**); post-Figma implementation plan refinement (**079**)
+  - **active/upcoming:** production UI slices **080–083** (see §Post-Figma roadmap above) — apply approved design to preview/product surfaces while preserving **061** checkpoint and JSON contracts
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

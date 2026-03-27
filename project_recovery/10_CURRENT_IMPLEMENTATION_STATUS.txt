@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Post-Figma Implementation Plan Refinement
+Post-Figma production UI implementation (tasks **080+**; design-sync **062–079** complete)
 
 STATUS:
 - Architecture synced with latest rules
@@ -90,11 +90,11 @@ STATUS:
 - current branch operating rule: local tasks generate prompts for an external Figma-generation system, the generated Figma artifacts are returned into the workspace, and only then are they validated and imported into the implementation plan
 - external product-brief artifacts are now preserved in `docs/design/artifacts/task064/`
 - formal validation result for the external brief is `pass`; this produces a near-complete core UI baseline, but not yet the final exhaustive import-ready UI artifact
-- current IA validation revision for AI Task 066 is `fail / NO-GO` because the returned external IA bundle is incomplete
+- IA gap on the first external IA pass was closed by **AI Task 073**; **AI Task 066** re-opened revision is **`pass / GO`**
 - AI Task 073 completed: architecture-derived IA evidence package assembled from uploaded workspace artifacts only
 - AI Task 066 re-opened and passed / GO using the Task 073 fallback evidence package
 - IA structure is now certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
-- numbering correction applied for the post-fallback branch: active future design tasks are now `074–079`; pre-existing files `067–072` are retained only as superseded placeholders and must not be used as next-task anchors
+- numbering correction applied for the post-fallback branch: Figma **design-sync** tasks are `074–079` (complete); **production UI** uses `080+`; pre-existing files `067–072` are retained only as superseded placeholders and must not be used as next-task anchors
 - AI Task 074 completed: visual system prompt pack published
 - AI Task 075 validated: visual system review revision passed / GO using the Task 074 fallback evidence package from uploaded workspace artifacts
 - visual system is now certified as product-specific, IA-compatible, unified across shell / overview / visualization / history, and sufficient for screen prompt generation
@@ -103,12 +103,13 @@ STATUS:
 - uploaded workspace artifacts under `docs/design/artifacts/task076/` are now the preserved base UI package for the whole application until superseded by a later approved import
 - AI Task 077 validated: screen review revision approved / GO using the workspace-registered task076 package
 - AI Task 078 completed: approved Figma/UI design reference recorded at `docs/design/approved_figma_artifact.md`; primary artifact package `docs/design/artifacts/task076/`; `docs/architecture/system-definition.md` §20; plans/recovery/contextJSON aligned — design authority separate from runtime truth (latest contextJSON)
-- required next refinements: post-Figma implementation plan refinement (`079`), secondary flows / import-ready polish as tracked in approved artifact known gaps
+- AI Task 079 completed: post-Figma **implementation plan refinement** — production UI decomposed into slices **080–083** (`docs/plans/implementation-plan.md`); **preserved checkpoint** remains preview/demo handoff through **061**; design authority unchanged (`approved_figma_artifact.md` + `task076/`)
+- upcoming: secondary flows / import-ready polish as tracked in approved artifact known gaps (via future tasks after **083** as needed)
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 079 — Stage 8 post-Figma implementation plan refinement
+Run AI Task 080 — first Stage 8 post-Figma **production UI** slice (shared shell / design tokens on preview surfaces; see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

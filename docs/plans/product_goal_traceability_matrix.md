@@ -94,12 +94,13 @@ Primary user outcomes:
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
 | PG-RT-001, PG-RT-002 | Stage 2-4 | 004-023 | implemented |
-| PG-OV-001, PG-PL-001 | Stage 4-5 | 018-029 | implemented |
+| PG-OV-001 | Stage 4-5 | 018-029 | implemented |
+| PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON — planned) | implemented (feeds); in_progress (post-Figma UI slices) |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
 | PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036-079 (062 charter/workflow; 063-078 design branch complete through import sync; 079 plan refinement; 067-072 legacy superseded) | in_progress (design reference registered post-078) |
-| PG-EX-001 | Stage 2-8 | 001-079 (062-066, 073-079 active design branch/fallback; 067-072 legacy superseded placeholders) | implemented |
+| PG-UX-001 | Stage 6-8 | 036-083 planned (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded) | in_progress (approved design **`task076/`**; production UI build **080+**) |
+| PG-EX-001 | Stage 2-8 | 001-083 planned (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -124,8 +125,9 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `docs/design/artifacts/task076/` is preserved as the current base UI artifact package for the whole application and may be used as the default visual reference in future branch tasks until superseded by a later approved import.
 - `AI Task 077` is validated as `approve / GO` using the workspace-registered package under `docs/design/artifacts/task076/`.
 - `AI Task 078` is completed: authoritative UI design reference recorded at `docs/design/approved_figma_artifact.md`; `docs/architecture/system-definition.md` §20; primary package `docs/design/artifacts/task076/`; runtime truth unchanged (contextJSON / contracts).
-- Next executable design-branch task: `AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement`
-- Requirement mapping for **079**:
+- `AI Task 079` is completed: post-Figma **implementation plan refinement** — roadmap **`080–083`** in `docs/plans/implementation-plan.md`; separates **completed design-sync (062–079)** from **upcoming production UI**; preserves **061** checkpoint.
+- Next executable task: `AI Task 080` — first production UI slice (shell + tokens on preview surfaces; see plans).
+- Requirement mapping for **079** (complete):
   - `PG-PL-001`
   - `PG-UX-001`
   - `PG-EX-001`
@@ -238,7 +240,31 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `079` — Stage 8 Post-Figma Implementation Plan Refinement
+  - **completed** (roadmap **080–083**; see `docs/plans/implementation-plan.md`)
   - `PG-PL-001`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `080` — Stage 8 Production UI: Shared shell + design tokens (preview/bootstrap)
+  - **planned** (create `ai_tasks/080_*.md` before execution)
+  - `PG-UX-001`
+  - `PG-EX-001`
+  - `PG-PL-001`
+- `081` — Stage 8 Production UI: Overview surface fidelity
+  - **planned**
+  - `PG-OV-001`
+  - `PG-UX-001`
+  - `PG-EX-001`
+  - `PG-PL-001`
+- `082` — Stage 8 Production UI: Visualization workspace fidelity
+  - **planned**
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `083` — Stage 8 Production UI: History workspace + cross-surface handoff smoke
+  - **planned**
+  - `PG-HI-001`
+  - `PG-HI-002`
   - `PG-UX-001`
   - `PG-EX-001`
 - `073` — Stage 8 Architecture-Derived IA Fallback Package (uploaded-workspace-artifacts-only fallback path; no external-link authority)

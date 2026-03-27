@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-Figma Screen Prompt Generation
+Post-Figma production UI implementation (planned slices **080+**; design branch **062–079** complete)
 
 ## Progress
 
@@ -85,6 +85,7 @@ Completed:
 - AI Task 076 — Stage 8 Figma Screen Prompt Pack
 - AI Task 077 — Stage 8 Figma Screen Result Validation
 - AI Task 078 — Stage 8 Figma Import And Architecture Sync
+- AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -120,12 +121,23 @@ Execution status:
 - AI Task 077 validated: screen review revision approved / GO using the workspace-registered package `docs/design/artifacts/task076/`
 - AI Task 078 completed: Figma import and architecture sync — **authoritative UI design reference** recorded at `docs/design/approved_figma_artifact.md`; artifact package `docs/design/artifacts/task076/` registered as the current whole-application base UI reference; `docs/architecture/system-definition.md` §20 and recovery/plans/contextJSON synchronized
 - runtime truth remains contextJSON + JSON contracts; design truth is the approved artifact record until superseded
+- AI Task 079 completed: post-Figma **implementation plan refinement** — production UI work decomposed into numbered slices **080–083** (see `docs/plans/implementation-plan.md` §Post-Figma roadmap); **design-sync** tasks **062–079** closed as a track; **upcoming** work is **production UI** tied to feeds, not Figma prompt authoring
 
 Current:
-- Stage 8 active — post-import: validated preview / handoff checkpoint preserved; approved design package `task076/` + import record; substage readiness for **post-Figma implementation plan refinement**; current execution anchor is **AI Task 079**
+- Stage 8 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
+- **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
+- **Next execution anchor:** **AI Task 080** (first production UI slice — shared shell / design tokens applied to product preview surfaces)
 
-Next:
-- AI Task 079 — Stage 8 Post-Figma Implementation Plan Refinement
+Next (production UI, architecture-first):
+- **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task
+- **081** — **Overview** UI slice vs `get_ui_bootstrap_bundle` / `verify_stage5_dashboard_contracts`; visual manual test vs `task064`/`task076` overview evidence
+- **082** — **Visualization workspace** slice (tree + graph + inspector) vs visualization bundle feeds; visual manual test vs visualization export
+- **083** — **History workspace** slice + cross-workspace smoke confirming **061**-class readiness with approved styling
+
+## Post-Figma validation discipline (all slices 080+)
+- **Contract-first:** extend or reuse existing `code/ui` read-only scripts only through **new numbered tasks**; each slice lists exact shell commands for JSON contract checks
+- **Visual manual tests:** for every slice, side-by-side or checklist vs paths under `docs/design/artifacts/task076/` and `task064/extracted/stitch/`; screenshot path + `ls -lh` evidence per `AGENTS.md` / `figma_prompt_workflow.md`
+- **Runtime vs design:** rendered values from **feeds** only; Figma/copy in `approved_figma_artifact.md` defines **layout and visual intent**, not new metrics
 
 Response rule update:
 - task completion responses must include commit text after acceptance
