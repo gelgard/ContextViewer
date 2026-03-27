@@ -93,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Architecture-Derived IA Fallback Packaging
+- Substage: Figma Visual System Prompt Generation
 
 Next required action:
-→ run AI Task 073
+→ run AI Task 074
 
 
 ---

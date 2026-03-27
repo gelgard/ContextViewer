@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed, but IA validation is blocked on incomplete returned artifacts, so the next execution step is an architecture-derived fallback evidence package (`073`) based only on uploaded workspace artifacts before re-opening `066`, then continuing to visual system, screen coverage, import, and post-Figma plan refinement
+preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed; the fallback evidence package (`073`) is completed; IA validation (`066`) is re-opened and passed; numbering correction is applied so the active continuation now starts at visual system prompt generation (`074`), then visual validation, deeper screen coverage, import, and post-Figma plan refinement
 
 ## Stage Plan
 
@@ -84,23 +84,23 @@ preserved validated preview / handoff checkpoint; validated external UI brief re
 - Stage 8B — Figma design source generation and validation
 - local execution in this branch means authoring prompt packs for an external Figma-generation system and then validating returned Figma artifacts after they are brought back into the workspace
 - authoritative charter: `docs/design/figma_design_branch_charter.md`
-- authoritative workflow (tasks 062–072, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
+- authoritative workflow (tasks 062–066, optional 073 fallback, active continuation 074–079, mandatory validation artifacts, visual manual tests): `docs/design/figma_prompt_workflow.md`
 - product UI brief prompt pack
 - product UI brief result validation
 - preserve validated external artifacts in-repo per task
 - use Task 064 result as the current near-complete core UI baseline
 - information architecture prompt pack completed
-- current IA validation gate failed due to incomplete returned artifact bundle
+- information architecture validation passed after Task 073 fallback evidence packaging
 - fallback recovery path:
   - architecture-derived IA fallback package
   - re-open IA validation against completed evidence
+- numbering correction:
+  - legacy placeholders `067–072` retained only for history
+  - active post-fallback branch renumbered to `074–079`
 - required refinements from Task 064:
-  - tighter information architecture and workspace transitions
   - broader visual system/token coverage
   - deeper screen / flow coverage
   - stronger final import-ready artifact identity
-- information architecture prompt pack
-- information architecture result validation
 - visual system prompt pack
 - visual system result validation
 - screen prompt pack

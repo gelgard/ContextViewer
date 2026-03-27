@@ -125,8 +125,10 @@ Current execution state:
 - AI Task 065 completed: Figma information architecture prompt pack
 - external design artifacts preserved under `docs/design/artifacts/task064/`
 - validated external result establishes a near-complete core UI baseline for further refinement
-- AI Task 066 current review revision recorded `fail / NO-GO` because the returned IA artifact bundle is incomplete
-- fallback path opened: AI Task 073 will assemble an architecture-derived IA evidence package from uploaded workspace artifacts before re-opening Task 066
+- AI Task 073 completed: architecture-derived IA fallback package from uploaded workspace artifacts
+- AI Task 066 re-opened review revision recorded `pass / GO` using the Task 073 fallback evidence package
+- IA structure is now certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
+- numbering correction applied after fallback insertion: future active design tasks are renumbered to `074–079`; legacy files `067–072` remain in-repo as superseded placeholders and must not be used as execution anchors
 - Stage 8 UI demo handoff chain is validated
 
 Planned next branch inside Stage 8:
@@ -134,10 +136,9 @@ Planned next branch inside Stage 8:
 - generated Figma files / exports are returned to the workspace for validation, import, and post-Figma implementation refinement
 - AI Task 065: Figma information architecture prompt pack
 - AI Task 066: Figma information architecture result validation
-- AI Task 067: Figma visual system prompt pack
-- AI Task 068: Figma visual system result validation
-- AI Task 069: Figma screen prompt pack
-- AI Task 070: Figma screen result validation
-- AI Task 071: Figma import and architecture sync
-- AI Task 072: post-Figma implementation plan refinement
-- AI Task 073: architecture-derived IA fallback package
+- AI Task 074: Figma visual system prompt pack
+- AI Task 075: Figma visual system result validation
+- AI Task 076: Figma screen prompt pack
+- AI Task 077: Figma screen result validation
+- AI Task 078: Figma import and architecture sync
+- AI Task 079: post-Figma implementation plan refinement

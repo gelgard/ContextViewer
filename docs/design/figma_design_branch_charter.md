@@ -38,11 +38,12 @@ Direct generation of production React/layout code as a substitute for the Figma 
 
 ## Approved Figma artifact
 
-After successful validation (**AI Tasks 064, 066, 068, 070** as applicable) and import (**AI Task 071**), the **approved Figma artifact** becomes the **authoritative design reference** for subsequent **UI implementation** tasks (layout, styling, component structure, copy placement). It still does **not** override JSON field semantics or API contracts unless those are explicitly changed via implementation tasks.
+After successful validation (**AI Tasks 064, 066, 075, 077** as applicable) and import (**AI Task 078**), the **approved Figma artifact** becomes the **authoritative design reference** for subsequent **UI implementation** tasks (layout, styling, component structure, copy placement). It still does **not** override JSON field semantics or API contracts unless those are explicitly changed via implementation tasks. (Legacy **068–072** task files remain in-repo as superseded placeholders.)
 
 ## Governance
 
-- All Figma branch work runs through **numbered AI tasks** (`062`–`072`) with Goal Alignment and executable validation steps (`PG-EX-001`).
+- All Figma branch work runs through **numbered AI tasks** (`062`–`066`, optional fallback `073`, then active continuation `074`–`079`) with Goal Alignment and executable validation steps (`PG-EX-001`).
+- Legacy files `067`–`072` may remain present in-repo as superseded pre-fallback placeholders, but they are **not** valid execution anchors after the numbering correction.
 - **Architecture updates** (including contextJSON regeneration when required) follow the project’s architecture update command and recovery rules—never ad hoc edits that skip layers.
 
 ## References

@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Architecture-Derived IA Fallback Packaging
+Figma Visual System Prompt Generation
 
 STATUS:
 - Architecture synced with latest rules
@@ -91,13 +91,16 @@ STATUS:
 - external product-brief artifacts are now preserved in `docs/design/artifacts/task064/`
 - formal validation result for the external brief is `pass`; this produces a near-complete core UI baseline, but not yet the final exhaustive import-ready UI artifact
 - current IA validation revision for AI Task 066 is `fail / NO-GO` because the returned external IA bundle is incomplete
-- fallback execution path is now opened through AI Task 073: assemble an architecture-derived IA evidence package from uploaded workspace artifacts, explicitly marked as fallback rather than native external export, then re-open Task 066
-- required next refinements are: IA evidence closure, broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
+- AI Task 073 completed: architecture-derived IA evidence package assembled from uploaded workspace artifacts only
+- AI Task 066 re-opened and passed / GO using the Task 073 fallback evidence package
+- IA structure is now certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
+- numbering correction applied for the post-fallback branch: active future design tasks are now `074–079`; pre-existing files `067–072` are retained only as superseded placeholders and must not be used as next-task anchors
+- required next refinements are: broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 073 — Stage 8 architecture-derived IA fallback package
+Run AI Task 074 — Stage 8 Figma visual system prompt pack
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

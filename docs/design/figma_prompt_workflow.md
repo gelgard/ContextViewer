@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document is the **operational workflow** for Stage 8 **Figma design branch** tasks **062** through **072**. It complements `docs/design/figma_design_branch_charter.md`.
+This document is the **operational workflow** for Stage 8 **Figma design branch** tasks **062** through **079**. It complements `docs/design/figma_design_branch_charter.md`.
 
 **Runtime truth** remains JSON and contextJSON rules; **design truth** builds through external Figma generation and in-repo validation; **implementation truth** advances only through numbered AI tasks and plan/recovery sync.
 
@@ -15,14 +15,15 @@ This document is the **operational workflow** for Stage 8 **Figma design branch*
 | **064** | Figma product UI brief result validation | Validate returned brief-level design artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
 | **065** | Figma information architecture prompt pack | Produce exact prompt blocks for IA (navigation, structure). |
 | **066** | Figma information architecture result validation | Validate IA artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
-| **067** | Figma visual system prompt pack | Produce exact prompt blocks (tokens, type, color, spacing, components baseline). |
-| **068** | Figma visual system result validation | Validate visual system artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
-| **069** | Figma screen prompt pack | Produce exact prompt blocks for key screens / frames. |
-| **070** | Figma screen result validation | Validate screen-level artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
-| **071** | Figma import and architecture sync | Import **approved** artifact; sync design references into architecture/docs/context rules as defined by that task. |
-| **072** | Post-Figma implementation plan refinement | Update implementation plan after design import; no skip of execution discipline. |
+| **073** | Architecture-derived IA fallback package | Conditional recovery task used only when IA validation needs honest evidence closure from uploaded workspace artifacts. |
+| **074** | Figma visual system prompt pack | Produce exact prompt blocks (tokens, type, color, spacing, components baseline). |
+| **075** | Figma visual system result validation | Validate visual system artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
+| **076** | Figma screen prompt pack | Produce exact prompt blocks for key screens / frames. |
+| **077** | Figma screen result validation | Validate screen-level artifacts (must satisfy **Mandatory returned artifacts** + **UI-related validation** below). |
+| **078** | Figma import and architecture sync | Import **approved** artifact; sync design references into architecture/docs/context rules as defined by that task. |
+| **079** | Post-Figma implementation plan refinement | Update implementation plan after design import; no skip of execution discipline. |
 
-Prompt-pack tasks (**063, 065, 067, 069**) must store **exact prompt blocks** in-repo (or in task artifacts) for repeatability. Validation tasks (**064, 066, 068, 070**) never pass without the **mandatory returned artifacts** and **visual manual tests** defined in the following sections.
+Prompt-pack tasks (**063, 065, 074, 076**) must store **exact prompt blocks** in-repo (or in task artifacts) for repeatability. Validation tasks (**064, 066, 075, 077**) never pass without the **mandatory returned artifacts** and **visual manual tests** defined in the following sections.
 
 ## Conditional fallback recovery task
 
@@ -40,24 +41,36 @@ Rules for fallback packaging:
 - it must **not** be represented as a native full export from the external Figma-generation system
 - it must rely on uploaded workspace artifacts only; external Figma URLs are optional historical references, not authoritative validation evidence
 - it exists only to close evidence gaps and enable the blocked validation gate to be re-opened honestly
-- after **073**, **066** must be re-opened and either pass or fail based on the completed evidence package before the branch can continue to **067**
+- after **073**, **066** must be re-opened and either pass or fail based on the completed evidence package before the branch can continue to **074**
+
+## Numbering correction note
+
+The original pre-fallback future placeholders **067** through **072** remain in-repo for historical continuity, but they are **superseded** after fallback insertion and must **not** be used as active execution anchors.
+
+Active post-fallback continuation uses:
+- **074** instead of legacy **067**
+- **075** instead of legacy **068**
+- **076** instead of legacy **069**
+- **077** instead of legacy **070**
+- **078** instead of legacy **071**
+- **079** instead of legacy **072**
 
 ## Mandatory returned artifacts (design-validation tasks)
 
-For **064, 066, 068, 070**, the validation reply must include **all** of the following (missing any → task not accepted):
+For **064, 066, 075, 077**, the validation reply must include **all** of the following (missing any → task not accepted):
 
 1. **Source prompt used** — Exact text or path to the prompt block(s) sent to the third-party Figma-generation system.
 2. **Returned Figma reference** — At least one of: shareable **Figma file URL**, **uploaded file path** in the workspace, or **canonical identifier** from the external system (as defined in the task).
 3. **Generated frames/pages list** — Named list of pages and top-level frames (or equivalent) in the returned file.
 4. **Screenshots or exported visual evidence** — Paths to PNG/PDF (or similar) under workspace or `/tmp` as specified in the task; must be reproducible from listed commands.
 5. **Component/system summary** — Short inventory: components, styles, or patterns delivered (as applicable to the validation scope).
-6. **Gaps / defects / corrections needed** — Explicit list: pass/fail per requirement, and what must change before **071**.
+6. **Gaps / defects / corrections needed** — Explicit list: pass/fail per requirement, and what must change before **078** (import/sync; legacy **071** superseded).
 
-**071** and **072** define their own evidence lists in their AI task files; they are not “design validation” in the same sense as 064–070 but still require **executable checks** per `PG-EX-001`.
+**078** and **079** define their own evidence lists in their AI task files; they are not “design validation” in the same sense as 064–077 but still require **executable checks** per `PG-EX-001`.
 
 ## UI-related validation: visual manual tests
 
-Every **UI-related validation task** (064, 066, 068, 070, and any task that requires judging layout/visual fidelity) must include in its **Manual Test** section:
+Every **UI-related validation task** (064, 066, 075, 077, and any task that requires judging layout/visual fidelity) must include in its **Manual Test** section:
 
 1. **Exact manual viewing action** — e.g. open Figma URL in browser at file/page X; or open exported PDF path Y; or open preview URL Z (only when the task ties validation to existing preview).
 2. **Exact list of visual confirmations** — Bulleted checklist the reviewer must confirm (e.g. hierarchy, section visibility, IA labels, component usage).
@@ -69,10 +82,10 @@ Tasks **must not** rely on vague “check the design looks good” without the a
 
 ## Operating loop (per prompt/validate pair)
 
-1. **Assistant** (local agent): lands prompt pack in-repo per **063 / 065 / 067 / 069**.
+1. **Assistant** (local agent): lands prompt pack in-repo per **063 / 065 / 074 / 076**.
 2. **User**: runs prompts in the **third-party Figma-generation system**; returns file/link/exports to the workspace.
-3. **Assistant + user**: execute **064 / 066 / 068 / 070** checks; collect mandatory artifacts; fix or re-prompt if gaps non-empty.
-4. After all validations pass: **071** import and architecture sync, then **072** plan refinement.
+3. **Assistant + user**: execute **064 / 066 / 075 / 077** checks; collect mandatory artifacts; fix or re-prompt if gaps non-empty.
+4. After all validations pass: **078** import and architecture sync, then **079** plan refinement.
 
 ## Preserved checkpoint reminder
 

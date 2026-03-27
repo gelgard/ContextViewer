@@ -19,7 +19,7 @@ This package exists because **AI Task 066** previously recorded **`fail` / NO-GO
 |-------|------|
 | `docs/design/figma_design_branch_charter.md` | Charter: runtime vs design truth; third-party prompts. |
 | `docs/design/figma_prompt_workflow.md` | Task chain 062–072; validation artifact rules. |
-| `docs/design/reviews/figma_information_architecture_validation.md` | Formal 066 gate; **revision 2** registers this package (`pass` / **GO** for **067**). |
+| `docs/design/reviews/figma_information_architecture_validation.md` | Formal 066 gate; **revision 2** registers this package (`pass` / **GO** for **074** — visual system; legacy **067** superseded). |
 | `docs/design/artifacts/task064/` | Validated **product UI brief** baseline (zip / `.fig` / extracted bundle). |
 | `docs/architecture/dashboard-information-architecture.md` | Locked dashboard IA (overview entry, tree/graph, inspector, calendar). |
 
@@ -47,5 +47,5 @@ This identifier is **evidence metadata** inside the uploaded bundle file; it is 
 
 ## Next step
 
-1. ~~Update IA validation after fallback acceptance~~ **Done:** `docs/design/reviews/figma_information_architecture_validation.md` **revision 2** — **`pass`**, **Go / No-Go for AI Task 067:** **`GO`**.
-2. Proceed to **AI Task 067** (visual system prompt pack) while preserving this IA; do not treat external Figma URLs as primary evidence for this branch unless newly imported into the workspace per charter.
+1. ~~Update IA validation after fallback acceptance~~ **Done:** `docs/design/reviews/figma_information_architecture_validation.md` **revision 2** — **`pass`**, **Go / No-Go for AI Task 074:** **`GO`**.
+2. Proceed to **AI Task 074** (`docs/design/prompts/figma_visual_system_prompt.md`) while preserving this IA; do not treat external Figma URLs as primary evidence for this branch unless newly imported into the workspace per charter.

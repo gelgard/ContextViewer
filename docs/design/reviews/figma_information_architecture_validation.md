@@ -74,7 +74,7 @@ Together, evidence supports a **single coherent navigation model** for ContextVi
 ## Structural defects
 
 1. **Evidence class limitation:** Certification is for **architecture-derived fallback evidence**, not a **native** full static export set (e.g. PNG/PDF page-map exports) from the **external** Figma-generation system. Import and later design QA must keep that distinction (charter).
-2. **User journeys (065 prompt):** Demo / investor / day-to-day **annotated journey** frames are **implied** by transitions in `navigation_model.md` but **not** delivered as separate named journey diagrams in the fallback pack. **Non-blocking** for IA **structure**; recommend carrying into **067+** as narrative or lightweight diagrams if needed for stakeholder review.
+2. **User journeys (065 prompt):** Demo / investor / day-to-day **annotated journey** frames are **implied** by transitions in `navigation_model.md` but **not** delivered as separate named journey diagrams in the fallback pack. **Non-blocking** for IA **structure**; recommend carrying into **074+** (visual system / screens) as narrative or lightweight diagrams if needed for stakeholder review.
 3. **Bundle completeness flags:** `IA_RESULT.md` §F notes deferred **settings/profile** and a **diff viewer** not fully designed — acceptable as **secondary** gaps for later tasks; they do **not** break the three-workspace IA contract validated here.
 
 ---
@@ -83,11 +83,11 @@ Together, evidence supports a **single coherent navigation model** for ContextVi
 
 **Blocking corrections for IA gate (revision 2):** **none.** The Task **073** package resolves the prior **missing in-repo IA evidence** failure mode.
 
-**Non-blocking recommendations (067 and later):**
+**Non-blocking recommendations (074 and later):**
 
-1. When generating the **visual system** prompt pack (**067**), preserve the **three-workspace shell** and **unified visualization** rules above; do not splinter tree vs graph into separate product areas.
+1. When generating the **visual system** prompt pack (**AI Task 074**), preserve the **three-workspace shell** and **unified visualization** rules above; do not splinter tree vs graph into separate product areas.
 2. Optionally add **raster or annotated journey** exports under `docs/design/artifacts/task065/exports/` (or a future task folder) if stakeholders require pixel-locked IA diagrams beyond Mermaid.
-3. Track **settings** and **diff viewer** as product backlog per bundle §F — outside the minimum IA gate for **067**.
+3. Track **settings** and **diff viewer** as product backlog per bundle §F — outside the minimum IA gate for **074**.
 
 ---
 
@@ -117,14 +117,14 @@ Together, evidence supports a **single coherent navigation model** for ContextVi
 
 ## Go / No-Go
 
-**Go / No-Go for AI Task 067:** `GO`
+**Go / No-Go for AI Task 074** (visual system prompt pack; numbering correction — legacy **067** placeholder superseded): **`GO`**
 
-**Reason:** IA **structure** for the three workspaces is **certified** under the fallback evidence rule. **067** may proceed to **visual system / component-level** prompt generation while preserving this IA; remaining items in §**Structural defects** / §**Exact corrections** are **non-blocking** for this transition.
+**Reason:** IA **structure** for the three workspaces is **certified** under the fallback evidence rule. **074** may proceed to **visual system** prompt generation while preserving this IA; remaining items in §**Structural defects** / §**Exact corrections** are **non-blocking** for this transition. Validation of returned visual-system artifacts is **AI Task 075** (legacy **068** superseded).
 
 ---
 
 ## Summary judgment
 
-- **Proceed** to **AI Task 067** on this basis.
+- **Proceed** to **AI Task 074** on this basis.
 - **Do not** misrepresent the fallback package as a **native** external full export; keep **JSON / contextJSON** as runtime truth per charter.
 - **Preserve** `docs/design/artifacts/task065/` as the **authoritative IA text + derived maps** for this branch until superseded or extended by future import/sync tasks.

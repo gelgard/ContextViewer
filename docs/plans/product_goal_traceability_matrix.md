@@ -98,8 +98,8 @@ Primary user outcomes:
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
 | PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036-073 (062 charter/workflow delivered; 063-073 design branch/fallback) | in_progress |
-| PG-EX-001 | Stage 2-8 | 001-073 (062-073 design branch/fallback) | implemented |
+| PG-UX-001 | Stage 6-8 | 036-079 (062 charter/workflow delivered; 063-066, 073-079 active design branch/fallback; 067-072 legacy superseded placeholders) | in_progress |
+| PG-EX-001 | Stage 2-8 | 001-079 (062-066, 073-079 active design branch/fallback; 067-072 legacy superseded placeholders) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -115,14 +115,11 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - Validated external brief artifacts preserved at: `docs/design/artifacts/task064/`
 - Formal validation record: `docs/design/reviews/figma_product_ui_brief_validation.md` (`AI Task 064`, verdict `pass`, Go for `065`)
 - `AI Task 065` is completed.
-- `AI Task 066` is currently `fail / NO-GO` because the returned IA artifact bundle is incomplete.
-- Next executable design-branch task: `AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package`
-- Requirement mapping for **073**:
-  - `PG-OV-001`
-  - `PG-AR-001`
-  - `PG-AR-002`
-  - `PG-HI-001`
-  - `PG-HI-002`
+- `AI Task 073` is completed as the approved architecture-derived fallback evidence package using uploaded workspace artifacts only.
+- `AI Task 066` re-opened revision is `pass / GO` using the completed Task 073 fallback evidence package.
+- Numbering correction applied after fallback insertion: legacy placeholder files `067–072` remain in-repo but are superseded and are not valid execution anchors.
+- Next executable design-branch task: `AI Task 074 — Stage 8 Figma Visual System Prompt Pack`
+- Requirement mapping for **074**:
   - `PG-UX-001`
   - `PG-EX-001`
 
@@ -156,7 +153,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `066` — Stage 8 Figma Information Architecture Result Validation
-  - **in_progress** (`fail / NO-GO` current revision; missing returned IA artifact completeness)
+  - **completed** (`pass / GO` re-opened revision using Task 073 fallback evidence package)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -165,12 +162,15 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `067` — Stage 8 Figma Visual System Prompt Pack
+  - **superseded placeholder** (replaced by active task `074` after numbering correction)
   - `PG-UX-001`
   - `PG-EX-001`
 - `068` — Stage 8 Figma Visual System Result Validation
+  - **superseded placeholder** (replaced by active task `075` after numbering correction)
   - `PG-UX-001`
   - `PG-EX-001`
 - `069` — Stage 8 Figma Screen Prompt Pack
+  - **superseded placeholder** (replaced by active task `076` after numbering correction)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -179,6 +179,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `070` — Stage 8 Figma Screen Result Validation
+  - **superseded placeholder** (replaced by active task `077` after numbering correction)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -187,15 +188,49 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `071` — Stage 8 Figma Import And Architecture Sync
+  - **superseded placeholder** (replaced by active task `078` after numbering correction)
   - `PG-RT-001`
   - `PG-RT-002`
   - `PG-UX-001`
   - `PG-EX-001`
 - `072` — Stage 8 Post-Figma Implementation Plan Refinement
+  - **superseded placeholder** (replaced by active task `079` after numbering correction)
+  - `PG-PL-001`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `074` — Stage 8 Figma Visual System Prompt Pack
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `075` — Stage 8 Figma Visual System Result Validation
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `076` — Stage 8 Figma Screen Prompt Pack
+  - `PG-OV-001`
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-HI-001`
+  - `PG-HI-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `077` — Stage 8 Figma Screen Result Validation
+  - `PG-OV-001`
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-HI-001`
+  - `PG-HI-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `078` — Stage 8 Figma Import And Architecture Sync
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `079` — Stage 8 Post-Figma Implementation Plan Refinement
   - `PG-PL-001`
   - `PG-UX-001`
   - `PG-EX-001`
 - `073` — Stage 8 Architecture-Derived IA Fallback Package (uploaded-workspace-artifacts-only fallback path; no external-link authority)
+  - **completed**
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
