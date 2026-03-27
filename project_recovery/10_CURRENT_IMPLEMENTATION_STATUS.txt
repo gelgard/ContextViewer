@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Figma Information Architecture Prompt Generation
+Architecture-Derived IA Fallback Packaging
 
 STATUS:
 - Architecture synced with latest rules
@@ -83,18 +83,21 @@ STATUS:
 - AI Task 062 completed: Stage 8 Figma design branch charter and prompt workflow
 - AI Task 063 completed: Stage 8 Figma product UI brief prompt pack
 - AI Task 064 completed: Stage 8 Figma product UI brief result validation
+- AI Task 065 completed: Stage 8 Figma information architecture prompt pack
 - Stage 8 UI bootstrap / preview / handoff chain is validated through smoke coverage
 - validated preview / handoff state is fixed as the baseline checkpoint before design-source expansion
 - Stage 8 Figma design branch is planned as a refinement path, not a replacement for runtime or implementation architecture
 - current branch operating rule: local tasks generate prompts for an external Figma-generation system, the generated Figma artifacts are returned into the workspace, and only then are they validated and imported into the implementation plan
 - external product-brief artifacts are now preserved in `docs/design/artifacts/task064/`
 - formal validation result for the external brief is `pass`; this produces a near-complete core UI baseline, but not yet the final exhaustive import-ready UI artifact
-- required next refinements are: tighter information architecture, broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
+- current IA validation revision for AI Task 066 is `fail / NO-GO` because the returned external IA bundle is incomplete
+- fallback execution path is now opened through AI Task 073: assemble an architecture-derived IA evidence package from uploaded workspace artifacts, explicitly marked as fallback rather than native external export, then re-open Task 066
+- required next refinements are: IA evidence closure, broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 065 — Stage 8 Figma information architecture prompt pack
+Run AI Task 073 — Stage 8 architecture-derived IA fallback package
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

@@ -1,0 +1,22 @@
+%% Architecture-derived fallback evidence (AI Task 073).
+%% Navigation / flow — workspace switching and return paths.
+%% Uploaded workspace artifacts only as authoritative evidence.
+
+flowchart LR
+  subgraph Shell["Global shell"]
+    Nav["Sidebar: Overview | Visualization | History"]
+  end
+
+  O["Overview\nentry surface"]
+  V["Visualization workspace\ntree · graph · inspector"]
+  H["History workspace\ntimeline · daily drill-down"]
+
+  Nav --> O
+  Nav --> V
+  Nav --> H
+
+  O -->|"structural depth"| V
+  O -->|"temporal depth"| H
+  V -->|"return / switch"| O
+  H -->|"return / switch"| O
+  V <-->|"peer switch"| H

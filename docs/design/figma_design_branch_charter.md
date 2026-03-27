@@ -22,6 +22,8 @@ Nothing in the Figma branch **reopens or replaces** that checkpoint as the sourc
 
 The Figma branch **refines design truth** and **informs** implementation truth through plan updates. It does **not** redefine runtime truth.
 
+If a Figma/design validation gate fails only because the returned external artifact bundle is incomplete, a numbered fallback AI task may assemble an **architecture-derived evidence package** from the locked architecture, preserved baseline, and uploaded workspace artifacts returned from the external system. Such a package must be explicitly marked as fallback evidence, must never be misrepresented as a full native export from the external system, and must not treat an external Figma URL as authoritative evidence.
+
 ## Figma branch scope
 
 - **Refines and extends UI planning** (brief, IA, visual system, screens) on top of the preserved checkpoint.

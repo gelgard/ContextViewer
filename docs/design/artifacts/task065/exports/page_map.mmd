@@ -1,0 +1,20 @@
+%% Architecture-derived fallback evidence (AI Task 073).
+%% Not a native full export from the external Figma-generation system.
+%% Authoritative: uploaded workspace artifacts only; do not treat external Figma URLs as primary.
+
+flowchart TB
+  subgraph APP["Application (project in context)"]
+    SHELL["App shell: header + primary nav"]
+    O["Overview — DEFAULT ENTRY\nhigh-signal summary"]
+    V["Visualization workspace — ONE workspace\ntree + graph + inspector"]
+    H["History workspace — FIRST-CLASS\ntimeline + daily grouping"]
+    ST["States & variations\nloading / empty / sparse"]
+  end
+
+  SHELL --> O
+  SHELL --> V
+  SHELL --> H
+  SHELL -.-> ST
+  O --- V
+  O --- H
+  V --- H

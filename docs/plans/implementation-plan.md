@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; next refinement pass is information architecture tightening, followed by visual system, screen coverage, import, and post-Figma plan refinement (tasks **065**–**072**)
+preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed, but IA validation is blocked on incomplete returned artifacts, so the next execution step is an architecture-derived fallback evidence package (`073`) based only on uploaded workspace artifacts before re-opening `066`, then continuing to visual system, screen coverage, import, and post-Figma plan refinement
 
 ## Stage Plan
 
@@ -89,6 +89,11 @@ preserved validated preview / handoff checkpoint; validated external UI brief re
 - product UI brief result validation
 - preserve validated external artifacts in-repo per task
 - use Task 064 result as the current near-complete core UI baseline
+- information architecture prompt pack completed
+- current IA validation gate failed due to incomplete returned artifact bundle
+- fallback recovery path:
+  - architecture-derived IA fallback package
+  - re-open IA validation against completed evidence
 - required refinements from Task 064:
   - tighter information architecture and workspace transitions
   - broader visual system/token coverage

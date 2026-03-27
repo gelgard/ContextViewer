@@ -24,6 +24,24 @@ This document is the **operational workflow** for Stage 8 **Figma design branch*
 
 Prompt-pack tasks (**063, 065, 067, 069**) must store **exact prompt blocks** in-repo (or in task artifacts) for repeatability. Validation tasks (**064, 066, 068, 070**) never pass without the **mandatory returned artifacts** and **visual manual tests** defined in the following sections.
 
+## Conditional fallback recovery task
+
+If **066** (or any later design-validation task) fails **only because the returned external artifact bundle is incomplete**, the workflow may insert:
+
+- **073** — Stage 8 Architecture-Derived IA Fallback Package
+
+This fallback task assembles an **architecture-derived evidence package** from:
+- the locked architecture and plans
+- the preserved validated design baseline
+- the uploaded workspace artifacts and returned external text artifacts that do exist
+
+Rules for fallback packaging:
+- it must be explicitly labeled as **fallback evidence**
+- it must **not** be represented as a native full export from the external Figma-generation system
+- it must rely on uploaded workspace artifacts only; external Figma URLs are optional historical references, not authoritative validation evidence
+- it exists only to close evidence gaps and enable the blocked validation gate to be re-opened honestly
+- after **073**, **066** must be re-opened and either pass or fail based on the completed evidence package before the branch can continue to **067**
+
 ## Mandatory returned artifacts (design-validation tasks)
 
 For **064, 066, 068, 070**, the validation reply must include **all** of the following (missing any → task not accepted):

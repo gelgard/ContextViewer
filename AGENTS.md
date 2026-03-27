@@ -93,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Figma Information Architecture Prompt Generation
+- Substage: Architecture-Derived IA Fallback Packaging
 
 Next required action:
-→ run AI Task 065
+→ run AI Task 073
 
 
 ---
@@ -140,6 +140,7 @@ Supported commands:
 - Figma prompt generation, Figma-result validation, Figma import, and post-Figma implementation refinement must all execute through numbered AI tasks
 - in the Stage 8 Figma design branch, the local agent authors prompt packs for a third-party Figma-generation system; the user then returns the generated Figma artifacts to the workspace for validation, import, and implementation-plan refinement
 - once an approved Figma artifact is returned to the workspace, it becomes the authoritative UI design reference for implementation decisions, but never replaces JSON as runtime truth
+- if a Figma validation gate fails because the returned external artifact bundle is structurally incomplete, a numbered fallback AI task may assemble an architecture-derived evidence package from the current architecture, preserved design baseline, and returned uploaded workspace artifacts; that fallback package must be explicitly labeled as non-native external output, cannot be misrepresented as a full external export, and must not rely on an external Figma link as authoritative evidence
 - after Figma artifact import or design sync, architecture files and contextJSON must be synchronized before continuing implementation
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`

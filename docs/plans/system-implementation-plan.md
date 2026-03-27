@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-Figma Information Architecture Prompt Generation
+Architecture-Derived IA Fallback Packaging
 
 ## Progress
 
@@ -77,6 +77,7 @@ Completed:
 - AI Task 062 — Stage 8 Figma Design Branch Charter And Prompt Workflow
 - AI Task 063 — Stage 8 Figma Product UI Brief Prompt Pack
 - AI Task 064 — Stage 8 Figma Product UI Brief Result Validation
+- AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack
 
 Execution status:
 - Stage 2 opened through AI task system
@@ -99,14 +100,17 @@ Execution status:
 - external product-brief artifacts preserved in-repo: `docs/design/artifacts/task064/`
 - product brief result validated in `docs/design/reviews/figma_product_ui_brief_validation.md` (AI Task 064, verdict `pass`)
 - current design baseline: near-complete core UI for overview / visualization / history, but not yet final import-ready exhaustive UI
-- required next refinements: information architecture, broader visual-system coverage, deeper screen/flow coverage, stronger final import-ready artifact identity
+- AI Task 065 completed: information architecture prompt pack published for external generation
+- AI Task 066 review currently recorded as `fail / NO-GO` because the returned external IA bundle is structurally incomplete
+- fallback path opened: AI Task 073 will assemble an architecture-derived IA evidence package from uploaded workspace artifacts so Task 066 can be re-opened honestly without misrepresenting external output
+- required next refinements remain: information architecture evidence closure, broader visual-system coverage, deeper screen/flow coverage, stronger final import-ready artifact identity
 
 Current:
-- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; next executable work is information architecture refinement starting at **AI Task 065**
+- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; IA prompt pack completed; current execution anchor is **AI Task 073** to recover the missing IA evidence bundle before re-opening **AI Task 066**
 
 Next:
-- AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack
-- AI Task 066 — Stage 8 Figma Information Architecture Result Validation
+- AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package
+- Re-open AI Task 066 — Stage 8 Figma Information Architecture Result Validation
 - AI Task 067 — Stage 8 Figma Visual System Prompt Pack
 - AI Task 068 — Stage 8 Figma Visual System Result Validation
 - AI Task 069 — Stage 8 Figma Screen Prompt Pack

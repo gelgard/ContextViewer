@@ -98,8 +98,8 @@ Primary user outcomes:
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
 | PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036-072 (062 charter/workflow delivered; 063-072 design branch) | in_progress |
-| PG-EX-001 | Stage 2-8 | 001-072 (062-072 design branch) | implemented |
+| PG-UX-001 | Stage 6-8 | 036-073 (062 charter/workflow delivered; 063-073 design branch/fallback) | in_progress |
+| PG-EX-001 | Stage 2-8 | 001-073 (062-073 design branch/fallback) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -114,8 +114,10 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - Active Stage 8 design branch docs: `docs/design/figma_design_branch_charter.md`, `docs/design/figma_prompt_workflow.md` (`AI Task 062` deliverables).
 - Validated external brief artifacts preserved at: `docs/design/artifacts/task064/`
 - Formal validation record: `docs/design/reviews/figma_product_ui_brief_validation.md` (`AI Task 064`, verdict `pass`, Go for `065`)
-- Next executable design-branch task: `AI Task 065 — Stage 8 Figma Information Architecture Prompt Pack`
-- Requirement mapping for **065**:
+- `AI Task 065` is completed.
+- `AI Task 066` is currently `fail / NO-GO` because the returned IA artifact bundle is incomplete.
+- Next executable design-branch task: `AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package`
+- Requirement mapping for **073**:
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -145,6 +147,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `065` — Stage 8 Figma Information Architecture Prompt Pack
+  - **completed**
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -153,6 +156,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `066` — Stage 8 Figma Information Architecture Result Validation
+  - **in_progress** (`fail / NO-GO` current revision; missing returned IA artifact completeness)
   - `PG-OV-001`
   - `PG-AR-001`
   - `PG-AR-002`
@@ -189,6 +193,14 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-EX-001`
 - `072` — Stage 8 Post-Figma Implementation Plan Refinement
   - `PG-PL-001`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- `073` — Stage 8 Architecture-Derived IA Fallback Package (uploaded-workspace-artifacts-only fallback path; no external-link authority)
+  - `PG-OV-001`
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-HI-001`
+  - `PG-HI-002`
   - `PG-UX-001`
   - `PG-EX-001`
 

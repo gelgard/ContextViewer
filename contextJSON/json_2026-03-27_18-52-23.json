@@ -1,0 +1,159 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-27T16:52:23Z",
+    "generated_filename": "json_2026-03-27_18-52-23.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Architecture-Derived IA Fallback Packaging",
+    "current_task": "AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Architecture-Derived IA Fallback Packaging",
+    "status": "stage8_active_with_uploaded_artifact_only_ia_recovery"
+  },
+  "system": {
+    "summary": "ContextViewer preserves a validated Stage 8 preview and demo handoff checkpoint plus a validated external near-complete core UI baseline. IA validation remains blocked by incomplete returned artifacts, and the sanctioned recovery path now explicitly uses only uploaded workspace artifacts rather than any external Figma link."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Task 053 UI bootstrap bundle completed",
+      "AI Task 054 UI bootstrap contract smoke suite completed",
+      "AI Task 055 UI bootstrap preview HTML completed",
+      "AI Task 056 UI preview launcher completed",
+      "AI Task 057 UI preview local server completed",
+      "AI Task 058 UI preview delivery smoke suite completed",
+      "AI Task 059 UI preview readiness report completed",
+      "AI Task 060 UI demo handoff bundle completed",
+      "AI Task 061 UI demo handoff smoke suite completed",
+      "AI Task 062 Figma design branch charter and prompt workflow completed",
+      "AI Task 063 Figma product UI brief prompt pack completed",
+      "AI Task 064 Figma product UI brief result validation completed",
+      "AI Task 065 Figma information architecture prompt pack completed"
+    ],
+    "in_progress": [
+      "Stage 8 Polish",
+      "Validated preview / handoff checkpoint preserved as baseline",
+      "External near-complete core UI baseline preserved from product-brief validation",
+      "IA validation gate is blocked on incomplete returned artifact coverage",
+      "Architecture-derived fallback IA evidence packaging from uploaded workspace artifacts is the current execution focus"
+    ],
+    "next": [
+      "Run AI Task 073 — Stage 8 architecture-derived IA fallback package using uploaded workspace artifacts only",
+      "Re-open AI Task 066 against the completed fallback evidence package",
+      "Continue to AI Task 067 only after IA validation reaches pass / GO"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "Fallback path clarified to rely only on uploaded workspace artifacts, not on an external Figma URL",
+    "Task 073 requirements and governance were synchronized to the uploaded-artifacts-only rule",
+    "Task 066 review wording was synchronized to reject external-link authority for the fallback path"
+  ],
+  "current_task": {
+    "id": "073",
+    "name": "Stage 8 architecture-derived IA fallback package",
+    "stage": "Stage 8 — Polish",
+    "substage": "Architecture-Derived IA Fallback Packaging",
+    "status": "next_defined"
+  },
+  "next_tasks": [
+    { "id": "073", "name": "Stage 8 architecture-derived IA fallback package" },
+    { "id": "066", "name": "Stage 8 Figma information architecture result validation (re-open)" },
+    { "id": "067", "name": "Stage 8 Figma visual system prompt pack" },
+    { "id": "068", "name": "Stage 8 Figma visual system result validation" },
+    { "id": "069", "name": "Stage 8 Figma screen prompt pack" },
+    { "id": "070", "name": "Stage 8 Figma screen result validation" },
+    { "id": "071", "name": "Stage 8 Figma import and architecture sync" },
+    { "id": "072", "name": "Stage 8 post-Figma implementation plan refinement" }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Architecture-Derived IA Fallback Packaging",
+    "state": "active",
+    "next_stage": null,
+    "design_branch": {
+      "status": "ia_validation_blocked_fallback_recovery_uploaded_artifacts_only",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "validated_external_ui_baseline": "docs/design/artifacts/task064/",
+      "ia_validation_status": "fail_no_go_current_revision",
+      "fallback_task": "073",
+      "fallback_evidence_rule": "uploaded_workspace_artifacts_only_no_external_figma_link_authority",
+      "remaining_design_gaps": [
+        "IA evidence closure and honest re-validation",
+        "visual system breadth and tokenization",
+        "deeper screen / flow coverage",
+        "final import-ready artifact identity"
+      ],
+      "next_design_tasks": ["073", "066", "067", "068", "069", "070", "071", "072"]
+    }
+  },
+  "ai_task_status": {
+    "last_completed_task": "065",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065"],
+    "next_task": "073",
+    "next_task_status": "defined_and_ready"
+  },
+  "traceability": {
+    "stage_8_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented_or_planned",
+      "PG-RT-002": "implemented_or_planned",
+      "PG-OV-001": "implemented_and_design_refinement_in_progress",
+      "PG-AR-001": "implemented_and_design_refinement_in_progress",
+      "PG-AR-002": "implemented_and_design_refinement_in_progress",
+      "PG-HI-001": "implemented_and_design_refinement_in_progress",
+      "PG-HI-002": "implemented_and_design_refinement_in_progress",
+      "PG-UX-001": "in_progress_with_uploaded_artifact_only_ia_fallback_recovery",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": "AI Task 073 — Stage 8 Architecture-Derived IA Fallback Package"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "architecture_update_applied_contextjson_regenerated"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8 remains active. The project now preserves a validated preview/handoff checkpoint, a validated external UI brief baseline, a completed IA prompt pack, and a blocked IA validation gate that is being recovered through a sanctioned fallback evidence task based only on uploaded workspace artifacts.",
+    "customer_status": "The design branch is still progressing, but IA validation cannot advance on text-only evidence. The recovery path now explicitly excludes external Figma-link authority and relies only on uploaded artifacts already brought into the workspace.",
+    "last_iteration": "Synchronized the architecture so the IA fallback path uses only uploaded workspace artifacts and no external Figma link as authoritative evidence."
+  },
+  "generated_at": "2026-03-27T16:52:23Z"
+}

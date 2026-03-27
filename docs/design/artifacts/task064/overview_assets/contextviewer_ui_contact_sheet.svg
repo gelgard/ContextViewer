@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="2350" viewBox="0 0 1700 2350">
+  <rect width="1700" height="2350" fill="#eef2f5"/>
+
+  <text x="70" y="90" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" fill="#1f2933">
+    ContextViewer UI Overview
+  </text>
+  <text x="70" y="132" font-family="Inter, Arial, sans-serif" font-size="20" fill="#52606d">
+    Consolidated view of the current Stage 8 design baseline: overview, visualization, history, and state coverage.
+  </text>
+
+  <g transform="translate(60,180)">
+    <rect x="0" y="0" width="760" height="900" rx="18" fill="#ffffff" stroke="#d9e2ec"/>
+    <text x="28" y="42" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#1f2933">Overview</text>
+    <text x="28" y="72" font-family="Inter, Arial, sans-serif" font-size="16" fill="#52606d">Entry surface: status, roadmap, changes, progress, architecture summary.</text>
+    <image href="../extracted/stitch/overview_screen/screen.png" x="20" y="96" width="720" height="780" preserveAspectRatio="xMidYMin meet"/>
+  </g>
+
+  <g transform="translate(880,180)">
+    <rect x="0" y="0" width="760" height="900" rx="18" fill="#ffffff" stroke="#d9e2ec"/>
+    <text x="28" y="42" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#1f2933">Visualization Workspace</text>
+    <text x="28" y="72" font-family="Inter, Arial, sans-serif" font-size="16" fill="#52606d">Unified technical workspace: tree, graph canvas, mode switching, right inspector.</text>
+    <image href="../extracted/stitch/visualization_workspace/screen.png" x="20" y="96" width="720" height="780" preserveAspectRatio="xMidYMin meet"/>
+  </g>
+
+  <g transform="translate(60,1120)">
+    <rect x="0" y="0" width="760" height="900" rx="18" fill="#ffffff" stroke="#d9e2ec"/>
+    <text x="28" y="42" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#1f2933">History Workspace</text>
+    <text x="28" y="72" font-family="Inter, Arial, sans-serif" font-size="16" fill="#52606d">First-class temporal workspace: timeline, daily groups, snapshot actions, details.</text>
+    <image href="../extracted/stitch/history_workspace/screen.png" x="20" y="96" width="720" height="780" preserveAspectRatio="xMidYMin meet"/>
+  </g>
+
+  <g transform="translate(880,1120)">
+    <rect x="0" y="0" width="760" height="900" rx="18" fill="#ffffff" stroke="#d9e2ec"/>
+    <text x="28" y="42" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#1f2933">States Variations</text>
+    <text x="28" y="72" font-family="Inter, Arial, sans-serif" font-size="16" fill="#52606d">Coverage for loading, empty, sparse, and other supporting product states.</text>
+    <image href="../extracted/stitch/states_variations/screen.png" x="20" y="96" width="720" height="780" preserveAspectRatio="xMidYMin meet"/>
+  </g>
+
+  <g transform="translate(60,2060)">
+    <rect x="0" y="0" width="1580" height="210" rx="18" fill="#ffffff" stroke="#d9e2ec"/>
+    <text x="28" y="44" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#1f2933">Reading Guide</text>
+    <text x="28" y="82" font-family="Inter, Arial, sans-serif" font-size="18" fill="#52606d">
+      1. Overview is the high-signal landing screen.
+    </text>
+    <text x="28" y="116" font-family="Inter, Arial, sans-serif" font-size="18" fill="#52606d">
+      2. Visualization is the deep technical workspace with tree + graph + inspector in one area.
+    </text>
+    <text x="28" y="150" font-family="Inter, Arial, sans-serif" font-size="18" fill="#52606d">
+      3. History is a first-class workspace for time-based navigation of project state.
+    </text>
+    <text x="28" y="184" font-family="Inter, Arial, sans-serif" font-size="18" fill="#52606d">
+      4. States Variations show the direction for supporting runtime conditions before final implementation refinement.
+    </text>
+  </g>
+</svg>

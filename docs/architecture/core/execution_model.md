@@ -54,6 +54,7 @@ Output:
 - explicit blockers and required fixes
 - when the Stage 8 Figma design branch is active, include current design checkpoint, pending design tasks, and imported-design sync status when available
 - when external Figma artifacts have passed a validation gate, include the preserved artifact location, validation verdict, and remaining design gaps before final import
+- when a Figma validation gate fails only because the returned artifact bundle is incomplete, allow a numbered fallback AI task to assemble an architecture-derived evidence package; that package must be explicitly marked as fallback evidence, must be based on uploaded workspace artifacts rather than an external Figma link, and the blocked validation gate must be re-opened before implementation continues
 
 ### Trigger matrix
 Fast restore:
