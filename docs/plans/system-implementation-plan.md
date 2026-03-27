@@ -4,7 +4,7 @@
 Stage 8 — Polish
 
 ## Current Substage
-Figma Visual System Prompt Generation
+Figma Screen Prompt Generation
 
 ## Progress
 
@@ -106,14 +106,15 @@ Execution status:
 - AI Task 073 completed: architecture-derived IA fallback evidence package assembled from uploaded workspace artifacts only
 - AI Task 066 re-opened and passed / GO using the completed Task 073 fallback evidence package
 - IA structure is certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
-- required next refinements remain: broader visual-system coverage, deeper screen/flow coverage, stronger final import-ready artifact identity
+- AI Task 074 completed: visual-system prompt pack published for external generation
+- AI Task 075 validated: visual-system review revision passed / GO using workspace-registered fallback evidence under `docs/design/artifacts/task074/`
+- visual system is certified as product-specific, unified, and IA-compatible for continuation to screen prompt generation
+- required next refinements remain: deeper screen/flow coverage and stronger final import-ready artifact identity
 
 Current:
-- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; IA prompt pack completed; fallback evidence package completed; IA validation re-opened and passed; numbering correction applied; current execution anchor is **AI Task 074** for visual-system prompt generation
+- Stage 8 active — validated preview / handoff checkpoint preserved; external UI brief result validated and stored; IA prompt pack completed; fallback evidence package completed; IA validation re-opened and passed; visual-system prompt and validation completed; numbering correction applied; current execution anchor is **AI Task 076** for screen prompt generation
 
 Next:
-- AI Task 074 — Stage 8 Figma Visual System Prompt Pack
-- AI Task 075 — Stage 8 Figma Visual System Result Validation
 - AI Task 076 — Stage 8 Figma Screen Prompt Pack
 - AI Task 077 — Stage 8 Figma Screen Result Validation
 - AI Task 078 — Stage 8 Figma Import And Architecture Sync

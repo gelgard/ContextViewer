@@ -21,7 +21,7 @@ This means:
 Stage 8 — Polish → active
 
 ## Current Focus
-preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed; the fallback evidence package (`073`) is completed; IA validation (`066`) is re-opened and passed; numbering correction is applied so the active continuation now starts at visual system prompt generation (`074`), then visual validation, deeper screen coverage, import, and post-Figma plan refinement
+preserved validated preview / handoff checkpoint; validated external UI brief result preserved under `docs/design/artifacts/task064/`; IA prompt pack is completed; the fallback evidence package (`073`) is completed; IA validation (`066`) is re-opened and passed; numbering correction is applied; visual-system prompt generation (`074`) and visual-system validation (`075`) are completed; the active continuation now moves to screen prompt generation (`076`), then screen validation, import, and post-Figma plan refinement
 
 ## Stage Plan
 
@@ -98,7 +98,6 @@ preserved validated preview / handoff checkpoint; validated external UI brief re
   - legacy placeholders `067–072` retained only for history
   - active post-fallback branch renumbered to `074–079`
 - required refinements from Task 064:
-  - broader visual system/token coverage
   - deeper screen / flow coverage
   - stronger final import-ready artifact identity
 - visual system prompt pack

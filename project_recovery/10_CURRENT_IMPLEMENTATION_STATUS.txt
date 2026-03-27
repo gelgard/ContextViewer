@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 8 — Polish
 
 CURRENT SUBSTAGE:
-Figma Visual System Prompt Generation
+Figma Screen Prompt Generation
 
 STATUS:
 - Architecture synced with latest rules
@@ -95,12 +95,15 @@ STATUS:
 - AI Task 066 re-opened and passed / GO using the Task 073 fallback evidence package
 - IA structure is now certified for overview entry, unified visualization workspace, first-class history workspace, and inspector-led progressive disclosure
 - numbering correction applied for the post-fallback branch: active future design tasks are now `074–079`; pre-existing files `067–072` are retained only as superseded placeholders and must not be used as next-task anchors
-- required next refinements are: broader visual-system coverage, deeper screen/flow coverage, and stronger import-ready artifact identity
+- AI Task 074 completed: visual system prompt pack published
+- AI Task 075 validated: visual system review revision passed / GO using the Task 074 fallback evidence package from uploaded workspace artifacts
+- visual system is now certified as product-specific, IA-compatible, unified across shell / overview / visualization / history, and sufficient for screen prompt generation
+- required next refinements are: deeper screen/flow coverage and stronger import-ready artifact identity
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 074 — Stage 8 Figma visual system prompt pack
+Run AI Task 076 — Stage 8 Figma screen prompt pack
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

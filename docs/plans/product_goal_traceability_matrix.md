@@ -118,8 +118,15 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 073` is completed as the approved architecture-derived fallback evidence package using uploaded workspace artifacts only.
 - `AI Task 066` re-opened revision is `pass / GO` using the completed Task 073 fallback evidence package.
 - Numbering correction applied after fallback insertion: legacy placeholder files `067–072` remain in-repo but are superseded and are not valid execution anchors.
-- Next executable design-branch task: `AI Task 074 — Stage 8 Figma Visual System Prompt Pack`
-- Requirement mapping for **074**:
+- `AI Task 074` is completed.
+- `AI Task 075` is validated as `pass / GO` using the completed Task 074 fallback evidence package under `docs/design/artifacts/task074/`.
+- Next executable design-branch task: `AI Task 076 — Stage 8 Figma Screen Prompt Pack`
+- Requirement mapping for **076**:
+  - `PG-OV-001`
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-HI-001`
+  - `PG-HI-002`
   - `PG-UX-001`
   - `PG-EX-001`
 
@@ -199,9 +206,11 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-UX-001`
   - `PG-EX-001`
 - `074` — Stage 8 Figma Visual System Prompt Pack
+  - **completed**
   - `PG-UX-001`
   - `PG-EX-001`
 - `075` — Stage 8 Figma Visual System Result Validation
+  - **completed** (`pass / GO` using Task 074 workspace-registered fallback evidence package)
   - `PG-UX-001`
   - `PG-EX-001`
 - `076` — Stage 8 Figma Screen Prompt Pack

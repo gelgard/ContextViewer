@@ -93,10 +93,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Figma Visual System Prompt Generation
+- Substage: Figma Screen Prompt Generation
 
 Next required action:
-→ run AI Task 074
+→ run AI Task 076
 
 
 ---
