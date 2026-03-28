@@ -33,6 +33,14 @@ ARCHITECTURE RULES
 15b. Cursor is used only for code-writing, implementation edits, development execution, and code-adjacent documentation changes required by the current AI task.
 15c. The `Cursor prompt (EN)` block must not duplicate local-agent responsibilities or repeat content already expressed in `Manual Test (exact commands)` or `What to send back for validation`.
 16. If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, the test section must also include a dedicated visual manual-test subsection with explicit viewing steps and exact visual evidence required for validation.
+16a. For each UI task, dual validation contours are mandatory and non-substitutable:
+   - assistant-side Playwright validation with explicit executed steps, per-step pass/fail, and visual mismatch list (if any);
+   - user-side manual visual validation via explicit step-by-step scenario.
+16b. Manual visual validation by the user is required even when Playwright validation passes.
+16c. Fast smoke execution policy is mandatory by default:
+   - first run the highest-level stage gate script;
+   - run underlying child smoke scripts only for failure localization, diagnostics, or explicit user request;
+   - avoid duplicate re-runs of unchanged heavy smoke scripts in one validation cycle.
 17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
 18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
 19. The validated Stage 8 preview / handoff state is a preserved checkpoint and must not be replaced by the Figma design branch.

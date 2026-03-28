@@ -20,6 +20,20 @@ RESPONSE FORMAT RULES
   - changed-files validation instructions
   - next-step planning or local validation responsibilities
 - If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
+- For each UI task, both validation contours are mandatory:
+  - Assistant must run Playwright and report:
+    - steps executed
+    - result per step (pass/fail)
+    - visual mismatch list (if any)
+  - User must also execute manual visual validation by explicit step-by-step scenario
+  - Manual visual validation is mandatory and is not replaced by Playwright
+- Fast smoke execution policy (mandatory by default):
+  - run one top-level orchestration gate first (stage readiness/completion gate)
+  - run underlying child smoke scripts only when:
+    - top-level gate failed
+    - failure localization is needed
+    - user explicitly requests full decomposition
+  - do not repeat expensive identical smoke runs in the same validation cycle without code changes
 - If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
 - If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`

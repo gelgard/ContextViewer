@@ -93,14 +93,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9 | 004-023; **084**, **086** | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9 | 004-023; **084**, **086**; **089** (completion gate verifies contract-only closure) | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
 | PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-9 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-086** secondary-flow foundations | implemented |
-| PG-EX-001 | Stage 2-9 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-086** | implemented |
+| PG-UX-001 | Stage 6-9 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089** Stage 9 secondary flows + closure gate | implemented |
+| PG-EX-001 | Stage 2-9 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089** (incl. **089** machine-readable Stage 9 completion gate) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -133,7 +133,25 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 084` is completed: Stage 9 diff-viewer contract bundle.
 - `AI Task 085` is completed: Stage 9 diff-viewer preview surface.
 - `AI Task 086` is completed: Stage 9 settings/profile contract bundle.
-- Next executable task: `AI Task 087` — Stage 9 settings/profile preview surface.
+- `AI Task 087` is completed: Stage 9 settings/profile preview surface (contract-backed `settings-workspace` / readiness fields; execution slice aligned with Stage 9 secondary flows).
+- `AI Task 088` is completed: Stage 9 secondary-flows readiness gate (`verify_stage9_secondary_flows_readiness_gate.sh`).
+- `AI Task 089` is completed: Stage 9 completion / transition readiness gate (`get_stage9_completion_gate_report.sh`, `verify_stage9_completion_gate.sh`) — proves **084–088** stable for next-stage transition.
+- **Stage 9 closure evidence:** run `bash code/ui/verify_stage9_completion_gate.sh --project-id <id>` (requires DB + preview stack); report `status` must be `ready_for_stage_transition` for transition GO.
+- Requirement mapping for **089** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-EX-001`
+  - `PG-UX-001`
+- Requirement mapping for **088** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-EX-001`
+  - `PG-UX-001`
+- Requirement mapping for **087** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
 - Requirement mapping for **086** (complete):
   - `PG-RT-001`
   - `PG-RT-002`

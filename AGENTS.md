@@ -139,6 +139,14 @@ Supported commands:
 - architecture planning, architecture synchronization, validation logic, changed-file scope review, next-step planning, and user-facing orchestration remain in the local agent layer and must not be duplicated inside the Cursor prompt
 - every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
 - if task-to-goal mapping is missing, task is blocked until mapping is added
+- fast smoke mode is mandatory by default:
+  - run one top-level stage gate first
+  - run child smoke scripts separately only for diagnostics/failure localization or explicit user request
+  - avoid repeated heavy smoke runs in the same validation cycle when no code changed
+- for every UI task, dual validation contours are mandatory:
+  - assistant-side Playwright run with explicit executed steps, per-step pass/fail, and visual mismatch list (if any)
+  - user-side manual visual validation via explicit step-by-step scenario
+  - manual visual validation is required even when Playwright passes
 - validated preview / handoff state is the current Stage 8 checkpoint and must remain preserved while the Figma design branch is developed
 - the Stage 8 Figma design branch refines the implementation plan and must not replace or invalidate the original architecture / runtime model
 - Figma prompt generation, Figma-result validation, Figma import, and post-Figma implementation refinement must all execute through numbered AI tasks
@@ -259,6 +267,14 @@ When command is triggered:
 - forbidden inside `Cursor prompt (EN)`: `Manual Test` sections, `What to send back for validation`, architecture-update instructions, next-step planning, changed-files validation instructions, or local-agent validation responsibilities
 - `Manual Test (exact commands)` and `What to send back for validation` remain mandatory response blocks in the local agent response, but must stay outside the `Cursor prompt (EN)` block
 - when an AI task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
+- for each UI task, both validation contours are mandatory and non-substitutable:
+  - assistant must run Playwright and provide: executed steps, per-step pass/fail, visual mismatch list (if any)
+  - user must run manual visual validation by explicit step-by-step scenario
+  - manual visual validation is mandatory and not replaced by Playwright
+- fast smoke execution policy is mandatory by default:
+  - run one highest-level orchestration gate first
+  - run lower-level smoke scripts only for diagnostics, failure localization, or explicit user request
+  - do not repeat identical heavy smoke runs in one validation cycle without code changes
 - when an AI task generates prompts for an external Figma/design system, tests must specify the exact prompt blocks to use externally and the exact returned evidence required for validation (for example: Figma link, exported frames, page list, component inventory, screenshots)
 - when an AI task validates returned Figma/design results, tests must specify the exact artifacts the user must send back (link/export/screenshots/page map/component list) and the exact visual/structural checks to confirm
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`

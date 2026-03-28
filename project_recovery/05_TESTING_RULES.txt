@@ -4,3 +4,14 @@ TESTING RULES
 - terminal tests must be fully executable from terminal
 - prefer deterministic outputs
 - clean up temporary files after testing
+- fast smoke mode is mandatory by default:
+  - run the highest-level stage gate first (single orchestration script)
+  - run lower-level smoke scripts separately only for diagnostics, failure isolation, or explicit user request
+  - avoid duplicate re-runs of the same heavy smoke scripts in one validation cycle unless code changed
+- for every UI task, dual validation is mandatory:
+  - assistant runs Playwright validation and reports:
+    - executed steps
+    - per-step result (pass/fail)
+    - visual mismatch list (if any)
+  - user runs manual visual validation by explicit step-by-step scenario
+  - manual visual validation is never replaced by Playwright
