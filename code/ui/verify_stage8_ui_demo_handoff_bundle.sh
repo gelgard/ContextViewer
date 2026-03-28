@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # AI Task 061: Stage 8 UI demo handoff bundle smoke suite (stdout = one JSON report).
 # AI Task 083: after ready bundle, confirms served HTML includes 081/082/083 production surface roots.
-# AI Task 085: served HTML must include diff section / diff-workspace; five demo_steps.
+# AI Task 085: served HTML must include diff section / diff-workspace.
+# AI Task 088: served HTML must include settings; six demo_steps.
 # Served body is grep'd from a temp file so bash does not truncate at embedded NUL in the JSON payload.
 set -euo pipefail
 
@@ -153,7 +154,8 @@ expected_demo_steps="$(jq -n '
     "Confirm the overview section is visible (data-section=\"overview\").",
     "Confirm the visualization section is visible (data-section=\"visualization\").",
     "Confirm the history section is visible (data-section=\"history\").",
-    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace)."
+    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace).",
+    "Confirm the settings/profile section is visible (data-section=\"settings\", class settings-workspace)."
   ]
 ')"
 
@@ -239,7 +241,7 @@ fi
 
 if [[ "$shape_ok" == true ]]; then
   if printf '%s\n' "$bundle_out" | jq -e --argjson exp "$expected_demo_steps" '.handoff.demo_steps == $exp' >/dev/null 2>&1; then
-    add_check "handoff: demo_steps length and order" "pass" "five strings in canonical order"
+    add_check "handoff: demo_steps length and order" "pass" "six strings in canonical order"
   else
     add_check "handoff: demo_steps length and order" "fail" "demo_steps do not match expected ordered list"
   fi
@@ -309,6 +311,16 @@ if [[ "$bundle_ready" == true ]]; then
     else
       add_check "handoff: served HTML diff-workspace (085)" "fail" "class diff-workspace not found"
     fi
+    if grep -q 'data-section="settings"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML settings section (088)" "pass" 'found data-section="settings"'
+    else
+      add_check "handoff: served HTML settings section (088)" "fail" 'data-section="settings" not found'
+    fi
+    if grep -q 'class="settings-workspace"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML settings-workspace (088)" "pass" "found settings-workspace"
+    else
+      add_check "handoff: served HTML settings-workspace (088)" "fail" "class settings-workspace not found"
+    fi
   else
     add_check "handoff: served HTML fetch for production markers" "fail" "HTTP ${ho_code} on preview_url"
     add_check "handoff: served HTML overview-surface (081)" "fail" "skipped: fetch failed"
@@ -316,6 +328,8 @@ if [[ "$bundle_ready" == true ]]; then
     add_check "handoff: served HTML history-workspace (083)" "fail" "skipped: fetch failed"
     add_check "handoff: served HTML diff section (085)" "fail" "skipped: fetch failed"
     add_check "handoff: served HTML diff-workspace (085)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML settings section (088)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML settings-workspace (088)" "fail" "skipped: fetch failed"
   fi
   rm -f "$ho_tmp"
 else
@@ -326,6 +340,8 @@ else
   add_check "handoff: served HTML history-workspace (083)" "fail" "$det"
   add_check "handoff: served HTML diff section (085)" "fail" "$det"
   add_check "handoff: served HTML diff-workspace (085)" "fail" "$det"
+  add_check "handoff: served HTML settings section (088)" "fail" "$det"
+  add_check "handoff: served HTML settings-workspace (088)" "fail" "$det"
 fi
 
 # --- negative: handoff child ---

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # AI Task 060: Stage 8 UI demo handoff bundle (read-only; stdout = one JSON object).
 # AI Task 085: demo_steps include diff viewer; readiness gates on diff surface via prepare.
+# AI Task 088: demo_steps include settings/profile surface; readiness gates on settings via prepare.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,7 +27,7 @@ Stdout:
     generated_at (UTC)
     status                 ready | not_ready
     handoff                output_dir, output_file, file_open_command, server_url, preview_url,
-                           browser_open_command, demo_steps
+                           browser_open_command, demo_steps (six strings: overview … settings/profile)
     readiness              full JSON from get_stage8_ui_preview_readiness_report.sh
     consistency_checks     project_id_match, output_file_matches_project, preview_url_matches_project,
                            readiness_ready, browser_open_command_matches_preview_url
@@ -190,7 +191,8 @@ demo_steps_json="$(jq -n '
     "Confirm the overview section is visible (data-section=\"overview\").",
     "Confirm the visualization section is visible (data-section=\"visualization\").",
     "Confirm the history section is visible (data-section=\"history\").",
-    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace)."
+    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace).",
+    "Confirm the settings/profile section is visible (data-section=\"settings\", class settings-workspace)."
   ]
 ')"
 

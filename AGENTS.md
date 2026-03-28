@@ -93,11 +93,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 8
-- Substage: Stage 8 complete / next-stage planning pending
+- Stage: Stage 9
+- Substage: Secondary flows implementation (diff/settings contract + preview surfaces)
 
 Next required action:
-→ define the next numbered AI task before resuming implementation
+→ run AI Task 087 (settings/profile preview surface)
 
 
 ---

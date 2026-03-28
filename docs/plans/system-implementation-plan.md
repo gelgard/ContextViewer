@@ -1,10 +1,10 @@
 # System Implementation Plan
 
 ## Current Stage
-Stage 8 — Polish
+Stage 9 — Secondary Flows And Release Readiness
 
 ## Current Substage
-Stage 8 complete / next-stage planning pending
+Secondary flows implementation (diff/settings contract + preview surfaces)
 
 ## Progress
 
@@ -126,12 +126,16 @@ Execution status:
 - AI Task 081 completed: Overview fidelity slice applied to bootstrap preview; preview HTML now exposes `render_profile=081_overview_fidelity` and renders structured feed-backed status / roadmap / progress / recent snapshot blocks while keeping shell marker and payload guarantees intact
 - AI Task 082 completed: Visualization fidelity slice applied to bootstrap preview; preview HTML now exposes `render_profile=082_visualization_fidelity` and renders a unified tree + graph + inspector workspace from Stage 6 visualization contracts while keeping shell marker and payload guarantees intact
 - AI Task 083 completed: History fidelity slice applied to bootstrap preview; preview HTML now exposes `render_profile=083_history_handoff_fidelity` and renders history daily rollup + snapshot timeline as one contract-backed surface while demo handoff and delivery smoke confirm overview / visualization / history production markers together
+- AI Task 084 completed: Stage 9 diff-viewer contract bundle foundation (`code/diff/*`) with contract smoke coverage
+- AI Task 085 completed: Stage 9 diff-viewer preview surface integrated into bootstrap preview (`render_profile=085_diff_viewer_preview`) and delivery/readiness smokes
+- AI Task 086 completed: Stage 9 settings/profile contract bundle foundation (`code/settings/*`) with contract smoke coverage
 
 Current:
-- Stage 8 complete — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
+- Stage 9 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
 - **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
 - **Post-Figma production UI slices `080–083`: completed**
-- **Next execution anchor:** no active numbered task; next stage / next task definition required before further implementation
+- **Stage 9 secondary flows in progress:** `084–086` completed
+- **Next execution anchor:** **AI Task 087** (settings/profile preview surface)
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**

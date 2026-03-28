@@ -93,14 +93,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 | 004-023 | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9 | 004-023; **084**, **086** | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
 | PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-8 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded) | implemented |
-| PG-EX-001 | Stage 2-8 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders) | implemented |
+| PG-UX-001 | Stage 6-9 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-086** secondary-flow foundations | implemented |
+| PG-EX-001 | Stage 2-9 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-086** | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -130,7 +130,25 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 081` is completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; shell marker/payload preserved; dashboard contracts and preview readiness remain successful.
 - `AI Task 082` is completed: Visualization workspace fidelity applied to bootstrap preview; `render_profile=082_visualization_fidelity`; tree + graph + inspector are rendered as one unified contract-backed workspace; visualization workspace contracts remain successful.
 - `AI Task 083` is completed: History workspace + cross-surface handoff smoke slice.
-- No next executable task is currently defined; next stage / next numbered AI task must be created before further implementation.
+- `AI Task 084` is completed: Stage 9 diff-viewer contract bundle.
+- `AI Task 085` is completed: Stage 9 diff-viewer preview surface.
+- `AI Task 086` is completed: Stage 9 settings/profile contract bundle.
+- Next executable task: `AI Task 087` — Stage 9 settings/profile preview surface.
+- Requirement mapping for **086** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- Requirement mapping for **085** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+- Requirement mapping for **084** (complete):
+  - `PG-RT-001`
+  - `PG-RT-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
 - Requirement mapping for **083** (complete):
   - `PG-HI-001`
   - `PG-HI-002`

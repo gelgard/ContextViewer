@@ -4,7 +4,8 @@
 # AI Task 081: structured Overview from dashboard feed.
 # AI Task 082: unified viz workspace HTML.
 # AI Task 083: history workspace HTML; production surface classes on served preview.
-# AI Task 085: diff viewer section; render_profile 085_diff_viewer_preview; diff_viewer_state in preview_summary.
+# AI Task 085: diff viewer section; render_profile + diff_viewer_state in preview_summary.
+# AI Task 088: settings section; render_profile 088_stage9_secondary_flows_preview; settings_surface_state; investor gate includes settings.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -30,12 +31,13 @@ Stdout:
     generated_at (UTC ISO-8601)
     status                 ready | not_ready
     preview_artifacts      output_dir, output_file, open_command (from prepare)
-    render_profile         from prepare.preview_summary (e.g. 085_diff_viewer_preview)
+    render_profile         from prepare.preview_summary (e.g. 088_stage9_secondary_flows_preview)
     verification:
       bootstrap_smoke      full JSON from verify_stage8_ui_bootstrap_contracts.sh
       delivery_smoke       full JSON from verify_stage8_ui_preview_delivery.sh
     readiness_summary      overview_available, visualization_available, history_available,
                            diff_viewer_available, diff_viewer_empty_state_only, diff_viewer_comparison_ready,
+                           settings_profile_available, settings_contract_consistent, settings_read_only_flags_ok,
                            preview_launch_ready, local_delivery_ready, investor_demo_ready
     consistency_checks     project_id_match, artifact_matches_project, bootstrap_pass,
                            delivery_pass, all_ready_flags_true
@@ -222,6 +224,13 @@ report="$(jq -n \
   | ($diff_sec and $dv_declared and $boot_pass) as $diff_a
   | (($prep.preview_summary.diff_viewer_state // empty).empty_state_only // false) as $dv_empty
   | (($prep.preview_summary.diff_viewer_state // empty).comparison_ready // false) as $dv_comp
+  | (($prep.preview_summary.settings_surface_state // empty).available == true) as $set_declared
+  | sections_has($sr; "settings") as $set_sec
+  | (($prep.preview_summary.settings_surface_state // empty).contract_consistent == true) as $set_cc_ok
+  | (($prep.preview_summary.settings_surface_state // empty).user_preferences_in_contract == false) as $set_no_prefs
+  | (($prep.preview_summary.settings_surface_state // empty).writable_product_settings_supported == false) as $set_no_write
+  | ($set_sec and $set_declared and $boot_pass and $set_cc_ok and $set_no_prefs and $set_no_write) as $set_a
+  | ($set_no_prefs and $set_no_write) as $set_ro_ok
   | (($prep.open_command | type == "string") and ($prep.open_command | startswith("open "))) as $open_ok
   | ($file_ok and ($prep.output_file | type == "string")
      and ($prep.output_file | endswith("contextviewer_ui_preview_\($pid).html"))) as $art_match
@@ -234,6 +243,9 @@ report="$(jq -n \
       diff_viewer_available: $diff_a,
       diff_viewer_empty_state_only: $dv_empty,
       diff_viewer_comparison_ready: $dv_comp,
+      settings_profile_available: $set_a,
+      settings_contract_consistent: $set_cc_ok,
+      settings_read_only_flags_ok: $set_ro_ok,
       preview_launch_ready: ($file_ok and $art_match and $open_ok),
       local_delivery_ready: $del_pass,
       investor_demo_ready: (
@@ -241,6 +253,7 @@ report="$(jq -n \
         and ($viz_a and $boot_pass)
         and ($hist_a and $boot_pass)
         and $diff_a
+        and $set_a
         and $file_ok
         and $art_match
         and $del_pass
@@ -248,6 +261,7 @@ report="$(jq -n \
     } as $rs
   | ($rs | [.overview_available, .visualization_available, .history_available,
             .diff_viewer_available,
+            .settings_profile_available,
             .preview_launch_ready, .local_delivery_ready, .investor_demo_ready] | all) as $all_flags
   | {
       project_id_match: $proj_match,

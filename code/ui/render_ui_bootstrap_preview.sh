@@ -5,11 +5,13 @@
 # AI Task 082: visualization workspace fidelity — unified tree + graph + inspector from visualization_workspace bundle only.
 # AI Task 083: history workspace fidelity + cross-surface handoff readiness (feed-only history UI).
 # AI Task 085: contract-backed diff viewer surface (get_diff_viewer_contract_bundle.sh only).
+# AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOOTSTRAP="${SCRIPT_DIR}/get_ui_bootstrap_bundle.sh"
 DIFF_CONTRACT="${SCRIPT_DIR}/../diff/get_diff_viewer_contract_bundle.sh"
+SETTINGS_CONTRACT="${SCRIPT_DIR}/../settings/get_settings_profile_contract_bundle.sh"
 
 usage() {
   cat <<'USAGE'
@@ -20,10 +22,10 @@ Usage:
 
 Calls get_ui_bootstrap_bundle.sh, writes one self-contained HTML file to --output, and prints
 one JSON summary line to stdout (project_id, generated_at, output_file, sections_rendered,
-render_profile, source_consistency_checks, diff_viewer_state).
+render_profile, source_consistency_checks, diff_viewer_state, settings_surface_state).
 
-The HTML includes data-section markers (overview, visualization, history, diff), feed-backed Overview
-layout (task 081), feed-backed Visualization workspace (task 082), feed-backed History workspace (task 083), diff viewer from Task 084 contract (085), embedded bootstrap JSON in
+The HTML includes data-section markers (overview, visualization, history, diff, settings), feed-backed Overview
+layout (task 081), feed-backed Visualization workspace (task 082), feed-backed History workspace (task 083), diff viewer from Task 084 contract (085), settings/profile from Task 086 contract (088), embedded bootstrap JSON in
 <script type="application/json" id="ui-bootstrap-payload">, and inline CSS only (no external assets).
 
 Environment:
@@ -154,7 +156,29 @@ if ! printf '%s\n' "$diff_json" | jq -e . >/dev/null 2>&1; then
   exit 3
 fi
 
-full_payload="$(jq -n --argjson b "$boot_json" --argjson d "$diff_json" '$b | .ui_sections.diff_viewer = $d')"
+if [[ ! -f "$SETTINGS_CONTRACT" || ! -x "$SETTINGS_CONTRACT" ]]; then
+  echo "error: missing or not executable: $SETTINGS_CONTRACT" >&2
+  exit 1
+fi
+
+err_sp="$(mktemp)"
+set +e
+settings_json="$(bash "$SETTINGS_CONTRACT" --project-id "$project_id" 2>"$err_sp")"
+settings_rc=$?
+set -e
+if [[ "$settings_rc" -ne 0 ]]; then
+  [[ -s "$err_sp" ]] && cat "$err_sp" >&2
+  rm -f "$err_sp"
+  exit "$settings_rc"
+fi
+rm -f "$err_sp"
+
+if ! printf '%s\n' "$settings_json" | jq -e . >/dev/null 2>&1; then
+  echo "error: settings profile contract stdout is not valid JSON" >&2
+  exit 3
+fi
+
+full_payload="$(jq -n --argjson b "$boot_json" --argjson d "$diff_json" --argjson sp "$settings_json" '$b | .ui_sections.diff_viewer = $d | .ui_sections.settings_profile = $sp')"
 
 proj_name="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.name // "—"')"
 proj_snapshots="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.total_valid_snapshots // 0')"
@@ -1101,12 +1125,80 @@ if [[ "$diffpy_rc" -ne 0 ]]; then
 fi
 rm -f "$err_diffpy" "$tmp_boot_diff"
 
+tmp_settings_json="$(mktemp)"
+printf '%s' "$settings_json" >"$tmp_settings_json"
+err_setpy="$(mktemp)"
+set +e
+settings_inner="$(
+  SETTINGS_JSON_FILE="$tmp_settings_json" python3 <<'PYSET' 2>"$err_setpy"
+import html
+import json
+import os
+
+def esc(s):
+    if s is None:
+        return "—"
+    return html.escape(str(s), quote=False)
+
+with open(os.environ["SETTINGS_JSON_FILE"], encoding="utf-8") as f:
+    sj = json.load(f)
+prof = sj.get("profile") or {}
+st = sj.get("settings_surface_state") or {}
+cc = sj.get("consistency_checks") or {}
+parts = [
+    '<div class="settings-workspace" role="region" data-cv-settings-surface="087" ',
+    'aria-label="Settings and profile (contract-backed)">',
+    '<header class="settings-workspace-header">',
+    '<p class="settings-kicker">Secondary flow · identity / integration · contract 086</p>',
+    '<p class="settings-lead mono muted">project ',
+    esc(prof.get("project_id")),
+    " · ",
+    esc(prof.get("name")),
+    "</p></header>",
+    '<p class="settings-hint muted">',
+    esc(st.get("hint")),
+    "</p>",
+    '<dl class="settings-profile-dl">',
+]
+for label, key in [
+    ("Integration status", "integration_status"),
+    ("Valid snapshots (overview)", "total_valid_snapshots"),
+    ("Latest valid snapshot id", "latest_valid_snapshot_id"),
+]:
+    parts.extend(["<dt>", esc(label), "</dt><dd class=\"mono\">", esc(prof.get(key)), "</dd>"])
+parts.append("</dl>")
+parts.append('<div class="settings-cc-wrap"><h4 class="settings-cc-heading">Contract consistency</h4>')
+parts.append('<dl class="settings-cc-dl mono muted">')
+for k in sorted(cc.keys()):
+    parts.extend(["<dt>", esc(k), "</dt><dd>", esc(cc[k]), "</dd>"])
+parts.extend(
+    [
+        "</dl></div>",
+        '<p class="settings-foot muted">Sources: <code class="mono">get_settings_profile_contract_bundle.sh</code>',
+        " only — no markdown; no user preference or writable settings invention.</p>",
+        "</div>",
+    ]
+)
+print("".join(parts), end="")
+PYSET
+)"
+setpy_rc=$?
+set -e
+if [[ "$setpy_rc" -ne 0 ]]; then
+  [[ -s "$err_setpy" ]] && cat "$err_setpy" >&2
+  rm -f "$err_setpy" "$tmp_settings_json"
+  echo "error: settings profile HTML build failed (python3)" >&2
+  exit 3
+fi
+rm -f "$err_setpy" "$tmp_settings_json"
+
 cc_json="$(printf '%s' "$boot_json" | jq -c '.consistency_checks')"
 cc_project="$(printf '%s' "$cc_json" | jq -r '.project_id_match')"
 cc_over="$(printf '%s' "$cc_json" | jq -r '.overview_present')"
 cc_viz="$(printf '%s' "$cc_json" | jq -r '.visualization_consistent')"
 cc_hist="$(printf '%s' "$cc_json" | jq -r '.history_consistent')"
 cc_diff="$(printf '%s' "$diff_json" | jq -r '[.consistency_checks | to_entries | .[].value] | all')"
+cc_settings="$(printf '%s' "$settings_json" | jq -r '[.consistency_checks | to_entries | .[].value] | all')"
 
 payload_embed="$(printf '%s' "$full_payload" | jq -c . | sed 's#</script#<\\/script#g')"
 
@@ -1893,6 +1985,61 @@ tmp_html="$(mktemp)"
     line-height: 1.45;
   }
   .diff-foot code { font-size: 0.68rem; }
+  /* AI Task 088 — settings/profile (contract bundle 086 only) */
+  .workspace-panel-settings { padding-bottom: var(--cv-space-8); }
+  .settings-workspace {
+    margin-top: var(--cv-space-2);
+    padding: var(--cv-space-4);
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
+    background: var(--cv-surface-lowest);
+  }
+  .settings-workspace-header { margin-bottom: var(--cv-space-3); }
+  .settings-kicker {
+    margin: 0 0 var(--cv-space-1);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cv-on-surface-variant);
+  }
+  .settings-lead { margin: 0; font-size: 0.8125rem; }
+  .settings-hint { margin: 0 0 var(--cv-space-3); font-size: 0.8125rem; }
+  .settings-profile-dl {
+    margin: 0 0 var(--cv-space-4);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--cv-space-2) var(--cv-space-4);
+    font-size: 0.8125rem;
+  }
+  .settings-profile-dl dt { font-weight: 600; color: var(--cv-on-surface-variant); }
+  .settings-profile-dl dd { margin: 0; }
+  .settings-cc-wrap {
+    margin-top: var(--cv-space-3);
+    padding: var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: color-mix(in srgb, var(--cv-surface-low) 80%, transparent);
+  }
+  .settings-cc-heading {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    font-weight: var(--cv-title-weight);
+  }
+  .settings-cc-dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--cv-space-1) var(--cv-space-4);
+    font-size: 0.75rem;
+  }
+  .settings-cc-dl dt { font-weight: 700; }
+  .settings-cc-dl dd { margin: 0; text-align: right; }
+  .settings-foot {
+    margin: var(--cv-space-3) 0 0;
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+  .settings-foot code { font-size: 0.68rem; }
   .consistency-panel {
     margin-top: var(--cv-space-4);
     padding: var(--cv-space-4) var(--cv-space-6);
@@ -1962,6 +2109,7 @@ tmp_html="$(mktemp)"
         <a class="nav-item" href="#cv-section-visualization">Visualization</a>
         <a class="nav-item" href="#cv-section-history">History</a>
         <a class="nav-item" href="#cv-section-diff">Diff viewer</a>
+        <a class="nav-item" href="#cv-section-settings">Settings / profile</a>
       </nav>
     </aside>
     <main class="app-main" id="cv-main-workspace">
@@ -1982,6 +2130,10 @@ $(printf '%s' "$hist_inner")
           <h2>Diff viewer</h2>
 $(printf '%s' "$diff_inner")
         </section>
+        <section id="cv-section-settings" data-section="settings" class="workspace-panel workspace-panel-settings">
+          <h2>Settings / profile</h2>
+$(printf '%s' "$settings_inner")
+        </section>
         <section class="consistency-panel">
           <h2>Bootstrap consistency</h2>
           <ul class="consistency">
@@ -1990,6 +2142,7 @@ $(printf '%s' "$diff_inner")
             <li class="$( [[ "$cc_viz" == "true" ]] && echo ok || echo bad )">visualization_consistent: ${cc_viz}</li>
             <li class="$( [[ "$cc_hist" == "true" ]] && echo ok || echo bad )">history_consistent: ${cc_hist}</li>
             <li class="$( [[ "$cc_diff" == "true" ]] && echo ok || echo bad )">diff_viewer_contract_consistent: ${cc_diff}</li>
+            <li class="$( [[ "$cc_settings" == "true" ]] && echo ok || echo bad )">settings_profile_contract_consistent: ${cc_settings}</li>
           </ul>
         </section>
       </div>
@@ -2024,14 +2177,16 @@ jq -n \
   --arg of "$output_path" \
   --argjson cc "$(printf '%s' "$boot_json" | jq '.consistency_checks')" \
   --argjson dcc "$(printf '%s' "$diff_json" | jq '.consistency_checks')" \
+  --argjson scc "$(printf '%s' "$settings_json" | jq '.consistency_checks')" \
   --argjson d "$diff_json" \
+  --argjson sp "$settings_json" \
   '{
     project_id: ($pid | tonumber),
     generated_at: $ga,
     output_file: $of,
-    sections_rendered: ["overview", "visualization", "history", "diff"],
-    render_profile: "085_diff_viewer_preview",
-    source_consistency_checks: ($cc + {diff_viewer: $dcc}),
+    sections_rendered: ["overview", "visualization", "history", "diff", "settings"],
+    render_profile: "088_stage9_secondary_flows_preview",
+    source_consistency_checks: ($cc + {diff_viewer: $dcc, settings_profile: $scc}),
     diff_viewer_state: {
       available: true,
       empty_state_only: (
@@ -2039,5 +2194,11 @@ jq -n \
         or (($d.viewer_context.valid_snapshots_count // 0) == 0)
       ),
       comparison_ready: ($d.comparison_ready == true)
+    },
+    settings_surface_state: {
+      available: true,
+      contract_consistent: ([$sp.consistency_checks | to_entries | .[].value] | all),
+      user_preferences_in_contract: ($sp.settings_surface_state.user_preferences_in_contract // false),
+      writable_product_settings_supported: ($sp.settings_surface_state.writable_product_settings_supported // false)
     }
   }'

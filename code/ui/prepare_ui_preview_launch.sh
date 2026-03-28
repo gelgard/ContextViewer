@@ -5,6 +5,7 @@
 # AI Task 082: Visualization workspace in preview HTML.
 # AI Task 083: History workspace + render_profile through handoff fidelity.
 # AI Task 085: diff viewer section + `085_diff_viewer_preview` / diff_viewer_state in preview_summary.
+# AI Task 088: `088_stage9_secondary_flows_preview` + settings_surface_state in preview_summary.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -29,8 +30,9 @@ Stdout (exactly one JSON object):
   preview_summary:
     sections_rendered
     source_consistency_checks
-    (optional) render_profile from child — e.g. 085_diff_viewer_preview
+    (optional) render_profile from child — e.g. 088_stage9_secondary_flows_preview
     (optional) diff_viewer_state { available, empty_state_only, comparison_ready }
+    (optional) settings_surface_state { available, contract_consistent, user_preferences_in_contract, writable_product_settings_supported }
 
 Missing/non-numeric --project-id: stderr + non-zero exit.
 Output directory creation failure or unresolvable path: stderr + exit 3.
@@ -160,7 +162,8 @@ jq -n \
       sections_rendered: $r.sections_rendered,
       source_consistency_checks: $r.source_consistency_checks,
       render_profile: ($r.render_profile // null),
-      diff_viewer_state: ($r.diff_viewer_state // null)
+      diff_viewer_state: ($r.diff_viewer_state // null),
+      settings_surface_state: ($r.settings_surface_state // null)
     }
   }
   '

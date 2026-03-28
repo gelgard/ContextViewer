@@ -149,4 +149,19 @@ Stage 8 — **post-Figma production UI** (current):
 - **Implementation baseline (non-negotiable):** validated UI bootstrap / preview / handoff through **AI Task 061**
 - **Production UI track `080–083`: completed**
 - **Stage 8 scope:** completed
-- **Next action:** define the next numbered AI task / next stage before further implementation
+- **Next action:** Stage 9 secondary-flow execution
+
+### Stage 9 — Secondary Flows And Release Readiness
+Status: active
+
+Current execution state:
+- AI Task 084 completed: diff-viewer contract bundle foundation (`code/diff/get_diff_viewer_contract_bundle.sh`, `verify_stage9_diff_viewer_contracts.sh`)
+- AI Task 085 completed: diff-viewer preview surface integrated into standalone shell (`render_profile=085_diff_viewer_preview`) with delivery/readiness smoke continuity
+- AI Task 086 completed: settings/profile contract bundle foundation (`code/settings/get_settings_profile_contract_bundle.sh`, `verify_stage9_settings_profile_contracts.sh`)
+- AI Task 087 created: settings/profile preview surface (next execution anchor)
+
+Stage 9 — **secondary-flow continuity** (current):
+- **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
+- **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
+- **Completed in Stage 9:** `084`, `085`, `086`
+- **Next execution anchor:** **AI Task 087**

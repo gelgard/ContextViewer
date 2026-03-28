@@ -1,10 +1,10 @@
 PROJECT: ContextViewer
 
 CURRENT STAGE:
-Stage 8 — Polish
+Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Stage 8 complete / next-stage planning pending
+Secondary flows implementation (diff/settings contract + preview surfaces)
 
 STATUS:
 - Architecture synced with latest rules
@@ -109,11 +109,15 @@ STATUS:
 - AI Task 082 completed: Visualization fidelity slice delivered — bootstrap preview now renders a unified tree/graph/inspector workspace with `render_profile=082_visualization_fidelity`; visualization workspace contracts remain `pass`; no fake graph analytics introduced
 - AI Task 083 completed: History fidelity + cross-surface handoff slice delivered — bootstrap preview now renders a product-specific history workspace with `render_profile=083_history_handoff_fidelity`; history contracts, delivery smoke, demo handoff smoke, and readiness report all passed / ready
 - upcoming: secondary flows / import-ready polish as tracked in approved artifact known gaps (via future tasks after **083** as needed)
+- AI Task 084 completed: Stage 9 diff-viewer contract bundle delivered (contract-backed, empty/single/comparable-safe, no markdown-derived runtime state)
+- AI Task 085 completed: Stage 9 diff-viewer preview surface delivered (`render_profile=085_diff_viewer_preview`), integrated into delivery and readiness smokes
+- AI Task 086 completed: Stage 9 settings/profile contract bundle delivered (identity/integration/runtime metadata only, no fake preferences/writable settings)
+- AI Task 087 created: Stage 9 settings/profile preview surface (next)
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Define the next numbered AI task before further implementation work (Stage 8 execution track `080–083` is complete)
+Run AI Task 087 — Stage 9 settings/profile preview surface
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements
