@@ -3,7 +3,8 @@
 # AI Task 080: unchanged contract; child render emits production shell HTML + render_profile.
 # AI Task 081: child render adds Overview surface fidelity.
 # AI Task 082: Visualization workspace in preview HTML.
-# AI Task 083: History workspace + final render_profile `083_history_handoff_fidelity`.
+# AI Task 083: History workspace + render_profile through handoff fidelity.
+# AI Task 085: diff viewer section + `085_diff_viewer_preview` / diff_viewer_state in preview_summary.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -28,7 +29,8 @@ Stdout (exactly one JSON object):
   preview_summary:
     sections_rendered
     source_consistency_checks
-    (optional) render_profile from child — e.g. 083_history_handoff_fidelity
+    (optional) render_profile from child — e.g. 085_diff_viewer_preview
+    (optional) diff_viewer_state { available, empty_state_only, comparison_ready }
 
 Missing/non-numeric --project-id: stderr + non-zero exit.
 Output directory creation failure or unresolvable path: stderr + exit 3.
@@ -157,7 +159,8 @@ jq -n \
     preview_summary: {
       sections_rendered: $r.sections_rendered,
       source_consistency_checks: $r.source_consistency_checks,
-      render_profile: ($r.render_profile // null)
+      render_profile: ($r.render_profile // null),
+      diff_viewer_state: ($r.diff_viewer_state // null)
     }
   }
   '

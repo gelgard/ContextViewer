@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 060: Stage 8 UI demo handoff bundle (read-only; stdout = one JSON object).
+# AI Task 085: demo_steps include diff viewer; readiness gates on diff surface via prepare.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -188,7 +189,8 @@ demo_steps_json="$(jq -n '
     "Open local preview URL in a browser (see handoff.preview_url).",
     "Confirm the overview section is visible (data-section=\"overview\").",
     "Confirm the visualization section is visible (data-section=\"visualization\").",
-    "Confirm the history section is visible (data-section=\"history\")."
+    "Confirm the history section is visible (data-section=\"history\").",
+    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace)."
   ]
 ')"
 

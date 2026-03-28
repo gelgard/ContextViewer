@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # AI Task 061: Stage 8 UI demo handoff bundle smoke suite (stdout = one JSON report).
 # AI Task 083: after ready bundle, confirms served HTML includes 081/082/083 production surface roots.
+# AI Task 085: served HTML must include diff section / diff-workspace; five demo_steps.
 # Served body is grep'd from a temp file so bash does not truncate at embedded NUL in the JSON payload.
 set -euo pipefail
 
@@ -151,7 +152,8 @@ expected_demo_steps="$(jq -n '
     "Open local preview URL in a browser (see handoff.preview_url).",
     "Confirm the overview section is visible (data-section=\"overview\").",
     "Confirm the visualization section is visible (data-section=\"visualization\").",
-    "Confirm the history section is visible (data-section=\"history\")."
+    "Confirm the history section is visible (data-section=\"history\").",
+    "Confirm the diff viewer section is visible (data-section=\"diff\", class diff-workspace)."
   ]
 ')"
 
@@ -237,7 +239,7 @@ fi
 
 if [[ "$shape_ok" == true ]]; then
   if printf '%s\n' "$bundle_out" | jq -e --argjson exp "$expected_demo_steps" '.handoff.demo_steps == $exp' >/dev/null 2>&1; then
-    add_check "handoff: demo_steps length and order" "pass" "four strings in canonical order"
+    add_check "handoff: demo_steps length and order" "pass" "five strings in canonical order"
   else
     add_check "handoff: demo_steps length and order" "fail" "demo_steps do not match expected ordered list"
   fi
@@ -297,11 +299,23 @@ if [[ "$bundle_ready" == true ]]; then
     else
       add_check "handoff: served HTML history-workspace (083)" "fail" "class history-workspace not found"
     fi
+    if grep -q 'data-section="diff"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML diff section (085)" "pass" 'found data-section="diff"'
+    else
+      add_check "handoff: served HTML diff section (085)" "fail" 'data-section="diff" not found'
+    fi
+    if grep -q 'class="diff-workspace"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML diff-workspace (085)" "pass" "found diff-workspace"
+    else
+      add_check "handoff: served HTML diff-workspace (085)" "fail" "class diff-workspace not found"
+    fi
   else
     add_check "handoff: served HTML fetch for production markers" "fail" "HTTP ${ho_code} on preview_url"
     add_check "handoff: served HTML overview-surface (081)" "fail" "skipped: fetch failed"
     add_check "handoff: served HTML viz-workspace (082)" "fail" "skipped: fetch failed"
     add_check "handoff: served HTML history-workspace (083)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML diff section (085)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML diff-workspace (085)" "fail" "skipped: fetch failed"
   fi
   rm -f "$ho_tmp"
 else
@@ -310,6 +324,8 @@ else
   add_check "handoff: served HTML overview-surface (081)" "fail" "$det"
   add_check "handoff: served HTML viz-workspace (082)" "fail" "$det"
   add_check "handoff: served HTML history-workspace (083)" "fail" "$det"
+  add_check "handoff: served HTML diff section (085)" "fail" "$det"
+  add_check "handoff: served HTML diff-workspace (085)" "fail" "$det"
 fi
 
 # --- negative: handoff child ---

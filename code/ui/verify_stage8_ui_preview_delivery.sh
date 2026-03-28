@@ -2,6 +2,7 @@
 # AI Task 058: Stage 8 UI preview delivery smoke suite (stdout = one JSON report).
 # AI Task 080: stronger HTML check for production shell marker on served preview.
 # AI Task 083: served HTML must include 081/082/083 production surface root classes (parity with demo handoff verify).
+# AI Task 085: served HTML must include diff section marker and diff-workspace surface class.
 # Served HTML is grep'd from a temp file (not a bash variable) so embedded NUL bytes in the JSON payload cannot truncate checks.
 set -euo pipefail
 
@@ -14,7 +15,7 @@ usage() {
 verify_stage8_ui_preview_delivery.sh — Stage 8 UI preview delivery end-to-end smoke tests
 
 Runs start_ui_preview_server.sh (metadata + local HTTP), validates preview URL via curl and HTML
-markers (incl. AI Task 080 `data-cv-preview-shell="080"` and AI Task 081–083 production surface root classes), then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
+markers (incl. AI Task 080 shell, 081–083 surface roots, 085 diff section/surface), then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
   status        pass | fail
   checks        array of { name, status, details }
   failed_checks integer
@@ -243,6 +244,16 @@ if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; 
     else
       add_check "delivery: served HTML history-workspace (083)" "fail" "class history-workspace not found"
     fi
+    if grep -q 'data-section="diff"' "$html_tmp" 2>/dev/null; then
+      add_check "delivery: served HTML diff section (085)" "pass" 'found data-section="diff"'
+    else
+      add_check "delivery: served HTML diff section (085)" "fail" 'data-section="diff" not found'
+    fi
+    if grep -q 'class="diff-workspace"' "$html_tmp" 2>/dev/null; then
+      add_check "delivery: served HTML diff-workspace (085)" "pass" "found diff-workspace"
+    else
+      add_check "delivery: served HTML diff-workspace (085)" "fail" "class diff-workspace not found"
+    fi
     rm -f "$html_tmp"
   else
     add_check "delivery: preview URL reachable (curl)" "fail" "skipped: preview_url mismatch"
@@ -254,6 +265,8 @@ if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; 
     add_check "delivery: served HTML overview-surface (081)" "fail" "skipped"
     add_check "delivery: served HTML viz-workspace (082)" "fail" "skipped"
     add_check "delivery: served HTML history-workspace (083)" "fail" "skipped"
+    add_check "delivery: served HTML diff section (085)" "fail" "skipped"
+    add_check "delivery: served HTML diff-workspace (085)" "fail" "skipped"
   fi
 else
   if [[ "$srv_rc" -eq 0 ]]; then
@@ -268,6 +281,8 @@ else
     add_check "delivery: served HTML overview-surface (081)" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML viz-workspace (082)" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML history-workspace (083)" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML diff section (085)" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML diff-workspace (085)" "fail" "skipped: invalid JSON"
   else
     det="skipped: start_ui_preview_server failed"
     add_check "delivery: server JSON shape" "fail" "$det"
@@ -281,6 +296,8 @@ else
     add_check "delivery: served HTML overview-surface (081)" "fail" "$det"
     add_check "delivery: served HTML viz-workspace (082)" "fail" "$det"
     add_check "delivery: served HTML history-workspace (083)" "fail" "$det"
+    add_check "delivery: served HTML diff section (085)" "fail" "$det"
+    add_check "delivery: served HTML diff-workspace (085)" "fail" "$det"
   fi
 fi
 

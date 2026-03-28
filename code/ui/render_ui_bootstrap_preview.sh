@@ -4,10 +4,12 @@
 # AI Task 081: overview surface fidelity — structured status, progress, roadmap, timeline from dashboard feed only.
 # AI Task 082: visualization workspace fidelity — unified tree + graph + inspector from visualization_workspace bundle only.
 # AI Task 083: history workspace fidelity + cross-surface handoff readiness (feed-only history UI).
+# AI Task 085: contract-backed diff viewer surface (get_diff_viewer_contract_bundle.sh only).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOOTSTRAP="${SCRIPT_DIR}/get_ui_bootstrap_bundle.sh"
+DIFF_CONTRACT="${SCRIPT_DIR}/../diff/get_diff_viewer_contract_bundle.sh"
 
 usage() {
   cat <<'USAGE'
@@ -18,10 +20,10 @@ Usage:
 
 Calls get_ui_bootstrap_bundle.sh, writes one self-contained HTML file to --output, and prints
 one JSON summary line to stdout (project_id, generated_at, output_file, sections_rendered,
-render_profile, source_consistency_checks).
+render_profile, source_consistency_checks, diff_viewer_state).
 
-The HTML includes data-section markers (overview, visualization, history), feed-backed Overview
-layout (task 081), feed-backed Visualization workspace (task 082), feed-backed History workspace (task 083), embedded bootstrap JSON in
+The HTML includes data-section markers (overview, visualization, history, diff), feed-backed Overview
+layout (task 081), feed-backed Visualization workspace (task 082), feed-backed History workspace (task 083), diff viewer from Task 084 contract (085), embedded bootstrap JSON in
 <script type="application/json" id="ui-bootstrap-payload">, and inline CSS only (no external assets).
 
 Environment:
@@ -129,6 +131,30 @@ if ! printf '%s\n' "$boot_json" | jq -e . >/dev/null 2>&1; then
   echo "error: bootstrap stdout is not valid JSON" >&2
   exit 3
 fi
+
+if [[ ! -f "$DIFF_CONTRACT" || ! -x "$DIFF_CONTRACT" ]]; then
+  echo "error: missing or not executable: $DIFF_CONTRACT" >&2
+  exit 1
+fi
+
+err_diff="$(mktemp)"
+set +e
+diff_json="$(bash "$DIFF_CONTRACT" --project-id "$project_id" 2>"$err_diff")"
+diff_rc=$?
+set -e
+if [[ "$diff_rc" -ne 0 ]]; then
+  [[ -s "$err_diff" ]] && cat "$err_diff" >&2
+  rm -f "$err_diff"
+  exit "$diff_rc"
+fi
+rm -f "$err_diff"
+
+if ! printf '%s\n' "$diff_json" | jq -e . >/dev/null 2>&1; then
+  echo "error: diff viewer contract stdout is not valid JSON" >&2
+  exit 3
+fi
+
+full_payload="$(jq -n --argjson b "$boot_json" --argjson d "$diff_json" '$b | .ui_sections.diff_viewer = $d')"
 
 proj_name="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.name // "—"')"
 proj_snapshots="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.total_valid_snapshots // 0')"
@@ -349,8 +375,9 @@ parts.append("</section>")
 
 parts.append(
     '<p class="overview-deep-hint muted">Architecture tree, graph, and inspector: '
-    "use <strong>Visualization</strong> in the sidebar. Snapshot history depth: "
-    "use <strong>History</strong>.</p>"
+    "use <strong>Visualization</strong> in the sidebar. Snapshot history: "
+    "<strong>History</strong>. Top-level snapshot key diff: "
+    "<strong>Diff viewer</strong>.</p>"
 )
 parts.append("</div>")
 print("".join(parts), end="")
@@ -907,13 +934,181 @@ if [[ "$hist_rc" -ne 0 ]]; then
 fi
 rm -f "$err_hist" "$tmp_boot_hist"
 
+tmp_boot_diff="$(mktemp)"
+printf '%s' "$full_payload" >"$tmp_boot_diff"
+err_diffpy="$(mktemp)"
+set +e
+diff_inner="$(
+  BOOT_JSON_FILE="$tmp_boot_diff" python3 <<'PYDIFF' 2>"$err_diffpy"
+import html
+import json
+import os
+
+def esc(s):
+    if s is None:
+        return "—"
+    return html.escape(str(s), quote=False)
+
+
+def esc_attr(s):
+    return html.escape(str(s) if s is not None else "", quote=True)
+
+
+def fmt_key_list(items, cap):
+    if not isinstance(items, list):
+        return "<p class=\"muted\">—</p>"
+    if not items:
+        return "<p class=\"muted mono\">(none)</p>"
+    parts = ['<ul class="diff-key-list mono">']
+    for k in items[:cap]:
+        parts.append("<li>" + esc(k) + "</li>")
+    if len(items) > cap:
+        parts.append(
+            '<li class="muted">… +' + esc(str(len(items) - cap)) + " keys</li>"
+        )
+    parts.append("</ul>")
+    return "".join(parts)
+
+
+with open(os.environ["BOOT_JSON_FILE"], encoding="utf-8") as _bf:
+    boot = json.load(_bf)
+
+dv = (boot.get("ui_sections") or {}).get("diff_viewer") or {}
+if not isinstance(dv, dict):
+    dv = {}
+vc = dv.get("viewer_context") or {}
+if not isinstance(vc, dict):
+    vc = {}
+ds = dv.get("diff_summary") or {}
+if not isinstance(ds, dict):
+    ds = {}
+ls = dv.get("latest_snapshot") or {}
+ps = dv.get("previous_snapshot") or {}
+if not isinstance(ls, dict):
+    ls = {}
+if not isinstance(ps, dict):
+    ps = {}
+ccdv = dv.get("consistency_checks") or {}
+if not isinstance(ccdv, dict):
+    ccdv = {}
+comp = dv.get("comparison_ready")
+gen = dv.get("generated_at")
+n_valid = vc.get("valid_snapshots_count")
+if not isinstance(n_valid, int):
+    try:
+        n_valid = int(n_valid) if n_valid is not None else 0
+    except (TypeError, ValueError):
+        n_valid = 0
+
+empty_st = bool(vc.get("empty_state"))
+single_st = bool(vc.get("single_snapshot_only"))
+hint = vc.get("hint") or ""
+
+if empty_st:
+    state_class = "diff-state-empty"
+    state_label = "Empty state"
+elif single_st or not comp:
+    state_class = "diff-state-single"
+    state_label = "Single snapshot only"
+else:
+    state_class = "diff-state-ready"
+    state_label = "Comparison ready"
+
+parts = []
+parts.append(
+    '<div class="diff-workspace" role="region" data-cv-diff-surface="085" '
+    'aria-label="Diff viewer from snapshot contract bundle">'
+)
+parts.append('<header class="diff-workspace-header">')
+parts.append(
+    '<p class="diff-kicker">Secondary flow · top-level JSON keys · contract <time datetime="'
+    + esc_attr(gen)
+    + '">'
+    + esc(gen)
+    + "</time></p>"
+)
+parts.append(
+    '<div class="diff-state-banner ' + esc_attr(state_class) + '">'
+    '<span class="diff-state-label">' + esc(state_label) + "</span>"
+    '<span class="diff-state-meta mono">valid snapshots: '
+    + esc(str(n_valid))
+    + "</span></div>"
+)
+parts.append('<p class="diff-hint muted">' + esc(hint) + "</p>")
+parts.append('<div class="diff-snap-row">')
+parts.append('<div class="diff-snap-card">')
+parts.append('<h4 class="diff-snap-title">Latest</h4>')
+parts.append(
+    '<p class="mono diff-snap-line">id '
+    + esc(ls.get("snapshot_id"))
+    + "</p>"
+)
+parts.append(
+    '<p class="mono diff-snap-line muted">'
+    + esc(ls.get("snapshot_timestamp"))
+    + "</p>"
+)
+parts.append("</div>")
+parts.append('<div class="diff-snap-card">')
+parts.append('<h4 class="diff-snap-title">Previous (newer − 1)</h4>')
+parts.append(
+    '<p class="mono diff-snap-line">id '
+    + esc(ps.get("snapshot_id"))
+    + "</p>"
+)
+parts.append(
+    '<p class="mono diff-snap-line muted">'
+    + esc(ps.get("snapshot_timestamp"))
+    + "</p>"
+)
+parts.append("</div></div>")
+parts.append("</header>")
+
+parts.append('<div class="diff-grid-keys">')
+parts.append('<section class="diff-key-panel" aria-labelledby="diff-add-h">')
+parts.append('<h3 id="diff-add-h" class="diff-panel-title">Added top-level keys</h3>')
+parts.append(fmt_key_list(ds.get("added_top_level_keys"), 120))
+parts.append("</section>")
+parts.append('<section class="diff-key-panel" aria-labelledby="diff-rem-h">')
+parts.append('<h3 id="diff-rem-h" class="diff-panel-title">Removed top-level keys</h3>')
+parts.append(fmt_key_list(ds.get("removed_top_level_keys"), 120))
+parts.append("</section>")
+parts.append('<section class="diff-key-panel" aria-labelledby="diff-chg-h">')
+parts.append('<h3 id="diff-chg-h" class="diff-panel-title">Changed top-level keys</h3>')
+parts.append(fmt_key_list(ds.get("changed_top_level_keys"), 120))
+parts.append("</section></div>")
+
+parts.append('<div class="diff-cc-wrap"><h4 class="diff-cc-heading">Contract consistency</h4>')
+parts.append('<dl class="diff-cc-dl mono muted">')
+for k in sorted(ccdv.keys()):
+    parts.append("<dt>" + esc(k) + "</dt><dd>" + esc(ccdv.get(k)) + "</dd>")
+parts.append("</dl></div>")
+parts.append(
+    '<p class="diff-foot muted">Sources: <code class="mono">get_diff_viewer_contract_bundle.sh</code>'
+    " only — top-level key semantics match Stage 4 diff summary; no markdown or invented analytics.</p>"
+)
+parts.append("</div>")
+print("".join(parts), end="")
+PYDIFF
+)"
+diffpy_rc=$?
+set -e
+if [[ "$diffpy_rc" -ne 0 ]]; then
+  [[ -s "$err_diffpy" ]] && cat "$err_diffpy" >&2
+  rm -f "$err_diffpy" "$tmp_boot_diff"
+  echo "error: diff viewer HTML build failed (python3)" >&2
+  exit 3
+fi
+rm -f "$err_diffpy" "$tmp_boot_diff"
+
 cc_json="$(printf '%s' "$boot_json" | jq -c '.consistency_checks')"
 cc_project="$(printf '%s' "$cc_json" | jq -r '.project_id_match')"
 cc_over="$(printf '%s' "$cc_json" | jq -r '.overview_present')"
 cc_viz="$(printf '%s' "$cc_json" | jq -r '.visualization_consistent')"
 cc_hist="$(printf '%s' "$cc_json" | jq -r '.history_consistent')"
+cc_diff="$(printf '%s' "$diff_json" | jq -r '[.consistency_checks | to_entries | .[].value] | all')"
 
-payload_embed="$(printf '%s' "$boot_json" | jq -c . | sed 's#</script#<\\/script#g')"
+payload_embed="$(printf '%s' "$full_payload" | jq -c . | sed 's#</script#<\\/script#g')"
 
 out_dir="$(dirname "$output_path")"
 if [[ "$out_dir" != "." && -n "$out_dir" ]]; then
@@ -1569,6 +1764,135 @@ tmp_html="$(mktemp)"
     border-radius: var(--cv-radius-sm);
     background: color-mix(in srgb, var(--cv-tertiary) 7%, var(--cv-surface-low));
   }
+  /* AI Task 085 — diff viewer (contract bundle 084 only) */
+  .workspace-panel-diff { padding-bottom: var(--cv-space-8); }
+  .diff-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+  .diff-workspace-header {
+    padding: var(--cv-space-3) var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+    border-left: 3px solid var(--cv-primary);
+  }
+  .diff-kicker {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--cv-on-surface-variant);
+  }
+  .diff-state-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--cv-space-3);
+    margin-bottom: var(--cv-space-2);
+    padding: var(--cv-space-2) var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+  .diff-state-empty {
+    background: color-mix(in srgb, var(--cv-outline-variant) 18%, var(--cv-surface-lowest));
+    color: var(--cv-on-surface-variant);
+  }
+  .diff-state-single {
+    background: color-mix(in srgb, var(--cv-primary) 12%, var(--cv-surface-lowest));
+    color: var(--cv-on-surface);
+  }
+  .diff-state-ready {
+    background: color-mix(in srgb, var(--cv-tertiary) 12%, var(--cv-surface-lowest));
+    color: var(--cv-on-surface);
+  }
+  .diff-state-meta { font-weight: 600; opacity: 0.9; }
+  .diff-hint { margin: 0 0 var(--cv-space-3); font-size: 0.8125rem; }
+  .diff-snap-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--cv-space-3);
+    margin-bottom: var(--cv-space-2);
+  }
+  @media (max-width: 720px) {
+    .diff-snap-row { grid-template-columns: 1fr; }
+  }
+  .diff-snap-card {
+    padding: var(--cv-space-3);
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 16%, transparent);
+  }
+  .diff-snap-title {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cv-on-surface-variant);
+  }
+  .diff-snap-line { margin: 0; font-size: 0.8125rem; }
+  .diff-grid-keys {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--cv-space-3);
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .diff-grid-keys { grid-template-columns: 1fr; }
+  }
+  .diff-key-panel {
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    padding: var(--cv-space-4);
+    min-height: 8rem;
+  }
+  .diff-panel-title {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.8125rem;
+    font-weight: var(--cv-headline-weight);
+  }
+  ul.diff-key-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.75rem;
+    max-height: 18rem;
+    overflow: auto;
+  }
+  ul.diff-key-list li { margin: var(--cv-space-1) 0; word-break: break-all; }
+  .diff-cc-wrap {
+    padding: var(--cv-space-3);
+    background: color-mix(in srgb, var(--cv-primary) 5%, var(--cv-surface-lowest));
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 14%, transparent);
+  }
+  .diff-cc-heading {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cv-on-surface-variant);
+  }
+  .diff-cc-dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--cv-space-1) var(--cv-space-3);
+    font-size: 0.6875rem;
+  }
+  .diff-cc-dl dt { font-weight: 700; }
+  .diff-cc-dl dd { margin: 0; text-align: right; }
+  .diff-foot {
+    margin: var(--cv-space-3) 0 0;
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+  .diff-foot code { font-size: 0.68rem; }
   .consistency-panel {
     margin-top: var(--cv-space-4);
     padding: var(--cv-space-4) var(--cv-space-6);
@@ -1637,6 +1961,7 @@ tmp_html="$(mktemp)"
         <a class="nav-item" href="#cv-section-overview">Overview</a>
         <a class="nav-item" href="#cv-section-visualization">Visualization</a>
         <a class="nav-item" href="#cv-section-history">History</a>
+        <a class="nav-item" href="#cv-section-diff">Diff viewer</a>
       </nav>
     </aside>
     <main class="app-main" id="cv-main-workspace">
@@ -1653,6 +1978,10 @@ $(printf '%s' "$viz_inner")
           <h2>History workspace</h2>
 $(printf '%s' "$hist_inner")
         </section>
+        <section id="cv-section-diff" data-section="diff" class="workspace-panel workspace-panel-diff">
+          <h2>Diff viewer</h2>
+$(printf '%s' "$diff_inner")
+        </section>
         <section class="consistency-panel">
           <h2>Bootstrap consistency</h2>
           <ul class="consistency">
@@ -1660,6 +1989,7 @@ $(printf '%s' "$hist_inner")
             <li class="$( [[ "$cc_over" == "true" ]] && echo ok || echo bad )">overview_present: ${cc_over}</li>
             <li class="$( [[ "$cc_viz" == "true" ]] && echo ok || echo bad )">visualization_consistent: ${cc_viz}</li>
             <li class="$( [[ "$cc_hist" == "true" ]] && echo ok || echo bad )">history_consistent: ${cc_hist}</li>
+            <li class="$( [[ "$cc_diff" == "true" ]] && echo ok || echo bad )">diff_viewer_contract_consistent: ${cc_diff}</li>
           </ul>
         </section>
       </div>
@@ -1693,11 +2023,21 @@ jq -n \
   --arg ga "$generated_at" \
   --arg of "$output_path" \
   --argjson cc "$(printf '%s' "$boot_json" | jq '.consistency_checks')" \
+  --argjson dcc "$(printf '%s' "$diff_json" | jq '.consistency_checks')" \
+  --argjson d "$diff_json" \
   '{
     project_id: ($pid | tonumber),
     generated_at: $ga,
     output_file: $of,
-    sections_rendered: ["overview", "visualization", "history"],
-    render_profile: "083_history_handoff_fidelity",
-    source_consistency_checks: $cc
+    sections_rendered: ["overview", "visualization", "history", "diff"],
+    render_profile: "085_diff_viewer_preview",
+    source_consistency_checks: ($cc + {diff_viewer: $dcc}),
+    diff_viewer_state: {
+      available: true,
+      empty_state_only: (
+        ($d.viewer_context.empty_state == true)
+        or (($d.viewer_context.valid_snapshots_count // 0) == 0)
+      ),
+      comparison_ready: ($d.comparison_ready == true)
+    }
   }'
