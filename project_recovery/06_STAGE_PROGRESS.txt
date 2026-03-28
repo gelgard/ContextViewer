@@ -106,7 +106,7 @@ Current execution state:
 - Stage 7 scope completed
 
 ### Stage 8 — Polish
-Status: active
+Status: completed
 
 Current execution state:
 - validated preview / handoff checkpoint fixed as baseline before design-source branch
@@ -142,8 +142,11 @@ Current execution state:
 - AI Task 080 completed: approved shell + visual tokens applied to bootstrap/preview surfaces; preview HTML now carries production shell marker `data-cv-preview-shell="080"` while preserving bootstrap payload and section markers; bootstrap and preview delivery smokes passed
 - AI Task 081 completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; high-signal status/roadmap/progress/changes blocks now render from dashboard feed + project overview only; dashboard contracts and preview readiness remain `pass/ready`
 - AI Task 082 completed: Visualization workspace fidelity applied to bootstrap preview; `render_profile=082_visualization_fidelity`; tree + graph + inspector now render as one unified contract-backed workspace from Stage 6 visualization bundles only
+- AI Task 083 completed: History workspace fidelity applied to bootstrap preview; `render_profile=083_history_handoff_fidelity`; history daily rollup + timeline now render as one product-faithful contract-backed surface; demo handoff and preview delivery smokes passed with overview / visualization / history production markers intact
 
 Stage 8 — **post-Figma production UI** (current):
 - **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`** (charter: `docs/design/figma_design_branch_charter.md`)
 - **Implementation baseline (non-negotiable):** validated UI bootstrap / preview / handoff through **AI Task 061**
-- **Next execution anchor:** **AI Task 083** — History workspace UI + **061-class** demo handoff smoke with approved styling
+- **Production UI track `080–083`: completed**
+- **Stage 8 scope:** completed
+- **Next action:** define the next numbered AI task / next stage before further implementation

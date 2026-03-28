@@ -95,12 +95,12 @@ Primary user outcomes:
 |---|---|---|---|
 | PG-RT-001, PG-RT-002 | Stage 2-4 | 004-023 | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
-| PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON — planned) | implemented (feeds); in_progress (post-Figma UI slices) |
+| PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
-| PG-HI-001 | Stage 7 | 047, 049, 051, 052 | implemented |
-| PG-HI-002 | Stage 7 | 048-052 | implemented |
-| PG-UX-001 | Stage 6-8 | 036-083 planned (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded) | in_progress (approved design **`task076/`**; production UI build **080+**) |
-| PG-EX-001 | Stage 2-8 | 001-083 planned (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders) | implemented |
+| PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
+| PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
+| PG-UX-001 | Stage 6-8 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded) | implemented |
+| PG-EX-001 | Stage 2-8 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders) | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -129,7 +129,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 080` is completed: shared shell + design tokens applied to bootstrap preview; `render_profile=080_shell_tokens`; delivery smoke confirms `data-cv-preview-shell="080"` while preserving bootstrap payload markers.
 - `AI Task 081` is completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; shell marker/payload preserved; dashboard contracts and preview readiness remain successful.
 - `AI Task 082` is completed: Visualization workspace fidelity applied to bootstrap preview; `render_profile=082_visualization_fidelity`; tree + graph + inspector are rendered as one unified contract-backed workspace; visualization workspace contracts remain successful.
-- Next executable task: `AI Task 083` — History workspace + cross-surface handoff smoke slice (see plans).
+- `AI Task 083` is completed: History workspace + cross-surface handoff smoke slice.
+- No next executable task is currently defined; next stage / next numbered AI task must be created before further implementation.
+- Requirement mapping for **083** (complete):
+  - `PG-HI-001`
+  - `PG-HI-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
 - Requirement mapping for **082** (complete):
   - `PG-AR-001`
   - `PG-AR-002`

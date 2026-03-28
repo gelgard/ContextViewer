@@ -94,10 +94,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 8
-- Substage: Post-Figma production UI implementation (tasks **080+**; design-sync **062–079** complete)
+- Substage: Stage 8 complete / next-stage planning pending
 
 Next required action:
-→ run AI Task 083 (history workspace + cross-surface handoff smoke — see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
+→ define the next numbered AI task before resuming implementation
 
 
 ---

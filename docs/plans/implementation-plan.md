@@ -18,10 +18,10 @@ This means:
 - future recovery and architecture updates must remain compatible with the template-defined rules and commands
 
 ## Current Stage
-Stage 8 — Polish → active
+Stage 8 — Polish → completed
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Design-sync track** **062–079** complete (IA → visual system → screens → import/sync → **079** plan refinement). **Runtime truth** remains latest **contextJSON** + JSON/API **contracts** — production UI must not silently change field semantics. **AI Task 080** is complete (shared shell + tokens on bootstrap preview). **AI Task 081** is complete (Overview fidelity slice). **AI Task 082** is complete (Visualization workspace fidelity). **Next:** **AI Task 083** (History workspace + handoff smoke).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Design-sync track** **062–079** complete (IA → visual system → screens → import/sync → **079** plan refinement). **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. **Production UI track `080–083` is complete**: **080** shell + tokens, **081** Overview fidelity, **082** Visualization fidelity, **083** History fidelity + cross-surface handoff smoke. **Current state:** Stage 8 is complete; next numbered task must be defined before further implementation.
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 
@@ -30,13 +30,13 @@ Stage 8 — Polish → active
 | **080** | Shared **shell + tokens** applied to bootstrap/preview HTML | 061 baseline, 078 import/sync, approved `task076` | Global chrome, nav from IA, typography/color/spacing vs visual system | `bash code/ui/verify_stage8_ui_bootstrap_contracts.sh --project-id <id>`; `bash code/ui/verify_stage8_ui_preview_delivery.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: open `prepare_ui_preview_launch.sh` output, compare chrome/tokens to `docs/design/artifacts/task074/` + `docs/design/artifacts/task076/` PDF/exports; **no** feed/JSON field semantic changes without a new contract task |
 | **081** | **Overview** region fidelity (still feed-driven) | **080** | Overview / dashboard section per IA | `bash code/dashboard/verify_stage5_dashboard_contracts.sh --project-id <id>`; `bash code/ui/get_ui_bootstrap_bundle.sh --project-id <id> > /tmp/bootstrap_overview_slice.json` then `jq` assert `.ui_sections.overview.dashboard_feed`; manual: parity vs `docs/design/artifacts/task064/extracted/stitch/` + `task076` overview evidence |
 | **082** | **Visualization workspace** (tree + graph + inspector in one surface) | **080** | Viz workspace panels | `bash code/visualization/verify_stage6_visualization_workspace_contracts.sh --project-id <id>`; manual: tree/graph/inspector layout vs `docs/design/artifacts/task076/visible_screen_list.md` + viz export/`task064` stitch |
-| **083** | **History workspace** + **061-class** cross-surface handoff | **080**; full product path needs **081** and **082** | History panels + nav between workspaces | `bash code/history/get_history_workspace_contract_bundle.sh --project-id <id> > /tmp/history_ws_slice.json`; `bash code/ui/verify_stage8_ui_demo_handoff_bundle.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: history vs `task076` history evidence + confirm overview/viz/history markers in served HTML still match **061** expectations |
+| **083** | **History workspace** + **061-class** cross-surface handoff | **080**; full product path needs **081** and **082** | History panels + nav between workspaces | `bash code/history/get_history_workspace_contract_bundle.sh --project-id <id> > /tmp/history_ws_slice.json`; `bash code/ui/verify_stage8_ui_demo_handoff_bundle.sh --project-id <id> --port 8787 --output-dir /tmp/contextviewer_ui_preview`; manual: history vs `task076` history evidence + confirm overview/viz/history markers in served HTML still match **061** expectations — **completed** |
 
-**Dependencies (summary):** **080** gates all visual alignment and is complete; **081** is complete for Overview fidelity; **082** is complete for Visualization fidelity; **083** is now the final integration slice that confirms history fidelity and handoff readiness.
+**Dependencies (summary):** **080** gates all visual alignment and is complete; **081** is complete for Overview fidelity; **082** is complete for Visualization fidelity; **083** completed the final integration slice for history fidelity and handoff readiness. **Post-Figma production UI roadmap is complete.**
 
 **Design-sync vs production (explicit):**
 - **Completed (062–079):** prompt packs, external Figma generation, **066/075/077** validation, **078** import, **079** roadmap — **documentation and artifact authority only**.
-- **Upcoming (080+):** HTML/CSS/JS (or template) changes in **`code/ui` / preview bootstrap** driven by **approved** package `task076/` and charter `docs/design/figma_design_branch_charter.md`.
+- **Completed (080–083):** HTML/CSS/JS (or template) changes in **`code/ui` / preview bootstrap** driven by **approved** package `task076/` and charter `docs/design/figma_design_branch_charter.md`.
 
 ## Stage Plan
 

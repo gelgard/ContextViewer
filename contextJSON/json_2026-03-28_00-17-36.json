@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-28T00:17:36Z",
+    "generated_filename": "json_2026-03-28_00-17-36.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Stage 8 complete / next-stage planning pending",
+    "current_task": "No active AI task — Stage 8 completed through AI Task 083",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 8",
+    "substage": "Stage 8 complete / next-stage planning pending",
+    "status": "stage8_completed_pending_next_task_definition"
+  },
+  "approved_design_reference": {
+    "import_record_path": "docs/design/approved_figma_artifact.md",
+    "primary_artifact_package": "docs/design/artifacts/task076/",
+    "native_figma_workspace_path": "docs/design/artifacts/task076/raw/ContextViewer.fig",
+    "import_sync_task": "078",
+    "import_recorded_date": "2026-03-27",
+    "evidence_rule": "uploaded_workspace_artifacts_primary_external_urls_optional",
+    "runtime_truth_note": "Latest valid contextJSON and JSON-backed contracts remain authoritative for computed UI state; Figma/design docs are design truth only."
+  },
+  "system": {
+    "summary": "ContextViewer completed the full Stage 8 polish track: validated preview/demo handoff baseline, imported approved design authority, and finished production UI slices 080-083 for shell, Overview, Visualization, and History with final handoff smoke readiness."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "AI Tasks 053-061 Stage 8 UI bootstrap preview handoff chain completed",
+      "AI Task 062 Figma design branch charter and prompt workflow completed",
+      "AI Task 063-066 product brief and IA prompt/validation completed",
+      "AI Task 073 IA fallback evidence package completed",
+      "AI Task 074-075 visual system prompt and validation completed",
+      "AI Task 076 screen prompt pack completed",
+      "AI Task 077 screen result validation approve GO completed",
+      "AI Task 078 Figma import and architecture sync completed",
+      "AI Task 079 post-Figma implementation plan refinement completed",
+      "AI Task 080 shared shell and design-token preview/bootstrap slice completed",
+      "AI Task 081 overview surface fidelity slice completed",
+      "AI Task 082 visualization workspace fidelity slice completed",
+      "AI Task 083 history workspace and cross-surface handoff smoke slice completed",
+      "Stage 8 Polish completed"
+    ],
+    "in_progress": [],
+    "next": [
+      "Define the next numbered AI task before additional implementation work",
+      "If a new stage is opened, synchronize plans, recovery, and traceability first"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "completed" }
+  ],
+  "changes_since_previous": [
+    "AI Task 083 completed: History workspace fidelity applied with render_profile=083_history_handoff_fidelity",
+    "Demo handoff smoke, preview delivery smoke, and readiness report all confirm overview / visualization / history production surfaces together",
+    "Stage 8 production UI track 080-083 is complete and the execution anchor is cleared pending the next numbered AI task"
+  ],
+  "current_task": {
+    "id": null,
+    "name": "No active AI task",
+    "stage": "Stage 8 — Polish",
+    "substage": "Stage 8 complete / next-stage planning pending",
+    "status": "awaiting_next_task_definition"
+  },
+  "next_tasks": [],
+  "project_plan": {
+    "current_stage": "Stage 8 — Polish",
+    "current_substage": "Stage 8 complete / next-stage planning pending",
+    "state": "completed_waiting_for_next_task",
+    "next_stage": null,
+    "design_branch": {
+      "status": "complete_imported_and_authoritative",
+      "preserved_checkpoint": "validated Stage 8 preview / demo handoff",
+      "approved_design_record": "docs/design/approved_figma_artifact.md",
+      "primary_ui_artifact_package": "docs/design/artifacts/task076/",
+      "validated_external_ui_baseline": "docs/design/artifacts/task064/",
+      "validated_ia_baseline": "docs/design/artifacts/task065/",
+      "validated_visual_system_baseline": "docs/design/artifacts/task074/",
+      "screen_validation_status": "approve_go_final",
+      "import_task": "078_completed",
+      "plan_refinement_task": "079_completed",
+      "fallback_evidence_rule": "uploaded_workspace_artifacts_only_no_external_figma_link_authority",
+      "legacy_superseded_placeholders": ["067", "068", "069", "070", "071", "072"],
+      "remaining_design_gaps": [
+        "secondary flows (settings/profile, diff viewer) per approved artifact known gaps",
+        "optional richer demo deck polish"
+      ],
+      "next_design_tasks": []
+    },
+    "post_figma_production_ui": {
+      "status": "completed",
+      "current_anchor": null,
+      "completed_slices": ["080", "081", "082", "083"],
+      "planned_slices": [],
+      "runtime_truth_rule": "json_contracts_remain_authoritative",
+      "design_truth_rule": "approved_figma_artifact_and_task076_package"
+    }
+  },
+  "ai_task_status": {
+    "last_completed_design_branch_task": "083",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "073", "066", "074", "075", "076", "077", "078", "079", "080", "081", "082", "083"],
+    "next_task": null,
+    "next_task_status": "not_defined"
+  },
+  "traceability": {
+    "stage_8_status": "completed",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented",
+      "PG-RT-002": "implemented",
+      "PG-OV-001": "implemented_and_design_reference_registered_overview_fidelity_complete",
+      "PG-AR-001": "implemented_and_design_reference_registered_visualization_fidelity_complete",
+      "PG-AR-002": "implemented_and_design_reference_registered_visualization_fidelity_complete",
+      "PG-HI-001": "implemented_and_design_reference_registered_history_fidelity_complete",
+      "PG-HI-002": "implemented_and_design_reference_registered_history_fidelity_complete",
+      "PG-PL-001": "implemented_post_figma_plan_refinement_and_slices_080_083_complete",
+      "PG-UX-001": "implemented_post_figma_production_ui_complete",
+      "PG-EX-001": "implemented_and_extended"
+    },
+    "current_anchor_task": null
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "ai_task_083_completed_stage8_closed_contextjson_regenerated"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "cursor_prompt_scope": "implementation_only_no_local_orchestration_duplication",
+    "local_agent_scope": "planning_architecture_validation_changed_files_next_steps",
+    "cursor_prompt_forbidden_duplication": [
+      "manual_test_block",
+      "what_to_send_back_block",
+      "architecture_update_instructions",
+      "changed_files_validation_instructions",
+      "next_step_planning",
+      "local_validation_responsibilities"
+    ],
+    "assistant_must_run_git_status_short_during_validation": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 8 is complete. Approved design authority was imported, production UI slices 080-083 were delivered, and no next numbered task is currently defined.",
+    "customer_status": "The product preview now includes approved shell, Overview, Visualization, and History fidelity while remaining fully JSON-driven and handoff-ready.",
+    "last_iteration": "Architecture sync after AI Task 083: Stage 8 closed and runtime snapshot advanced to a no-active-task state."
+  },
+  "generated_at": "2026-03-28T00:17:36Z"
+}
