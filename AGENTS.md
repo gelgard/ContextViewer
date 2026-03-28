@@ -97,7 +97,7 @@ Forbidden:
 - Substage: Post-Figma production UI implementation (tasks **080+**; design-sync **062–079** complete)
 
 Next required action:
-→ run AI Task 082 (visualization workspace fidelity slice — see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
+→ run AI Task 083 (history workspace + cross-surface handoff smoke — see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
 
 
 ---

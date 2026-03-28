@@ -2,7 +2,8 @@
 # AI Task 059: Stage 8 UI preview readiness report (read-only; stdout = one JSON object).
 # AI Task 080: delivery smoke gains production shell marker check; readiness still gates on full delivery pass.
 # AI Task 081: structured Overview from dashboard feed.
-# AI Task 082: unified viz workspace HTML; prepare may report render_profile 082_visualization_fidelity.
+# AI Task 082: unified viz workspace HTML.
+# AI Task 083: history workspace HTML; prepare may report 083_history_handoff_fidelity; handoff verify curls production class markers.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -28,6 +29,7 @@ Stdout:
     generated_at (UTC ISO-8601)
     status                 ready | not_ready
     preview_artifacts      output_dir, output_file, open_command (from prepare)
+    render_profile         from prepare.preview_summary (e.g. 083_history_handoff_fidelity)
     verification:
       bootstrap_smoke      full JSON from verify_stage8_ui_bootstrap_contracts.sh
       delivery_smoke       full JSON from verify_stage8_ui_preview_delivery.sh
@@ -258,6 +260,7 @@ report="$(jq -n \
         output_file: $prep.output_file,
         open_command: $prep.open_command
       },
+      render_profile: ($prep.preview_summary.render_profile // null),
       verification: {
         bootstrap_smoke: $boot,
         delivery_smoke: $del

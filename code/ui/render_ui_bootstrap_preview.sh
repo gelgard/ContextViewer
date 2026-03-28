@@ -3,6 +3,7 @@
 # AI Task 080: production-aligned shared shell, nav framing, and design tokens (preview only; data unchanged).
 # AI Task 081: overview surface fidelity — structured status, progress, roadmap, timeline from dashboard feed only.
 # AI Task 082: visualization workspace fidelity — unified tree + graph + inspector from visualization_workspace bundle only.
+# AI Task 083: history workspace fidelity + cross-surface handoff readiness (feed-only history UI).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,7 +21,7 @@ one JSON summary line to stdout (project_id, generated_at, output_file, sections
 render_profile, source_consistency_checks).
 
 The HTML includes data-section markers (overview, visualization, history), feed-backed Overview
-layout (task 081), feed-backed Visualization workspace (task 082), history readout, embedded bootstrap JSON in
+layout (task 081), feed-backed Visualization workspace (task 082), feed-backed History workspace (task 083), embedded bootstrap JSON in
 <script type="application/json" id="ui-bootstrap-payload">, and inline CSS only (no external assets).
 
 Environment:
@@ -636,13 +637,275 @@ if [[ "$viz_rc" -ne 0 ]]; then
 fi
 rm -f "$err_viz" "$tmp_boot_viz"
 
-hist_gen="$(printf '%s' "$boot_json" | jq -r '.ui_sections.history_workspace.generated_at // "—"')"
-hist_days="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.history_workspace.contracts.project_history_bundle.history.daily.summary.days_with_activity // 0
-')"
-hist_tl="$(printf '%s' "$boot_json" | jq -r '
-  .ui_sections.history_workspace.contracts.project_history_bundle.history.timeline.summary.total_returned // 0
-')"
+tmp_boot_hist="$(mktemp)"
+printf '%s' "$boot_json" >"$tmp_boot_hist"
+err_hist="$(mktemp)"
+set +e
+hist_inner="$(
+  BOOT_JSON_FILE="$tmp_boot_hist" python3 <<'PYHIST' 2>"$err_hist"
+import html
+import json
+import os
+
+def esc(s):
+    if s is None:
+        return "—"
+    return html.escape(str(s), quote=False)
+
+
+def esc_attr(s):
+    return html.escape(str(s) if s is not None else "", quote=True)
+
+
+def fmt_ids(ids):
+    if not isinstance(ids, list):
+        return esc(ids)
+    parts = []
+    for x in ids[:12]:
+        parts.append(esc(x))
+    if len(ids) > 12:
+        parts.append('<span class="muted">… +' + esc(str(len(ids) - 12)) + "</span>")
+    return " ".join(parts) if parts else "—"
+
+
+with open(os.environ["BOOT_JSON_FILE"], encoding="utf-8") as _bf:
+    boot = json.load(_bf)
+
+hist_ws = (boot.get("ui_sections") or {}).get("history_workspace") or {}
+ws_gen = hist_ws.get("generated_at")
+cc_ws = hist_ws.get("consistency_checks") or {}
+phb = (hist_ws.get("contracts") or {}).get("project_history_bundle") or {}
+if not isinstance(phb, dict):
+    phb = {}
+hist = phb.get("history") or {}
+if not isinstance(hist, dict):
+    hist = {}
+daily = hist.get("daily") or {}
+if not isinstance(daily, dict):
+    daily = {}
+timeline_feed = hist.get("timeline") or {}
+if not isinstance(timeline_feed, dict):
+    timeline_feed = {}
+
+rng_top = phb.get("range") or {}
+if not isinstance(rng_top, dict):
+    rng_top = {}
+
+daily_summary = daily.get("summary") or {}
+if not isinstance(daily_summary, dict):
+    daily_summary = {}
+daily_days = daily.get("days")
+daily_days = daily_days if isinstance(daily_days, list) else []
+daily_range = daily.get("range") or rng_top
+
+tl_summary = timeline_feed.get("summary") or {}
+if not isinstance(tl_summary, dict):
+    tl_summary = {}
+tl_rows = timeline_feed.get("timeline")
+tl_rows = tl_rows if isinstance(tl_rows, list) else []
+tl_range = timeline_feed.get("range") or rng_top
+
+phb_cc = phb.get("consistency_checks") or {}
+if not isinstance(phb_cc, dict):
+    phb_cc = {}
+
+parts = []
+parts.append(
+    '<div class="history-workspace" role="region" data-cv-history-surface="083" '
+    'aria-label="History workspace from bootstrap feed">'
+)
+parts.append('<header class="hist-workspace-header">')
+parts.append(
+    '<p class="hist-kicker">History workspace · bundle <time datetime="'
+    + esc_attr(ws_gen)
+    + '">'
+    + esc(ws_gen)
+    + "</time></p>"
+)
+parts.append('<div class="hist-meta-strip">')
+parts.append(
+    '<span class="hist-meta-chip mono">days w/ activity <strong>'
+    + esc(daily_summary.get("days_with_activity"))
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="hist-meta-chip mono">valid snapshots (rollup) <strong>'
+    + esc(daily_summary.get("total_valid_snapshots"))
+    + "</strong></span>"
+)
+parts.append(
+    '<span class="hist-meta-chip mono">timeline rows <strong>'
+    + esc(tl_summary.get("total_returned"))
+    + "</strong></span>"
+)
+rf = tl_range.get("from") if isinstance(tl_range, dict) else None
+rt = tl_range.get("to") if isinstance(tl_range, dict) else None
+rlim = tl_range.get("limit") if isinstance(tl_range, dict) else None
+parts.append(
+    '<span class="hist-meta-chip mono">range <strong>'
+    + esc(rf)
+    + " … "
+    + esc(rt)
+    + "</strong></span>"
+)
+if rlim is not None:
+    parts.append(
+        '<span class="hist-meta-chip mono">limit <strong>'
+        + esc(rlim)
+        + "</strong></span>"
+    )
+parts.append("</div>")
+
+parts.append('<div class="hist-consistency-grid">')
+parts.append('<div class="hist-cc-block"><h4 class="hist-cc-title">Workspace checks</h4><dl class="hist-cc-dl mono">')
+for _k in ("project_id_match", "selected_bundle_match", "history_smoke_pass"):
+    parts.append(
+        "<dt>"
+        + esc(_k)
+        + "</dt><dd>"
+        + esc(cc_ws.get(_k))
+        + "</dd>"
+    )
+parts.append("</dl></div>")
+parts.append('<div class="hist-cc-block"><h4 class="hist-cc-title">Bundle checks</h4><dl class="hist-cc-dl mono">')
+for _k in (
+    "project_id_match",
+    "range_match",
+    "timeline_count_consistent",
+    "latest_timestamp_aligned",
+):
+    if _k in phb_cc:
+        parts.append(
+            "<dt>"
+            + esc(_k)
+            + "</dt><dd>"
+            + esc(phb_cc.get(_k))
+            + "</dd>"
+        )
+parts.append("</dl></div></div>")
+parts.append("</header>")
+
+parts.append('<div class="hist-main-split">')
+parts.append('<section class="hist-panel hist-daily-panel" aria-labelledby="hist-daily-h">')
+parts.append('<h3 id="hist-daily-h" class="hist-panel-title">Daily rollup</h3>')
+parts.append(
+    '<p class="hist-panel-sub muted mono">UTC calendar days · latest snapshot in rollup: '
+    + esc(daily_summary.get("latest_snapshot_timestamp"))
+    + "</p>"
+)
+parts.append('<div class="hist-table-wrap">')
+parts.append(
+    '<table class="hist-data-table"><thead><tr>'
+    "<th scope=\"col\">UTC day</th>"
+    "<th scope=\"col\">Snapshots</th>"
+    "<th scope=\"col\">Latest row time</th>"
+    "<th scope=\"col\">Snapshot ids (max 12)</th>"
+    "</tr></thead><tbody>"
+)
+cap_d = 35
+for day in daily_days[:cap_d]:
+    if not isinstance(day, dict):
+        parts.append(
+            '<tr><td colspan="4">'
+            + esc(str(day))
+            + "</td></tr>"
+        )
+        continue
+    parts.append(
+        "<tr><td class=\"mono\">"
+        + esc(day.get("date"))
+        + '</td><td class="mono">'
+        + esc(day.get("valid_snapshots_count"))
+        + '</td><td class="mono">'
+        + esc(day.get("latest_snapshot_timestamp"))
+        + '</td><td class="mono hist-ids">'
+        + fmt_ids(day.get("snapshot_ids"))
+        + "</td></tr>"
+    )
+parts.append("</tbody></table></div>")
+if len(daily_days) > cap_d:
+    parts.append(
+        '<p class="hist-cap-note muted mono">Showing '
+        + esc(str(cap_d))
+        + " of "
+        + esc(str(len(daily_days)))
+        + " days</p>"
+    )
+if not daily_days:
+    parts.append('<p class="muted">No daily rows in feed.</p>')
+parts.append("</section>")
+
+parts.append('<section class="hist-panel hist-timeline-panel" aria-labelledby="hist-tl-h">')
+parts.append('<h3 id="hist-tl-h" class="hist-panel-title">Snapshot timeline</h3>')
+parts.append(
+    '<p class="hist-panel-sub muted mono">Ordered rows · latest: '
+    + esc(tl_summary.get("latest_snapshot_timestamp"))
+    + " · oldest: "
+    + esc(tl_summary.get("oldest_snapshot_timestamp"))
+    + "</p>"
+)
+parts.append('<div class="hist-table-wrap">')
+parts.append(
+    '<table class="hist-data-table"><thead><tr>'
+    "<th scope=\"col\">Day</th>"
+    "<th scope=\"col\">Snapshot</th>"
+    "<th scope=\"col\">File</th>"
+    "<th scope=\"col\">Snapshot time</th>"
+    "<th scope=\"col\">Import</th>"
+    "</tr></thead><tbody>"
+)
+cap_tl = 45
+for row in tl_rows[:cap_tl]:
+    if not isinstance(row, dict):
+        parts.append(
+            '<tr><td colspan="5">'
+            + esc(str(row))
+            + "</td></tr>"
+        )
+        continue
+    parts.append(
+        "<tr><td class=\"mono\">"
+        + esc(row.get("day"))
+        + '</td><td class="mono">'
+        + esc(row.get("snapshot_id"))
+        + '</td><td class="mono">'
+        + esc(row.get("file_name"))
+        + '</td><td class="mono">'
+        + esc(row.get("snapshot_timestamp"))
+        + '</td><td class="mono">'
+        + esc(row.get("import_time"))
+        + "</td></tr>"
+    )
+parts.append("</tbody></table></div>")
+if len(tl_rows) > cap_tl:
+    parts.append(
+        '<p class="hist-cap-note muted mono">Showing '
+        + esc(str(cap_tl))
+        + " of "
+        + esc(str(len(tl_rows)))
+        + " rows</p>"
+    )
+if not tl_rows:
+    parts.append('<p class="muted">No timeline rows in feed.</p>')
+parts.append("</section>")
+parts.append("</div>")
+parts.append(
+    '<p class="hist-cross-hint muted">Overview and Visualization remain the entry and '
+    "deep-architecture surfaces — this block is contract-backed history only.</p>"
+)
+parts.append("</div>")
+print("".join(parts), end="")
+PYHIST
+)"
+hist_rc=$?
+set -e
+if [[ "$hist_rc" -ne 0 ]]; then
+  [[ -s "$err_hist" ]] && cat "$err_hist" >&2
+  rm -f "$err_hist" "$tmp_boot_hist"
+  echo "error: history HTML build failed (python3)" >&2
+  exit 3
+fi
+rm -f "$err_hist" "$tmp_boot_hist"
 
 cc_json="$(printf '%s' "$boot_json" | jq -c '.consistency_checks')"
 cc_project="$(printf '%s' "$cc_json" | jq -r '.project_id_match')"
@@ -1176,6 +1439,136 @@ tmp_html="$(mktemp)"
   .viz-inspector-dl dd { margin: 0; word-break: break-word; }
   .viz-insp-foot { margin: var(--cv-space-3) 0 0; font-size: 0.6875rem; }
   .viz-inspector-empty { margin: 0; font-size: 0.8125rem; }
+  /* AI Task 083 — history workspace (daily + timeline from feeds only) */
+  .workspace-panel-hist { padding-bottom: var(--cv-space-8); }
+  .history-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+  .hist-workspace-header {
+    padding: var(--cv-space-3) var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+    border-left: 3px solid var(--cv-tertiary);
+  }
+  .hist-kicker {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--cv-on-surface-variant);
+  }
+  .hist-meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cv-space-2);
+    margin-bottom: var(--cv-space-3);
+  }
+  .hist-meta-chip {
+    font-size: 0.6875rem;
+    padding: var(--cv-space-1) var(--cv-space-3);
+    background: var(--cv-surface-lowest);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+  }
+  .hist-meta-chip strong { font-weight: 700; color: var(--cv-on-surface); }
+  .hist-consistency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--cv-space-3);
+  }
+  .hist-cc-block {
+    padding: var(--cv-space-2);
+    background: color-mix(in srgb, var(--cv-tertiary) 6%, var(--cv-surface-lowest));
+    border-radius: var(--cv-radius-sm);
+  }
+  .hist-cc-title {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cv-on-surface-variant);
+  }
+  .hist-cc-dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--cv-space-1) var(--cv-space-3);
+    font-size: 0.6875rem;
+  }
+  .hist-cc-dl dt { font-weight: 700; }
+  .hist-cc-dl dd { margin: 0; text-align: right; }
+  .hist-main-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: var(--cv-space-4);
+    align-items: stretch;
+  }
+  @media (max-width: 960px) {
+    .hist-main-split { grid-template-columns: 1fr; }
+  }
+  .hist-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    padding: var(--cv-space-4);
+  }
+  .hist-timeline-panel {
+    background: color-mix(in srgb, var(--cv-surface-high) 22%, var(--cv-surface-low));
+  }
+  .hist-panel-title {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.01em;
+  }
+  .hist-panel-sub { margin: 0 0 var(--cv-space-3); font-size: 0.6875rem; }
+  .hist-table-wrap {
+    flex: 1;
+    overflow: auto;
+    max-height: 26rem;
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 16%, transparent);
+    background: var(--cv-surface-lowest);
+  }
+  .hist-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+  }
+  .hist-data-table th,
+  .hist-data-table td {
+    padding: var(--cv-space-2) var(--cv-space-2);
+    text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+    vertical-align: top;
+  }
+  .hist-data-table th {
+    position: sticky;
+    top: 0;
+    background: var(--cv-surface-lowest);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--cv-on-surface-variant);
+  }
+  .hist-ids { word-break: break-all; }
+  .hist-cap-note { margin: var(--cv-space-2) 0 0; font-size: 0.6875rem; }
+  .hist-cross-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    padding: var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: color-mix(in srgb, var(--cv-tertiary) 7%, var(--cv-surface-low));
+  }
   .consistency-panel {
     margin-top: var(--cv-space-4);
     padding: var(--cv-space-4) var(--cv-space-6);
@@ -1256,11 +1649,9 @@ $(printf '%s' "$overview_inner")
           <h2>Visualization workspace</h2>
 $(printf '%s' "$viz_inner")
         </section>
-        <section id="cv-section-history" data-section="history" class="workspace-panel">
+        <section id="cv-section-history" data-section="history" class="workspace-panel workspace-panel-hist">
           <h2>History workspace</h2>
-          <pre class="summary">History workspace bundle: $(printf '%s' "$hist_gen" | html_escape)
-Daily rollup days with activity: $(printf '%s' "$hist_days" | html_escape)
-Timeline rows returned: $(printf '%s' "$hist_tl" | html_escape)</pre>
+$(printf '%s' "$hist_inner")
         </section>
         <section class="consistency-panel">
           <h2>Bootstrap consistency</h2>
@@ -1307,6 +1698,6 @@ jq -n \
     generated_at: $ga,
     output_file: $of,
     sections_rendered: ["overview", "visualization", "history"],
-    render_profile: "082_visualization_fidelity",
+    render_profile: "083_history_handoff_fidelity",
     source_consistency_checks: $cc
   }'

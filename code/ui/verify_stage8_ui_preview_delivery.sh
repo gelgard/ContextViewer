@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # AI Task 058: Stage 8 UI preview delivery smoke suite (stdout = one JSON report).
 # AI Task 080: stronger HTML check for production shell marker on served preview.
+# AI Task 083: served HTML must include 081/082/083 production surface root classes (parity with demo handoff verify).
+# Served HTML is grep'd from a temp file (not a bash variable) so embedded NUL bytes in the JSON payload cannot truncate checks.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,7 +14,7 @@ usage() {
 verify_stage8_ui_preview_delivery.sh — Stage 8 UI preview delivery end-to-end smoke tests
 
 Runs start_ui_preview_server.sh (metadata + local HTTP), validates preview URL via curl and HTML
-markers (incl. AI Task 080 `data-cv-preview-shell="080"`), then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
+markers (incl. AI Task 080 `data-cv-preview-shell="080"` and AI Task 081–083 production surface root classes), then verify_stage8_ui_bootstrap_contracts.sh. Prints exactly one JSON object:
   status        pass | fail
   checks        array of { name, status, details }
   failed_checks integer
@@ -168,7 +170,6 @@ else
 fi
 
 preview_url=""
-html_body=""
 if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; then
   if ! printf '%s\n' "$srv_out" | jq -e '
       type == "object"
@@ -194,39 +195,55 @@ if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; 
   fi
 
   if [[ "$preview_url" == "$expected_preview_url" ]]; then
-    html_body="$(curl -sS --connect-timeout 5 "$preview_url" 2>/dev/null || true)"
-    code="$(curl -sS -o /dev/null -w "%{http_code}" --connect-timeout 5 "$preview_url" 2>/dev/null || echo "000")"
+    html_tmp="$(mktemp)"
+    code="$(curl -sS --connect-timeout 5 -o "$html_tmp" -w "%{http_code}" "$preview_url" 2>/dev/null || echo "000")"
     if [[ "$code" == "200" ]]; then
       add_check "delivery: preview URL reachable (curl)" "pass" "HTTP ${code}"
     else
       add_check "delivery: preview URL reachable (curl)" "fail" "HTTP ${code}"
     fi
 
-    if printf '%s' "$html_body" | grep -q 'data-section="overview"'; then
+    if grep -q 'data-section="overview"' "$html_tmp" 2>/dev/null; then
       add_check "delivery: served HTML overview marker" "pass" 'found data-section="overview"'
     else
       add_check "delivery: served HTML overview marker" "fail" "marker not found"
     fi
-    if printf '%s' "$html_body" | grep -q 'data-section="visualization"'; then
+    if grep -q 'data-section="visualization"' "$html_tmp" 2>/dev/null; then
       add_check "delivery: served HTML visualization marker" "pass" 'found data-section="visualization"'
     else
       add_check "delivery: served HTML visualization marker" "fail" "marker not found"
     fi
-    if printf '%s' "$html_body" | grep -q 'data-section="history"'; then
+    if grep -q 'data-section="history"' "$html_tmp" 2>/dev/null; then
       add_check "delivery: served HTML history marker" "pass" 'found data-section="history"'
     else
       add_check "delivery: served HTML history marker" "fail" "marker not found"
     fi
-    if printf '%s' "$html_body" | grep -q 'id="ui-bootstrap-payload"'; then
+    if grep -q 'id="ui-bootstrap-payload"' "$html_tmp" 2>/dev/null; then
       add_check "delivery: served HTML bootstrap payload script" "pass" 'found id="ui-bootstrap-payload"'
     else
       add_check "delivery: served HTML bootstrap payload script" "fail" "script id not found"
     fi
-    if printf '%s' "$html_body" | grep -q 'data-cv-preview-shell="080"'; then
+    if grep -q 'data-cv-preview-shell="080"' "$html_tmp" 2>/dev/null; then
       add_check "delivery: served HTML production shell marker (080)" "pass" 'found data-cv-preview-shell="080"'
     else
       add_check "delivery: served HTML production shell marker (080)" "fail" "body shell marker not found"
     fi
+    if grep -q 'class="overview-surface"' "$html_tmp" 2>/dev/null; then
+      add_check "delivery: served HTML overview-surface (081)" "pass" "found overview-surface"
+    else
+      add_check "delivery: served HTML overview-surface (081)" "fail" "class overview-surface not found"
+    fi
+    if grep -q 'class="viz-workspace"' "$html_tmp" 2>/dev/null; then
+      add_check "delivery: served HTML viz-workspace (082)" "pass" "found viz-workspace"
+    else
+      add_check "delivery: served HTML viz-workspace (082)" "fail" "class viz-workspace not found"
+    fi
+    if grep -q 'class="history-workspace"' "$html_tmp" 2>/dev/null; then
+      add_check "delivery: served HTML history-workspace (083)" "pass" "found history-workspace"
+    else
+      add_check "delivery: served HTML history-workspace (083)" "fail" "class history-workspace not found"
+    fi
+    rm -f "$html_tmp"
   else
     add_check "delivery: preview URL reachable (curl)" "fail" "skipped: preview_url mismatch"
     add_check "delivery: served HTML overview marker" "fail" "skipped"
@@ -234,6 +251,9 @@ if [[ "$srv_rc" -eq 0 ]] && printf '%s\n' "$srv_out" | jq -e . >/dev/null 2>&1; 
     add_check "delivery: served HTML history marker" "fail" "skipped"
     add_check "delivery: served HTML bootstrap payload script" "fail" "skipped"
     add_check "delivery: served HTML production shell marker (080)" "fail" "skipped"
+    add_check "delivery: served HTML overview-surface (081)" "fail" "skipped"
+    add_check "delivery: served HTML viz-workspace (082)" "fail" "skipped"
+    add_check "delivery: served HTML history-workspace (083)" "fail" "skipped"
   fi
 else
   if [[ "$srv_rc" -eq 0 ]]; then
@@ -245,6 +265,9 @@ else
     add_check "delivery: served HTML history marker" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML bootstrap payload script" "fail" "skipped: invalid JSON"
     add_check "delivery: served HTML production shell marker (080)" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML overview-surface (081)" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML viz-workspace (082)" "fail" "skipped: invalid JSON"
+    add_check "delivery: served HTML history-workspace (083)" "fail" "skipped: invalid JSON"
   else
     det="skipped: start_ui_preview_server failed"
     add_check "delivery: server JSON shape" "fail" "$det"
@@ -255,6 +278,9 @@ else
     add_check "delivery: served HTML history marker" "fail" "$det"
     add_check "delivery: served HTML bootstrap payload script" "fail" "$det"
     add_check "delivery: served HTML production shell marker (080)" "fail" "$det"
+    add_check "delivery: served HTML overview-surface (081)" "fail" "$det"
+    add_check "delivery: served HTML viz-workspace (082)" "fail" "$det"
+    add_check "delivery: served HTML history-workspace (083)" "fail" "$det"
   fi
 fi
 

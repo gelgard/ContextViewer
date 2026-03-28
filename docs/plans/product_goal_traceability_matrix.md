@@ -128,7 +128,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 079` is completed: post-Figma **implementation plan refinement** — roadmap **`080–083`** in `docs/plans/implementation-plan.md`; separates **completed design-sync (062–079)** from **upcoming production UI**; preserves **061** checkpoint.
 - `AI Task 080` is completed: shared shell + design tokens applied to bootstrap preview; `render_profile=080_shell_tokens`; delivery smoke confirms `data-cv-preview-shell="080"` while preserving bootstrap payload markers.
 - `AI Task 081` is completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; shell marker/payload preserved; dashboard contracts and preview readiness remain successful.
-- Next executable task: `AI Task 082` — Visualization workspace fidelity slice (see plans).
+- `AI Task 082` is completed: Visualization workspace fidelity applied to bootstrap preview; `render_profile=082_visualization_fidelity`; tree + graph + inspector are rendered as one unified contract-backed workspace; visualization workspace contracts remain successful.
+- Next executable task: `AI Task 083` — History workspace + cross-surface handoff smoke slice (see plans).
+- Requirement mapping for **082** (complete):
+  - `PG-AR-001`
+  - `PG-AR-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
 - Requirement mapping for **081** (complete):
   - `PG-OV-001`
   - `PG-UX-001`
@@ -267,13 +273,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-EX-001`
   - `PG-PL-001`
 - `082` — Stage 8 Production UI: Visualization workspace fidelity
-  - **planned** (next executable task)
+  - **completed**
   - `PG-AR-001`
   - `PG-AR-002`
   - `PG-UX-001`
   - `PG-EX-001`
 - `083` — Stage 8 Production UI: History workspace + cross-surface handoff smoke
-  - **planned**
+  - **planned** (next executable task)
   - `PG-HI-001`
   - `PG-HI-002`
   - `PG-UX-001`

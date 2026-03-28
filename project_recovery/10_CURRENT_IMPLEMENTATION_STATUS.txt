@@ -106,12 +106,13 @@ STATUS:
 - AI Task 079 completed: post-Figma **implementation plan refinement** — production UI decomposed into slices **080–083** (`docs/plans/implementation-plan.md`); **preserved checkpoint** remains preview/demo handoff through **061**; design authority unchanged (`approved_figma_artifact.md` + `task076/`)
 - AI Task 080 completed: production preview shell/tokens slice delivered — shared header/sidebar/nav styling applied to bootstrap preview, `render_profile=080_shell_tokens`, `data-cv-preview-shell="080"` preserved by delivery smoke, runtime semantics unchanged
 - AI Task 081 completed: Overview fidelity slice delivered — bootstrap preview now renders structured feed-backed Overview blocks with `render_profile=081_overview_fidelity`; shell continuity from **080** preserved; dashboard contracts remain `pass`; preview readiness remains `ready`
+- AI Task 082 completed: Visualization fidelity slice delivered — bootstrap preview now renders a unified tree/graph/inspector workspace with `render_profile=082_visualization_fidelity`; visualization workspace contracts remain `pass`; no fake graph analytics introduced
 - upcoming: secondary flows / import-ready polish as tracked in approved artifact known gaps (via future tasks after **083** as needed)
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 082 — Stage 8 **Visualization workspace fidelity** slice (see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
+Run AI Task 083 — Stage 8 **History workspace + handoff smoke** slice (see `docs/plans/implementation-plan.md` §Post-Figma roadmap)
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

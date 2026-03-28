@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # AI Task 061: Stage 8 UI demo handoff bundle smoke suite (stdout = one JSON report).
+# AI Task 083: after ready bundle, confirms served HTML includes 081/082/083 production surface roots.
+# Served body is grep'd from a temp file so bash does not truncate at embedded NUL in the JSON payload.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -96,6 +98,10 @@ fi
 
 command -v jq >/dev/null 2>&1 || {
   echo "error: jq is required" >&2
+  exit 127
+}
+command -v curl >/dev/null 2>&1 || {
+  echo "error: curl is required" >&2
   exit 127
 }
 
@@ -263,6 +269,47 @@ if [[ "$shape_ok" == true ]]; then
   fi
 else
   add_check "handoff: browser_open_command present" "fail" "skipped: contract shape failed"
+fi
+
+bundle_ready=false
+if [[ "$shape_ok" == true ]] && printf '%s\n' "$bundle_out" | jq -e '.status == "ready"' >/dev/null 2>&1; then
+  bundle_ready=true
+fi
+
+if [[ "$bundle_ready" == true ]]; then
+  preview_url_ho="$(printf '%s' "$bundle_out" | jq -r '.handoff.preview_url // ""')"
+  ho_tmp="$(mktemp)"
+  ho_code="$(curl -sS --connect-timeout 5 -o "$ho_tmp" -w "%{http_code}" "$preview_url_ho" 2>/dev/null || echo "000")"
+  if [[ "$ho_code" == "200" ]]; then
+    add_check "handoff: served HTML fetch for production markers" "pass" "HTTP 200"
+    if grep -q 'class="overview-surface"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML overview-surface (081)" "pass" "found overview-surface"
+    else
+      add_check "handoff: served HTML overview-surface (081)" "fail" "class overview-surface not found"
+    fi
+    if grep -q 'class="viz-workspace"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML viz-workspace (082)" "pass" "found viz-workspace"
+    else
+      add_check "handoff: served HTML viz-workspace (082)" "fail" "class viz-workspace not found"
+    fi
+    if grep -q 'class="history-workspace"' "$ho_tmp" 2>/dev/null; then
+      add_check "handoff: served HTML history-workspace (083)" "pass" "found history-workspace"
+    else
+      add_check "handoff: served HTML history-workspace (083)" "fail" "class history-workspace not found"
+    fi
+  else
+    add_check "handoff: served HTML fetch for production markers" "fail" "HTTP ${ho_code} on preview_url"
+    add_check "handoff: served HTML overview-surface (081)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML viz-workspace (082)" "fail" "skipped: fetch failed"
+    add_check "handoff: served HTML history-workspace (083)" "fail" "skipped: fetch failed"
+  fi
+  rm -f "$ho_tmp"
+else
+  det="skipped: bundle not ready or invalid shape"
+  add_check "handoff: served HTML fetch for production markers" "fail" "$det"
+  add_check "handoff: served HTML overview-surface (081)" "fail" "$det"
+  add_check "handoff: served HTML viz-workspace (082)" "fail" "$det"
+  add_check "handoff: served HTML history-workspace (083)" "fail" "$det"
 fi
 
 # --- negative: handoff child ---
