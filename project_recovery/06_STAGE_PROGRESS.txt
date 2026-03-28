@@ -158,10 +158,13 @@ Current execution state:
 - AI Task 084 completed: diff-viewer contract bundle foundation (`code/diff/get_diff_viewer_contract_bundle.sh`, `verify_stage9_diff_viewer_contracts.sh`)
 - AI Task 085 completed: diff-viewer preview surface integrated into standalone shell (`render_profile=085_diff_viewer_preview`) with delivery/readiness smoke continuity
 - AI Task 086 completed: settings/profile contract bundle foundation (`code/settings/get_settings_profile_contract_bundle.sh`, `verify_stage9_settings_profile_contracts.sh`)
-- AI Task 087 created: settings/profile preview surface (next execution anchor)
+- AI Task 087 completed: settings/profile preview surface integrated into standalone shell
+- AI Task 088 completed: secondary-flows readiness gate (`verify_stage9_secondary_flows_readiness_gate.sh`)
+- AI Task 089 completed: completion gate and transition readiness (`get_stage9_completion_gate_report.sh`, `verify_stage9_completion_gate.sh`)
+- AI Task 090 created and active: fast smoke mode implementation for Stage 9 orchestration gates
 
 Stage 9 — **secondary-flow continuity** (current):
 - **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
 - **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
-- **Completed in Stage 9:** `084`, `085`, `086`
-- **Next execution anchor:** **AI Task 087**
+- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`
+- **Current execution anchor:** **AI Task 090**

@@ -8,6 +8,23 @@ TESTING RULES
   - run the highest-level stage gate first (single orchestration script)
   - run lower-level smoke scripts separately only for diagnostics, failure isolation, or explicit user request
   - avoid duplicate re-runs of the same heavy smoke scripts in one validation cycle unless code changed
+- validation profile lock is mandatory:
+  - default acceptance path is `fast` mode
+  - `full` mode is allowed only when:
+    - explicitly requested by the user, or
+    - `fast` mode failed and diagnostic depth is required
+  - running `full` first by default is forbidden
+- anti-hang execution policy is mandatory:
+  - do not run heavy UI smoke scripts in parallel on the same port
+  - for parallel terminals, each run must use a unique port
+  - by default, run heavy UI validation scripts sequentially
+  - if a run exceeds expected duration, stop it and re-run with diagnostics
+  - before each heavy run, check and clean stale processes from interrupted previous runs
+  - after user-aborted runs, process cleanup is required before any next heavy validation
+- timeout policy for long-running UI validation:
+  - each heavy smoke/gate run must use a bounded timeout mechanism
+  - on macOS where `timeout` may be missing, use a python-based timeout wrapper
+  - timeout expiration is a diagnostic event and must be reported, not ignored
 - for every UI task, dual validation is mandatory:
   - assistant runs Playwright validation and reports:
     - executed steps

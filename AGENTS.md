@@ -94,10 +94,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 9
-- Substage: Secondary flows implementation (diff/settings contract + preview surfaces)
+- Substage: Validation runtime optimization (fast smoke mode)
 
 Next required action:
-→ run AI Task 087 (settings/profile preview surface)
+→ complete AI Task 090 (fast smoke mode validation and closure evidence)
 
 
 ---
@@ -143,6 +143,19 @@ Supported commands:
   - run one top-level stage gate first
   - run child smoke scripts separately only for diagnostics/failure localization or explicit user request
   - avoid repeated heavy smoke runs in the same validation cycle when no code changed
+- validation profile lock is mandatory:
+  - `fast` is the default and required mode for routine acceptance checks
+  - `full` is allowed only when:
+    - user explicitly requests full diagnostics, or
+    - `fast` failed and failure localization is required
+  - running `full` preemptively as a default path is prohibited
+- anti-hang validation policy is mandatory:
+  - do not run heavy UI smoke scripts concurrently on the same local port
+  - parallel runs must use distinct ports per process
+  - heavy UI smoke/gate validations are sequential by default
+  - long-running commands must be executed with bounded-time guidance; timeout events require diagnostic rerun
+  - before each heavy UI validation cycle, stale validation/server processes from prior interrupted runs must be cleaned up
+  - if a run is interrupted by user, the next step must begin with process-state verification and cleanup
 - for every UI task, dual validation contours are mandatory:
   - assistant-side Playwright run with explicit executed steps, per-step pass/fail, and visual mismatch list (if any)
   - user-side manual visual validation via explicit step-by-step scenario
@@ -254,6 +267,10 @@ When command is triggered:
 
 ## 11. RESPONSE FORMAT RULES
 
+- first line of every assistant response must include a project/session marker:
+  - format: `ContextViewer-1 | <stage-or-topic>`
+  - this marker is mandatory for every response to reduce cross-project chat confusion
+- if the active project context changes, the marker must be updated immediately in the next response
 - Fast restore → one-line format only
 - Full restore → 8-section format
 - architecture update → no explanation, only result
@@ -275,6 +292,11 @@ When command is triggered:
   - run one highest-level orchestration gate first
   - run lower-level smoke scripts only for diagnostics, failure localization, or explicit user request
   - do not repeat identical heavy smoke runs in one validation cycle without code changes
+- anti-hang test policy is mandatory:
+  - test instructions must avoid concurrent heavy smoke runs on the same port
+  - if concurrent runs are required, assign unique ports explicitly
+  - heavy validation steps should be sequential by default
+  - include safe-stop + diagnostic-rerun instructions when a long command appears stalled
 - when an AI task generates prompts for an external Figma/design system, tests must specify the exact prompt blocks to use externally and the exact returned evidence required for validation (for example: Figma link, exported frames, page list, component inventory, screenshots)
 - when an AI task validates returned Figma/design results, tests must specify the exact artifacts the user must send back (link/export/screenshots/page map/component list) and the exact visual/structural checks to confirm
 - on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`

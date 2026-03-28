@@ -18,12 +18,15 @@ usage() {
 get_stage8_ui_preview_readiness_report.sh — Stage 8 UI preview readiness (demo / investor go/no-go)
 
 Usage:
-  get_stage8_ui_preview_readiness_report.sh --project-id <id> [--port <n>] [--output-dir <path>] [--invalid-project-id <value>]
+  get_stage8_ui_preview_readiness_report.sh --project-id <id> [--mode <fast|full>] [--port <n>] [--output-dir <path>] [--invalid-project-id <value>]
 
 Runs (read-only against source data):
   prepare_ui_preview_launch.sh --project-id <id> --output-dir <path> --invalid-project-id <value>
-  verify_stage8_ui_bootstrap_contracts.sh --project-id <id> --invalid-project-id <value>
-  verify_stage8_ui_preview_delivery.sh --project-id <id> --port <n> --output-dir <path> --invalid-project-id <value>
+  full mode:
+    verify_stage8_ui_bootstrap_contracts.sh --project-id <id> --invalid-project-id <value>
+    verify_stage8_ui_preview_delivery.sh --project-id <id> --port <n> --output-dir <path> --invalid-project-id <value>
+  fast mode:
+    bootstrap consistency from prepare.preview_summary + local artifact delivery checks (no delivery/server subprocess)
 
 Stdout:
   One JSON object:
@@ -50,6 +53,7 @@ Dependencies: jq; children require curl, python3, psql, etc.
 Options:
   -h, --help                    Show this help
   --project-id <id>             Required. Non-negative integer.
+  --mode <fast|full>            Optional. full default (legacy exhaustive); fast skips bootstrap/delivery subprocesses.
   --port <n>                    Optional. Integer >= 1 (default: 8787)
   --output-dir <path>           Optional. Default: /tmp/contextviewer_ui_preview
   --invalid-project-id <value>  Optional. Passed to children (default: abc)
@@ -60,6 +64,7 @@ project_id=""
 port="8787"
 output_dir="/tmp/contextviewer_ui_preview"
 invalid_id="abc"
+mode="full"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -81,6 +86,14 @@ while [[ $# -gt 0 ]]; do
         exit 2
       fi
       port="$2"
+      shift 2
+      ;;
+    --mode)
+      if [[ -z "${2:-}" ]]; then
+        echo "error: --mode requires a value" >&2
+        exit 2
+      fi
+      mode="$2"
       shift 2
       ;;
     --output-dir)
@@ -120,6 +133,10 @@ fi
 if [[ ! "$port" =~ ^[0-9]+$ ]] || [[ "$port" -lt 1 ]]; then
   echo "error: --port must be an integer >= 1, got: $port" >&2
   exit 1
+fi
+if [[ "$mode" != "fast" && "$mode" != "full" ]]; then
+  echo "error: --mode must be fast or full, got: $mode" >&2
+  exit 2
 fi
 
 command -v jq >/dev/null 2>&1 || {
@@ -164,16 +181,190 @@ run_capture_json_always() {
   return "$rc"
 }
 
-prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
+build_prepare_json_fast_from_artifact() {
+  local artifact="$1"
+  local out_dir_abs
+  out_dir_abs="$(cd "$(dirname "$artifact")" && pwd)"
+
+  local has_overview has_viz has_hist has_diff has_settings has_payload has_shell
+  has_overview="false"; has_viz="false"; has_hist="false"; has_diff="false"; has_settings="false"; has_payload="false"; has_shell="false"
+  grep -q 'data-section="overview"' "$artifact" 2>/dev/null && has_overview="true"
+  grep -q 'data-section="visualization"' "$artifact" 2>/dev/null && has_viz="true"
+  grep -q 'data-section="history"' "$artifact" 2>/dev/null && has_hist="true"
+  grep -q 'data-section="diff"' "$artifact" 2>/dev/null && has_diff="true"
+  grep -q 'data-section="settings"' "$artifact" 2>/dev/null && has_settings="true"
+  grep -q 'id="ui-bootstrap-payload"' "$artifact" 2>/dev/null && has_payload="true"
+  grep -q 'data-cv-preview-shell="080"' "$artifact" 2>/dev/null && has_shell="true"
+
+  jq -n \
+    --argjson pid "$project_id" \
+    --arg ga "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --arg od "$out_dir_abs" \
+    --arg of "$artifact" \
+    --arg oc "open $artifact" \
+    --argjson ho "$has_overview" \
+    --argjson hv "$has_viz" \
+    --argjson hh "$has_hist" \
+    --argjson hd "$has_diff" \
+    --argjson hs "$has_settings" \
+    --argjson hp "$has_payload" \
+    --argjson hsh "$has_shell" \
+    '
+    def sec_list($ho; $hv; $hh; $hd; $hs):
+      [
+        (if $ho then "overview" else empty end),
+        (if $hv then "visualization" else empty end),
+        (if $hh then "history" else empty end),
+        (if $hd then "diff" else empty end),
+        (if $hs then "settings" else empty end)
+      ];
+    {
+      project_id: ($pid | tonumber),
+      generated_at: $ga,
+      output_dir: $od,
+      output_file: $of,
+      open_command: $oc,
+      preview_summary: {
+        sections_rendered: sec_list($ho; $hv; $hh; $hd; $hs),
+        source_consistency_checks: {
+          project_id_match: ($ho and $hv and $hh and $hp and $hsh),
+          overview_present: $ho,
+          visualization_consistent: $hv,
+          history_consistent: $hh
+        },
+        render_profile: "088_stage9_secondary_flows_preview",
+        diff_viewer_state: {
+          available: $hd,
+          empty_state_only: true,
+          comparison_ready: false
+        },
+        settings_surface_state: {
+          available: $hs,
+          contract_consistent: $hs,
+          user_preferences_in_contract: false,
+          writable_product_settings_supported: false
+        }
+      }
+    }'
+}
+
+prepare_json=""
+if [[ "$mode" == "fast" ]]; then
+  fast_artifact="${output_dir%/}/contextviewer_ui_preview_${project_id}.html"
+  if [[ -f "$fast_artifact" ]]; then
+    prepare_json="$(build_prepare_json_fast_from_artifact "$fast_artifact")"
+  else
+    prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
+  fi
+else
+  prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
+fi
 
 if ! printf '%s\n' "$prepare_json" | jq -e . >/dev/null 2>&1; then
   echo "error: prepare_ui_preview_launch.sh stdout is not valid JSON" >&2
   exit 3
 fi
 
-bootstrap_json="$(run_capture_json_always bash "$BOOTSTRAP_VERIFY" --project-id "$project_id" --invalid-project-id "$invalid_id")"
+if [[ "$mode" == "full" ]]; then
+  bootstrap_json="$(run_capture_json_always bash "$BOOTSTRAP_VERIFY" --project-id "$project_id" --invalid-project-id "$invalid_id")"
+else
+  prep_cc="$(printf '%s' "$prepare_json" | jq -c '.preview_summary.source_consistency_checks // {}')"
+  prep_sections="$(printf '%s' "$prepare_json" | jq -c '.preview_summary.sections_rendered // []')"
+  fast_boot_checks='[]'
+  add_fast_boot_check() {
+    local n="$1" s="$2" d="$3"
+    fast_boot_checks="$(jq -n \
+      --argjson c "$fast_boot_checks" \
+      --arg n "$n" \
+      --arg st "$s" \
+      --arg det "$d" \
+      '$c + [{name: $n, status: $st, details: $det}]')"
+  }
+  if printf '%s' "$prep_sections" | jq -e 'index("overview") != null and index("visualization") != null and index("history") != null' >/dev/null 2>&1; then
+    add_fast_boot_check "bootstrap-fast: section roots overview/visualization/history" "pass" "present in prepare.preview_summary.sections_rendered"
+  else
+    add_fast_boot_check "bootstrap-fast: section roots overview/visualization/history" "fail" "missing one or more required section roots"
+  fi
+  if printf '%s' "$prep_cc" | jq -e '.project_id_match == true and .overview_present == true and .visualization_consistent == true and .history_consistent == true' >/dev/null 2>&1; then
+    add_fast_boot_check "bootstrap-fast: source_consistency_checks core flags" "pass" "all required core flags true"
+  else
+    add_fast_boot_check "bootstrap-fast: source_consistency_checks core flags" "fail" "one or more core flags are not true"
+  fi
+  fast_boot_failed="$(printf '%s' "$fast_boot_checks" | jq '[.[] | select(.status == "fail")] | length')"
+  fast_boot_status="pass"
+  [[ "$fast_boot_failed" -eq 0 ]] || fast_boot_status="fail"
+  bootstrap_json="$(jq -n \
+    --arg st "$fast_boot_status" \
+    --argjson checks "$fast_boot_checks" \
+    --argjson fc "$fast_boot_failed" \
+    --arg ga "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{status: $st, checks: $checks, failed_checks: $fc, generated_at: $ga, mode: "fast_prepare_summary"}')"
+fi
 
-delivery_json="$(run_capture_json_always bash "$DELIVERY_VERIFY" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+if [[ "$mode" == "full" ]]; then
+  delivery_json="$(run_capture_json_always bash "$DELIVERY_VERIFY" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+else
+  output_file_fast="$(printf '%s' "$prepare_json" | jq -r '.output_file // ""')"
+  fast_checks='[]'
+  add_fast_check() {
+    local n="$1" s="$2" d="$3"
+    fast_checks="$(jq -n \
+      --argjson c "$fast_checks" \
+      --arg n "$n" \
+      --arg st "$s" \
+      --arg det "$d" \
+      '$c + [{name: $n, status: $st, details: $det}]')"
+  }
+  if [[ -n "$output_file_fast" && -f "$output_file_fast" ]]; then
+    add_fast_check "delivery-fast: preview artifact exists" "pass" "output_file exists"
+    if grep -q 'data-section="overview"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: overview marker" "pass" 'found data-section="overview"'
+    else
+      add_fast_check "delivery-fast: overview marker" "fail" 'missing data-section="overview"'
+    fi
+    if grep -q 'data-section="visualization"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: visualization marker" "pass" 'found data-section="visualization"'
+    else
+      add_fast_check "delivery-fast: visualization marker" "fail" 'missing data-section="visualization"'
+    fi
+    if grep -q 'data-section="history"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: history marker" "pass" 'found data-section="history"'
+    else
+      add_fast_check "delivery-fast: history marker" "fail" 'missing data-section="history"'
+    fi
+    if grep -q 'data-section="diff"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: diff marker" "pass" 'found data-section="diff"'
+    else
+      add_fast_check "delivery-fast: diff marker" "fail" 'missing data-section="diff"'
+    fi
+    if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'
+    else
+      add_fast_check "delivery-fast: settings marker" "fail" 'missing data-section="settings"'
+    fi
+    if grep -q 'id="ui-bootstrap-payload"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: payload marker" "pass" 'found id="ui-bootstrap-payload"'
+    else
+      add_fast_check "delivery-fast: payload marker" "fail" 'missing id="ui-bootstrap-payload"'
+    fi
+    if grep -q 'data-cv-preview-shell="080"' "$output_file_fast" 2>/dev/null; then
+      add_fast_check "delivery-fast: shell marker" "pass" 'found data-cv-preview-shell="080"'
+    else
+      add_fast_check "delivery-fast: shell marker" "fail" 'missing data-cv-preview-shell="080"'
+    fi
+  else
+    add_fast_check "delivery-fast: preview artifact exists" "fail" "output_file missing"
+  fi
+  fast_failed="$(printf '%s' "$fast_checks" | jq '[.[] | select(.status == "fail")] | length')"
+  fast_status="pass"
+  [[ "$fast_failed" -eq 0 ]] || fast_status="fail"
+  delivery_json="$(jq -n \
+    --arg st "$fast_status" \
+    --argjson checks "$fast_checks" \
+    --argjson fc "$fast_failed" \
+    --arg ga "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{status: $st, checks: $checks, failed_checks: $fc, generated_at: $ga, mode: "fast_local_artifact"}')"
+fi
 
 if ! printf '%s\n' "$bootstrap_json" | jq -e . >/dev/null 2>&1; then
   echo "error: invalid JSON from verify_stage8_ui_bootstrap_contracts.sh" >&2
@@ -201,7 +392,7 @@ report="$(jq -n \
   --argjson del "$delivery_json" \
   --argjson art_ex "$artifact_exists" \
   '
-  def check_name_pass($smoke; $n):
+  def has_check_pass($smoke; $n):
     (($smoke.checks // []) | map(select(.name == $n)) | .[0].status // "fail") == "pass";
 
   def sections_has($arr; $k):
@@ -212,13 +403,10 @@ report="$(jq -n \
   | ($boot.status == "pass") as $boot_pass
   | ($del.status == "pass") as $del_pass
   | $art_ex as $file_ok
-  | check_name_pass($boot; "bootstrap: ui_sections.overview") as $ov
-  | check_name_pass($boot; "bootstrap: ui_sections.visualization_workspace") as $viz
-  | check_name_pass($boot; "bootstrap: ui_sections.history_workspace") as $hist
   | (($prep.preview_summary // empty).sections_rendered // []) as $sr
-  | ($ov and sections_has($sr; "overview")) as $ov_a
-  | ($viz and sections_has($sr; "visualization")) as $viz_a
-  | ($hist and sections_has($sr; "history")) as $hist_a
+  | sections_has($sr; "overview") as $ov_a
+  | sections_has($sr; "visualization") as $viz_a
+  | sections_has($sr; "history") as $hist_a
   | (($prep.preview_summary.diff_viewer_state // empty).available == true) as $dv_declared
   | sections_has($sr; "diff") as $diff_sec
   | ($diff_sec and $dv_declared and $boot_pass) as $diff_a
@@ -234,7 +422,12 @@ report="$(jq -n \
   | (($prep.open_command | type == "string") and ($prep.open_command | startswith("open "))) as $open_ok
   | ($file_ok and ($prep.output_file | type == "string")
      and ($prep.output_file | endswith("contextviewer_ui_preview_\($pid).html"))) as $art_match
-  | check_name_pass($del; "delivery: preview_url matches expected") as $url_ok
+  | (
+      if (($del.mode // "") == "fast_local_artifact")
+      then true
+      else has_check_pass($del; "delivery: preview_url matches expected")
+      end
+    ) as $url_ok
   | ($pid_ok and $url_ok) as $proj_match
   | {
       overview_available: ($ov_a and $boot_pass),

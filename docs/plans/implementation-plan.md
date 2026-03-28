@@ -21,7 +21,7 @@ This means:
 Stage 9 — Secondary Flows And Release Readiness → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow line is active: **084** diff-viewer contract bundle complete, **085** diff-viewer preview surface complete, **086** settings/profile contract bundle complete. **Next:** **AI Task 087** (settings/profile preview surface).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain **084–089** is delivered (diff + settings surfaces, readiness gate, completion gate). **Current execution anchor:** **AI Task 090** (fast-smoke mode and runtime benchmark closure for orchestration validation).
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 

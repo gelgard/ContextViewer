@@ -134,8 +134,8 @@ Current:
 - Stage 9 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
 - **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
 - **Post-Figma production UI slices `080–083`: completed**
-- **Stage 9 secondary flows in progress:** `084–086` completed
-- **Next execution anchor:** **AI Task 087** (settings/profile preview surface)
+- **Stage 9 secondary flows:** `084–089` delivered
+- **Current execution anchor:** **AI Task 090** (fast-smoke mode implementation and benchmark closure)
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**

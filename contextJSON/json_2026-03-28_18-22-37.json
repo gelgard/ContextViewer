@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-03-28T18:22:37Z",
+    "generated_filename": "json_2026-03-28_18-22-37.json",
+    "schema_version": "1.3.0",
+    "project_internal_name": "ContextViewer",
+    "project_public_name": "ContextViewer",
+    "current_stage": "Stage 9 — Secondary Flows And Release Readiness",
+    "current_substage": "Validation runtime optimization (fast smoke mode)",
+    "current_task": "AI Task 090 — Stage 9 Validation Fast Smoke Mode Implementation",
+    "runtime_authority": "latest_timestamped_json"
+  },
+  "project": {
+    "name": "ContextViewer",
+    "stage": "Stage 9",
+    "substage": "Validation runtime optimization (fast smoke mode)",
+    "status": "stage9_active_next_090"
+  },
+  "approved_design_reference": {
+    "import_record_path": "docs/design/approved_figma_artifact.md",
+    "primary_artifact_package": "docs/design/artifacts/task076/",
+    "native_figma_workspace_path": "docs/design/artifacts/task076/raw/ContextViewer.fig",
+    "import_sync_task": "078",
+    "import_recorded_date": "2026-03-27",
+    "evidence_rule": "uploaded_workspace_artifacts_primary_external_urls_optional",
+    "runtime_truth_note": "Latest valid contextJSON and JSON-backed contracts remain authoritative for computed UI state; design docs are visual authority only."
+  },
+  "system": {
+    "summary": "Stage 9 secondary-flow chain is delivered through AI Task 089. Active execution anchor is AI Task 090 for fast-smoke runtime optimization and benchmark closure evidence."
+  },
+  "progress": {
+    "implemented": [
+      "Stage 1 Foundation completed",
+      "Stage 2 Data Layer completed",
+      "Stage 3 Ingestion completed",
+      "Stage 4 Interpretation completed",
+      "Stage 5 Dashboard Core completed",
+      "Stage 6 Visualization completed",
+      "Stage 7 History Layer completed",
+      "Stage 8 completed through AI Task 083",
+      "AI Task 084 diff-viewer contract bundle completed",
+      "AI Task 085 diff-viewer preview surface completed",
+      "AI Task 086 settings/profile contract bundle completed",
+      "AI Task 087 settings/profile preview surface completed",
+      "AI Task 088 secondary-flows readiness gate completed",
+      "AI Task 089 completion gate and transition-readiness report completed"
+    ],
+    "in_progress": [
+      "AI Task 090 fast smoke mode implementation and validation benchmark closure"
+    ],
+    "next": [
+      "Finalize fast-vs-full runtime benchmark evidence for Stage 9 gates",
+      "Close AI Task 090 and re-run completion gate in fast mode"
+    ]
+  },
+  "roadmap": [
+    { "stage": "Stage 1", "name": "Foundation", "status": "completed" },
+    { "stage": "Stage 2", "name": "Data Layer", "status": "completed" },
+    { "stage": "Stage 3", "name": "Ingestion Engine", "status": "completed" },
+    { "stage": "Stage 4", "name": "Interpretation Layer", "status": "completed" },
+    { "stage": "Stage 5", "name": "Dashboard Core", "status": "completed" },
+    { "stage": "Stage 6", "name": "Visualization", "status": "completed" },
+    { "stage": "Stage 7", "name": "History Layer", "status": "completed" },
+    { "stage": "Stage 8", "name": "Polish", "status": "completed" },
+    { "stage": "Stage 9", "name": "Secondary Flows And Release Readiness", "status": "active" }
+  ],
+  "changes_since_previous": [
+    "Stage 9 anchors synchronized from task 087 to task 090 across recovery and plan layers.",
+    "Tasks 087, 088, and 089 are recorded as completed in architecture state.",
+    "Fast-smoke runtime optimization task 090 is now the active execution anchor."
+  ],
+  "current_task": {
+    "id": "090",
+    "name": "Stage 9 Validation Fast Smoke Mode Implementation",
+    "stage": "Stage 9 — Secondary Flows And Release Readiness",
+    "substage": "Validation Runtime Optimization",
+    "status": "active"
+  },
+  "next_tasks": [
+    { "id": "090", "name": "Stage 9 Validation Fast Smoke Mode Implementation" }
+  ],
+  "project_plan": {
+    "current_stage": "Stage 9 — Secondary Flows And Release Readiness",
+    "current_substage": "Validation runtime optimization (fast smoke mode)",
+    "state": "active",
+    "next_stage": null,
+    "preserved_checkpoint": "validated Stage 8 preview / demo handoff through AI Task 061",
+    "post_figma_production_ui": {
+      "status": "completed",
+      "completed_slices": ["080", "081", "082", "083"]
+    },
+    "stage9_secondary_flows": {
+      "status": "active",
+      "completed_slices": ["084", "085", "086", "087", "088", "089"],
+      "planned_slices": ["090"],
+      "runtime_truth_rule": "json_contracts_remain_authoritative",
+      "design_truth_rule": "approved_figma_artifact_and_task076_package"
+    }
+  },
+  "ai_task_status": {
+    "last_completed_design_branch_task": "089",
+    "completed_in_stage_8": ["053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "073", "066", "074", "075", "076", "077", "078", "079", "080", "081", "082", "083"],
+    "completed_in_stage_9": ["084", "085", "086", "087", "088", "089"],
+    "next_task": "090",
+    "next_task_status": "active"
+  },
+  "traceability": {
+    "stage_8_status": "completed",
+    "stage_9_status": "in_progress",
+    "requirement_coverage": {
+      "PG-RT-001": "implemented_extended_stage9",
+      "PG-RT-002": "implemented_extended_stage9",
+      "PG-OV-001": "implemented",
+      "PG-AR-001": "implemented",
+      "PG-AR-002": "implemented",
+      "PG-HI-001": "implemented",
+      "PG-HI-002": "implemented",
+      "PG-PL-001": "implemented",
+      "PG-UX-001": "implemented_extended_stage9",
+      "PG-EX-001": "implemented_extended_stage9"
+    },
+    "current_anchor_task": "AI Task 090 — Stage 9 Validation Fast Smoke Mode Implementation"
+  },
+  "recovery_status": {
+    "architecture_synced": true,
+    "latest_snapshot_authoritative": true,
+    "execution_mode": "active_through_numbered_ai_tasks",
+    "context_restore_policy": {
+      "default_command": "обнови контекст",
+      "full_restore_command": "обнови полный контекст",
+      "sync_state": "stage9_084_089_completed_and_090_anchor_synchronized"
+    }
+  },
+  "response_rules": {
+    "cursor_prompts_language": "EN",
+    "cursor_prompt_requires_copy_ready_code_block": true,
+    "cursor_prompt_scope": "implementation_only_no_local_orchestration_duplication",
+    "local_agent_scope": "planning_architecture_validation_changed_files_next_steps",
+    "assistant_must_run_git_status_short_during_validation": true,
+    "include_commit_text_after_accepted_task_completion": true,
+    "fast_restore_format": "one_line",
+    "full_restore_format": "8_section",
+    "next_ai_task_requires_physical_task_file": true,
+    "ui_tasks_require_visual_manual_tests": true,
+    "figma_prompt_tasks_require_exact_prompt_blocks": true,
+    "figma_validation_tasks_require_exact_returned_artifacts": true
+  },
+  "summaries": {
+    "management": "Stage 9 remains active under AI Task 090 optimization scope.",
+    "customer_status": "Core UI surfaces including diff and settings are integrated and stable; optimization of validation runtime is in progress.",
+    "last_iteration": "Architecture sync aligned recovery/plans/context to AI Task 090 anchor."
+  },
+  "generated_at": "2026-03-28T18:22:37Z"
+}

@@ -41,6 +41,23 @@ ARCHITECTURE RULES
    - first run the highest-level stage gate script;
    - run underlying child smoke scripts only for failure localization, diagnostics, or explicit user request;
    - avoid duplicate re-runs of unchanged heavy smoke scripts in one validation cycle.
+16c1. Validation profile lock is mandatory:
+   - `fast` mode is the required default for routine acceptance validation;
+   - `full` mode is allowed only when:
+     - explicitly requested by the user, or
+     - `fast` mode failed and deeper diagnostics are required;
+   - proactive `full` runs as default behavior are prohibited.
+16d. Anti-hang validation policy is mandatory:
+   - do not run heavy UI smoke scripts concurrently on the same local port;
+   - if concurrent execution is unavoidable, each process must use a distinct port;
+   - heavy UI validations are sequential by default unless explicitly split for diagnostics.
+16d1. Interrupted-run cleanup is mandatory:
+   - before each heavy validation cycle, verify and terminate stale validation/server processes from prior aborted runs;
+   - after user interruption, no new heavy run may start until cleanup + process-state verification is complete.
+16e. Timeout/diagnostic policy for heavy validations:
+   - long-running smoke/gate commands must be executed with bounded timeout guidance;
+   - on environments without `timeout`, use a python timeout wrapper;
+   - timeout events must be treated as diagnostic failures and followed by targeted reruns.
 17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
 18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
 19. The validated Stage 8 preview / handoff state is a preserved checkpoint and must not be replaced by the Figma design branch.
@@ -112,3 +129,6 @@ ARCHITECTURE RULES
    - `BLOCKED: Context restore policy violation.`
    - `REQUIRED FIX: Run <Fast|Full> restore and resync required files.`
 50. During validation, the assistant must always run `git status --short` itself and use it to generate changed-files scope review, even if the user did not provide that command output.
+51. Every assistant response must start with a project/session marker line:
+   - `ContextViewer-1 | <stage-or-topic>`
+   - marker is mandatory to prevent cross-project chat confusion.

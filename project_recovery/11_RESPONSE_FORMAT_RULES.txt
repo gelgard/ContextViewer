@@ -1,5 +1,9 @@
 RESPONSE FORMAT RULES
 
+- First line of every assistant response must include a project/session marker:
+  - format: `ContextViewer-1 | <stage-or-topic>`
+  - mandatory for all responses to prevent confusion across multiple active project chats
+- If project context changes, assistant must update the marker in the very next response
 - Always follow AI Task structure
 - Always include terminal testing instructions when terminal testing is involved
 - Always include:
@@ -34,6 +38,20 @@ RESPONSE FORMAT RULES
     - failure localization is needed
     - user explicitly requests full decomposition
   - do not repeat expensive identical smoke runs in the same validation cycle without code changes
+- Validation profile lock (mandatory):
+  - use `fast` mode for routine acceptance checks by default
+  - use `full` mode only if:
+    - user explicitly requested `full`, or
+    - `fast` failed and deeper diagnostics are required
+  - do not launch `full` preemptively as a default validation route
+- Anti-hang test-instruction policy (mandatory):
+  - instructions must avoid parallel heavy UI smoke runs on the same port
+  - if parallel runs are required, each command set must use a unique port
+  - heavy validation commands should be sequential by default
+  - for potentially long commands, include bounded-time execution guidance and fallback diagnostics
+  - if a command appears stalled, instructions must include safe stop + diagnostic rerun steps
+  - before any new heavy run, assistant must verify and clean stale processes from interrupted prior runs
+  - after user interruption, assistant must report process-state check result before restarting heavy validation
 - If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
 - If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`

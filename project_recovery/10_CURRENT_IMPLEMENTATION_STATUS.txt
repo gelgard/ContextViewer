@@ -112,12 +112,15 @@ STATUS:
 - AI Task 084 completed: Stage 9 diff-viewer contract bundle delivered (contract-backed, empty/single/comparable-safe, no markdown-derived runtime state)
 - AI Task 085 completed: Stage 9 diff-viewer preview surface delivered (`render_profile=085_diff_viewer_preview`), integrated into delivery and readiness smokes
 - AI Task 086 completed: Stage 9 settings/profile contract bundle delivered (identity/integration/runtime metadata only, no fake preferences/writable settings)
-- AI Task 087 created: Stage 9 settings/profile preview surface (next)
+- AI Task 087 completed: Stage 9 settings/profile preview surface delivered (`settings-workspace`, readiness/handoff integration)
+- AI Task 088 completed: Stage 9 secondary-flows readiness gate delivered (`verify_stage9_secondary_flows_readiness_gate.sh`)
+- AI Task 089 completed: Stage 9 completion gate and transition-readiness report delivered
+- AI Task 090 active: Stage 9 fast-smoke mode implementation for orchestration verifiers (`--mode fast|full`, fast-by-default)
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Run AI Task 087 — Stage 9 settings/profile preview surface
+Complete AI Task 090 — validate fast-vs-full runtime benchmark and closure evidence
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

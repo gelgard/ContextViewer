@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 089: Stage 9 completion gate smoke (stdout = one JSON report).
+# AI Task 090: --mode fast|full (default fast) — forwarded to get_stage9_completion_gate_report.sh.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,7 +21,11 @@ Required:
   --project-id <id>   non-negative integer; full stack must yield ready_for_stage_transition
 
 Optional:
+  --mode <fast|full>            fast (default); passed to get_stage9_completion_gate_report.sh
   --port <n>, --output-dir <path>, --invalid-project-id <value>  (passed to report; defaults match report script)
+  env STAGE9_GATE_TIMEOUT_S     child timeout seconds (default 420, minimum 30)
+
+Invalid --mode: stderr + exit 2.
 
 Invalid top-level --project-id (not a non-negative integer):
   stdout only: JSON fail, failed_checks 1, check project_id; exit 1.
@@ -38,12 +43,22 @@ project_id=""
 port="8787"
 output_dir="/tmp/contextviewer_ui_preview"
 invalid_id="abc"
+mode="fast"
+child_timeout_s="${STAGE9_GATE_TIMEOUT_S:-420}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help)
       usage
       exit 0
+      ;;
+    --mode)
+      if [[ -z "${2:-}" ]]; then
+        echo "error: --mode requires a value" >&2
+        exit 2
+      fi
+      mode="$2"
+      shift 2
       ;;
     --project-id)
       if [[ -z "${2:-}" ]]; then
@@ -90,8 +105,17 @@ if [[ -z "$project_id" ]]; then
   exit 2
 fi
 
+if [[ "$mode" != "fast" && "$mode" != "full" ]]; then
+  echo "error: --mode must be fast or full, got: $mode" >&2
+  exit 2
+fi
+
 if [[ ! "$port" =~ ^[0-9]+$ ]] || [[ "$port" -lt 1 ]]; then
   echo "error: --port must be an integer >= 1, got: $port" >&2
+  exit 1
+fi
+if [[ ! "$child_timeout_s" =~ ^[0-9]+$ ]] || [[ "$child_timeout_s" -lt 30 ]]; then
+  echo "error: STAGE9_GATE_TIMEOUT_S must be an integer >= 30, got: $child_timeout_s" >&2
   exit 1
 fi
 
@@ -138,7 +162,34 @@ fi
 # --- positive: full completion report ---
 errf="$(mktemp)"
 set +e
-rep_out="$(bash "$REPORT" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf")"
+rep_out="$(python3 - "$child_timeout_s" bash "$REPORT" --mode "$mode" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf" <<'PY'
+import subprocess
+import sys
+
+timeout_s = int(sys.argv[1])
+cmd = sys.argv[2:]
+try:
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
+    if proc.stdout:
+        sys.stdout.write(proc.stdout)
+    if proc.stderr:
+        sys.stderr.write(proc.stderr)
+    sys.exit(proc.returncode)
+except subprocess.TimeoutExpired as exc:
+    out = exc.stdout or ""
+    err = exc.stderr or ""
+    if isinstance(out, bytes):
+        out = out.decode("utf-8", errors="replace")
+    if isinstance(err, bytes):
+        err = err.decode("utf-8", errors="replace")
+    if out:
+        sys.stdout.write(out)
+    if err:
+        sys.stderr.write(err)
+    sys.stderr.write(f"error: timeout after {timeout_s}s: {' '.join(cmd)}\n")
+    sys.exit(124)
+PY
+)"
 rep_rc=$?
 set -e
 rm -f "$errf"
@@ -241,7 +292,8 @@ run_neg_exit() {
 }
 
 run_neg_exit "negative: get_stage9_completion_gate_report missing --project-id" 2 bash "$REPORT"
-run_neg_exit "negative: get_stage9_completion_gate_report invalid --project-id" 1 bash "$REPORT" --project-id "$invalid_id" --port "$port" --output-dir "$output_dir"
+run_neg_exit "negative: get_stage9_completion_gate_report invalid --project-id" 1 bash "$REPORT" --mode "$mode" --project-id "$invalid_id" --port "$port" --output-dir "$output_dir"
+run_neg_exit "negative: get_stage9_completion_gate_report invalid --mode" 2 bash "$REPORT" --mode bogus --project-id "$project_id" --port "$port" --output-dir "$output_dir"
 
 failed_checks="$(echo "$checks" | jq '[.[] | select(.status == "fail")] | length')"
 overall="pass"
