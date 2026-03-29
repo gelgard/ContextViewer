@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Closure ready after validation runtime stabilization
+Stage 9 transition handoff packaged (AI Task 093)
 
 STATUS:
 - Architecture synced with latest rules
@@ -118,6 +118,7 @@ STATUS:
 - AI Task 090 delivered the first fast/full execution split for Stage 9 orchestration verifiers
 - AI Task 091 completed: validation runtime stability + deterministic benchmark harness
 - AI Task 092 completed: static offline fixture pack created under `code/test_fixtures/` for hygiene/completion-report/benchmark outputs
+- AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — one JSON transition artifact (completion gate fast+diagnostic full, completion verifier, benchmark, latest contextJSON filename); `handoff_ready` gates `next_task_readiness.ready_for_next_numbered_ai_task`
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -133,7 +134,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Create the next numbered AI task and continue Stage 9 from the now-closed 091/092 baseline
+Open the next numbered AI task using the AI Task 093 transition handoff bundle as the recorded pre-next-task evidence package (closure baseline remains 091/092 validation policy + 093 bundle)
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements
