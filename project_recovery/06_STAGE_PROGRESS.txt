@@ -152,7 +152,7 @@ Stage 8 — **post-Figma production UI** (current):
 - **Next action:** Stage 9 secondary-flow execution
 
 ### Stage 9 — Secondary Flows And Release Readiness
-Status: active
+Status: completed
 
 Current execution state:
 - AI Task 084 completed: diff-viewer contract bundle foundation (`code/diff/get_diff_viewer_contract_bundle.sh`, `verify_stage9_diff_viewer_contracts.sh`)
@@ -168,6 +168,7 @@ Current execution state:
 - AI Task 095 completed: transition handoff **acceptance-artifact-primary** — `get_stage9_transition_handoff_bundle.sh` gates `handoff_ready` only on `get_stage9_acceptance_artifact.sh`; benchmark and `contextJSON` filename are never blocking; optional `STAGE9_HANDOFF_RUN_BENCHMARK=1` for diagnostic timings only
 - AI Task 096 completed: Stage 9 **release-readiness bundle** (`get_stage9_release_readiness_bundle.sh`, `verify_stage9_release_readiness_bundle.sh`) — primary authority is the **transition handoff bundle** only; ordinary path does not run benchmark or heavy completion chains; `contextJSON` metadata remains non-authoritative
 - AI Task 097 completed: Stage 9 **stage-transition package** (`get_stage9_stage_transition_package.sh`, `verify_stage9_stage_transition_package.sh`) — primary authority is the **release-readiness bundle** only; ordinary path does not run benchmark or older layers; `contextJSON` remains non-authoritative
+- AI Task 098 completed: **Stage 10 execution-entry bridge** (`get_stage10_execution_entry_bundle.sh`, `verify_stage10_execution_entry_bundle.sh`) — primary authority is the **Stage 9 stage-transition package** only; opens Stage 10 lightweight entry path (see Stage 10 section)
 - Validation-architecture migration completed at the OS/recovery/planning layer:
   - lightweight validation model is now the default project operating model
   - one task = one primary acceptance gate
@@ -176,13 +177,22 @@ Current execution state:
   - recursive orchestration is classified as architecture defect
   - legacy heavy validators remain diagnostic-only until replaced by artifact-first acceptance flows
 
-Stage 9 — **secondary-flow continuity** (current):
+Stage 9 — **secondary-flow continuity** (closure summary):
 - **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
 - **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
-- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`, `093`, `095`, `096`, `097`
+- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`, `093`, `095`, `096`, `097`, `098` (098 is the Stage 10 entry gate from Stage 9 transition authority)
 - **Pre-next-task handoff artifact (093 + 095):** use `get_stage9_transition_handoff_bundle.sh` (+ `verify_stage9_transition_handoff_bundle.sh`); ordinary readiness is **`get_stage9_acceptance_artifact.sh`**-backed per `095`
 - **Release-readiness bundle (096):** `get_stage9_release_readiness_bundle.sh` (+ `verify_stage9_release_readiness_bundle.sh`) — derives **`release_ready`** from **`handoff_ready`** via handoff bundle only
 - **Stage-transition package (097):** `get_stage9_stage_transition_package.sh` (+ `verify_stage9_stage_transition_package.sh`) — derives **`stage_transition_ready`** from **`release_ready`** via release bundle only
 - **Validation operating model:** lightweight / artifact-first / fast-authoritative
 - **Legacy heavy validation paths:** diagnostic-only; they must not be used as ordinary task-closure defaults
-- **Current execution anchor:** closed through **AI Task 097** (final Stage 9 transition package is release-authority-backed); next action: open the next numbered AI task or stage transition under the lightweight validation model
+
+### Stage 10 — Execution Entry
+Status: active
+
+Current execution state:
+- AI Task 098 completed: Stage 10 **execution-entry bundle** (`code/ui/get_stage10_execution_entry_bundle.sh`, `code/ui/verify_stage10_execution_entry_bundle.sh`) — primary authority is **`get_stage9_stage_transition_package.sh`** only; ordinary path does not run benchmark or reconstruct lower layers; `contextJSON` metadata remains non-authoritative
+
+Stage 10 — **execution entry** (current):
+- **Execution-entry bundle (098):** `get_stage10_execution_entry_bundle.sh` (+ `verify_stage10_execution_entry_bundle.sh`) — derives **`stage10_entry_ready`** from **`stage_transition_ready`** via Stage 9 transition package only
+- **Current execution anchor:** open on **AI Task 098** baseline; next action: continue Stage 10 work under the lightweight validation model using the execution-entry bundle as the recorded entry evidence where applicable
