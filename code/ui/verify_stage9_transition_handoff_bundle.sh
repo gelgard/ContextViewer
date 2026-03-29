@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 093: Stage 9 transition handoff bundle — JSON shape + negative CLI smoke (stdout = one JSON report).
+# AI Task 095: Shape matches acceptance-artifact-primary handoff; benchmark is optional diagnostic only.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,6 +9,9 @@ BUNDLE="${SCRIPT_DIR}/get_stage9_transition_handoff_bundle.sh"
 usage() {
   cat <<'USAGE'
 verify_stage9_transition_handoff_bundle.sh — validate Stage 9 transition handoff bundle contract
+
+AI Task 095 — Handoff is driven by get_stage9_acceptance_artifact.sh (embedded in evidence).
+benchmark_timings and optional_diagnostics never gate handoff_ready.
 
 Runs get_stage9_transition_handoff_bundle.sh and checks top-level JSON shape and readiness alignment.
 Prints exactly one JSON object:
@@ -26,7 +30,7 @@ Invalid top-level --project-id: stdout only JSON fail + exit 1.
 Invalid --port: stderr + exit 1.
 Missing --project-id: stderr + exit 2.
 
-Dependencies: jq; bundle children require python3, psql, etc.
+Dependencies: jq; bundle children python3, psql, etc.
 
 Options:
   -h, --help     Show this help
@@ -105,25 +109,32 @@ if printf '%s' "$bundle_out" | jq -e '
   and (.generated_at | type == "string")
   and (.status | type == "string")
   and (.closure_evidence_summary | type == "object")
+  and (.closure_evidence_summary.acceptance_authority == "stage9_acceptance_artifact_v1")
+  and (.closure_evidence_summary | has("acceptance_artifact"))
+  and (.closure_evidence_summary | has("optional_benchmark_diagnostic"))
+  and (.closure_evidence_summary | has("external_export_informational"))
+  and (.closure_evidence_summary.external_export_informational.is_handoff_authority == false)
   and (.benchmark_timings | type == "object")
+  and (.benchmark_timings.diagnostic_only == true)
+  and (.benchmark_timings.does_not_gate_handoff == true)
+  and (.benchmark_timings | has("included"))
   and (.latest_runtime_snapshot | type == "object")
+  and (.latest_runtime_snapshot.is_handoff_authority == false)
   and (.next_task_readiness | type == "object")
   and (.next_task_readiness | has("ready_for_next_numbered_ai_task"))
   and (.next_task_readiness.blockers | type == "array")
   and (.evidence | type == "object")
-  and (.evidence | has("completion_gate_report_fast"))
-  and (.evidence | has("completion_gate_report_full_diagnostic"))
-  and (.evidence | has("verify_stage9_completion_gate"))
-  and (.evidence | has("run_stage9_validation_runtime_benchmark"))
+  and (.evidence | has("stage9_acceptance_artifact"))
+  and (.evidence.stage9_acceptance_artifact | has("exit_code"))
+  and (.evidence.stage9_acceptance_artifact | has("report"))
+  and (.evidence | has("optional_diagnostics"))
+  and (.evidence.optional_diagnostics | has("run_stage9_validation_runtime_benchmark"))
   and (.consistency_checks | type == "object")
   and (.diagnostics | type == "object")
-  and (.benchmark_timings | has("fast_seconds"))
-  and (.benchmark_timings | has("full_seconds"))
-  and (.benchmark_timings | has("speedup_ratio"))
   and (.latest_runtime_snapshot | has("file_name"))
 ' >/dev/null 2>&1; then
   shape_ok="true"
-  add_check "handoff: top-level contract shape" "pass" "required keys and types"
+  add_check "handoff: top-level contract shape" "pass" "required keys and types (095)"
 else
   add_check "handoff: top-level contract shape" "fail" "missing keys or wrong types"
 fi
@@ -158,6 +169,19 @@ if [[ "$shape_ok" == "true" ]]; then
   fi
 else
   add_check "handoff: transition ready (live project)" "fail" "skipped"
+fi
+
+if [[ "$shape_ok" == "true" ]]; then
+  if printf '%s' "$bundle_out" | jq -e '
+    (.evidence.stage9_acceptance_artifact.report | type == "object")
+    and (.evidence.stage9_acceptance_artifact.report.schema_version == "stage9_acceptance_artifact_v1")
+  ' >/dev/null 2>&1; then
+    add_check "handoff: embedded acceptance artifact report" "pass" "stage9_acceptance_artifact_v1 object"
+  else
+    add_check "handoff: embedded acceptance artifact report" "fail" "missing or wrong schema in evidence"
+  fi
+else
+  add_check "handoff: embedded acceptance artifact report" "fail" "skipped"
 fi
 
 run_neg() {

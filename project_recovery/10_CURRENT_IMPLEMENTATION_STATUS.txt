@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Lightweight validation model active after Stage 9 transition handoff packaging (AI Task 093 complete)
+Lightweight validation model — Stage 9 transition handoff is acceptance-artifact-primary (AI Task 095 complete)
 
 STATUS:
 - Architecture synced with latest rules
@@ -118,7 +118,8 @@ STATUS:
 - AI Task 090 delivered the first fast/full execution split for Stage 9 orchestration verifiers
 - AI Task 091 completed: validation runtime stability + deterministic benchmark harness
 - AI Task 092 completed: static offline fixture pack created under `code/test_fixtures/` for hygiene/completion-report/benchmark outputs
-- AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — one validation JSON transition artifact (completion gate fast+diagnostic full, completion verifier, benchmark, latest external-export filename for reference only); `handoff_ready` gates `next_task_readiness.ready_for_next_numbered_ai_task`
+- AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — transition JSON artifact baseline
+- AI Task 095 completed: handoff bundle gates `handoff_ready` only on `get_stage9_acceptance_artifact.sh` (embedded report); benchmark not in ordinary path; `contextJSON/*` informational only; optional `STAGE9_HANDOFF_RUN_BENCHMARK=1` for diagnostic timings
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -145,7 +146,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Open the next numbered AI task using the AI Task 093 transition handoff bundle as the recorded pre-next-task evidence package, but only under the lightweight validation model:
+Open the next numbered AI task using the **AI Task 095** transition handoff bundle (`get_stage9_acceptance_artifact`-backed `handoff_ready`) as the recorded pre-next-task evidence baseline, only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack

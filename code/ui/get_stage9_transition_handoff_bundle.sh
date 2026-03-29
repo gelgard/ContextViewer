@@ -1,40 +1,43 @@
 #!/usr/bin/env bash
 # AI Task 093: Stage 9 transition handoff — single JSON bundle (read-only orchestration; no markdown runtime).
+# AI Task 095: Primary ordinary handoff authority = get_stage9_acceptance_artifact.sh (lightweight); benchmark
+#   and contextJSON are never gating; optional benchmark diagnostic only via STAGE9_HANDOFF_RUN_BENCHMARK=1.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CTX_DIR="$REPO_ROOT/contextJSON"
-REPORT="${SCRIPT_DIR}/get_stage9_completion_gate_report.sh"
-VERIFY="${SCRIPT_DIR}/verify_stage9_completion_gate.sh"
+ACCEPTANCE="${SCRIPT_DIR}/get_stage9_acceptance_artifact.sh"
 BENCH="${SCRIPT_DIR}/run_stage9_validation_runtime_benchmark.sh"
 
 usage() {
   cat <<'USAGE'
 get_stage9_transition_handoff_bundle.sh — Stage 9 pre-next-task handoff bundle (one JSON object)
 
-Composes existing machine-readable evidence only:
-  get_stage9_completion_gate_report.sh (--mode fast acceptance; --mode full diagnostic)
-  verify_stage9_completion_gate.sh --mode fast
-  run_stage9_validation_runtime_benchmark.sh
-  latest contextJSON/json_YYYY-MM-DD_HH-MM-SS.json filename under repo contextJSON/
+AI Task 095 — Ordinary handoff readiness is driven only by get_stage9_acceptance_artifact.sh (fast
+completion evidence embedded in the artifact). No benchmark and no contextJSON filename are required
+for handoff_ready.
+
+Optional diagnostics (never gating):
+  env STAGE9_HANDOFF_RUN_BENCHMARK=1  run run_stage9_validation_runtime_benchmark.sh; included under
+                                      benchmark_timings + evidence with diagnostic_only labels
 
 Stdout: one JSON object with project_id, generated_at, status, closure_evidence_summary,
-  benchmark_timings, latest_runtime_snapshot, next_task_readiness, evidence (full child payloads),
-  consistency_checks, diagnostics (full-mode completion metadata).
+  benchmark_timings (diagnostic metadata; may be skipped), latest_runtime_snapshot (informational
+  external export only), next_task_readiness, evidence, consistency_checks, diagnostics.
 
-  status                   handoff_ready | not_ready
-  next_task_readiness.ready true only when fast acceptance + verify + benchmark pass and
-                             a valid latest contextJSON filename is present
+  status             handoff_ready | not_ready
+  next_task_readiness.ready_for_next_numbered_ai_task  true only when acceptance artifact indicates
+                             closure (exit 0, closure_ready, shape valid, project_id aligned)
 
-Fast acceptance is authoritative; full completion report is diagnostic only (does not gate readiness).
+contextJSON/* path/filename when present is informational only (is_handoff_authority: false).
 
 Required:
   --project-id <id>   non-negative integer
 
 Optional:
-  --port <n>, --output-dir <path>, --invalid-project-id <value>  forwarded to children (defaults match Stage 9 gates)
-  env STAGE9_GATE_TIMEOUT_S   per-child timeout for report/verify (default 420, min 30); benchmark uses same
+  --port <n>, --output-dir <path>, --invalid-project-id <value>  forwarded to acceptance (defaults match Stage 9 gates)
+  env STAGE9_GATE_TIMEOUT_S   child timeout for acceptance (default 420, min 30); benchmark uses 2x+30 when enabled
 
 Exit 0 when status is handoff_ready. Exit 3 when JSON is complete but not ready.
 Exit 2 missing/invalid CLI. Exit 1 invalid --project-id format. Exit 127 no jq.
@@ -50,6 +53,7 @@ output_dir="/tmp/contextviewer_ui_preview"
 invalid_id="abc"
 child_timeout_s="${STAGE9_GATE_TIMEOUT_S:-420}"
 benchmark_timeout_s=""
+run_bench="${STAGE9_HANDOFF_RUN_BENCHMARK:-0}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -92,9 +96,10 @@ fi
 
 command -v jq >/dev/null 2>&1 || { echo "error: jq is required" >&2; exit 127; }
 
-for s in "$REPORT" "$VERIFY" "$BENCH"; do
-  [[ -f "$s" && -x "$s" ]] || { echo "error: missing or not executable: $s" >&2; exit 1; }
-done
+[[ -f "$ACCEPTANCE" && -x "$ACCEPTANCE" ]] || { echo "error: missing or not executable: $ACCEPTANCE" >&2; exit 1; }
+if [[ "$run_bench" == "1" ]]; then
+  [[ -f "$BENCH" && -x "$BENCH" ]] || { echo "error: STAGE9_HANDOFF_RUN_BENCHMARK=1 but missing or not executable: $BENCH" >&2; exit 1; }
+fi
 
 run_bounded_timeout() {
   local timeout_s="$1"
@@ -157,15 +162,11 @@ if [[ -n "$latest_ctx_name" ]] && [[ "$latest_ctx_name" =~ ^json_[0-9]{4}-[0-9]{
 fi
 
 set +e
-rep_fast_out="$(run_bounded bash "$REPORT" --mode fast --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
-rep_fast_rc=$?
+art_out="$(run_bounded bash "$ACCEPTANCE" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+art_rc=$?
 
-rep_full_out="$(run_bounded bash "$REPORT" --mode full --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
-rep_full_rc=$?
-
-ver_out="$(run_bounded bash "$VERIFY" --mode fast --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
-ver_rc=$?
-
+bench_out=""
+bench_rc=0
 bench_fast_port="$(( port + 8 ))"
 bench_full_port="$(( port + 9 ))"
 if [[ "$bench_fast_port" -gt 65535 || "$bench_full_port" -gt 65535 ]]; then
@@ -173,53 +174,53 @@ if [[ "$bench_fast_port" -gt 65535 || "$bench_full_port" -gt 65535 ]]; then
   bench_full_port=8796
 fi
 
-bench_out="$(run_bounded_timeout "$benchmark_timeout_s" env STAGE9_GATE_TIMEOUT_S="$child_timeout_s" bash "$BENCH" --project-id "$project_id" --fast-port "$bench_fast_port" --full-port "$bench_full_port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
-bench_rc=$?
+if [[ "$run_bench" == "1" ]]; then
+  bench_out="$(run_bounded_timeout "$benchmark_timeout_s" env STAGE9_GATE_TIMEOUT_S="$child_timeout_s" bash "$BENCH" --project-id "$project_id" --fast-port "$bench_fast_port" --full-port "$bench_full_port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+  bench_rc=$?
+fi
 set -e
 
-rep_fast_json="$(safe_json "$rep_fast_out")"
-rep_full_json="$(safe_json "$rep_full_out")"
-ver_json="$(safe_json "$ver_out")"
-bench_json="$(safe_json "$bench_out")"
-
-rep_fast_st="$(printf '%s' "$rep_fast_json" | jq -r 'if type == "object" then (.status // "not_ready") else "not_ready" end')"
-rep_full_st="$(printf '%s' "$rep_full_json" | jq -r 'if type == "object" then (.status // "not_ready") else "not_ready" end')"
-ver_st="$(printf '%s' "$ver_json" | jq -r 'if type == "object" then (.status // "fail") else "fail" end')"
-bench_st="$(printf '%s' "$bench_json" | jq -r 'if type == "object" then (.status // "fail") else "fail" end')"
-
-pid_rep_fast="$(printf '%s' "$rep_fast_json" | jq -r 'if type == "object" and (.project_id | type == "number") then .project_id else "null" end')"
-pid_rep_full="$(printf '%s' "$rep_full_json" | jq -r 'if type == "object" and (.project_id | type == "number") then .project_id else "null" end')"
-pid_bench="$(printf '%s' "$bench_json" | jq -r 'if type == "object" and (.project_id | type == "number") then .project_id else "null" end')"
-
-pid_match_fast="true"
-if [[ "$pid_rep_fast" != "null" ]] && [[ "$pid_rep_fast" != "$project_id" ]]; then
-  pid_match_fast="false"
+art_json="$(safe_json "$art_out")"
+bench_json="null"
+if [[ "$run_bench" == "1" ]]; then
+  bench_json="$(safe_json "$bench_out")"
 fi
-pid_match_full="true"
-if [[ "$pid_rep_full" != "null" ]] && [[ "$pid_rep_full" != "$project_id" ]]; then
-  pid_match_full="false"
-fi
-pid_match_bench="true"
-if [[ "$pid_bench" != "null" ]] && [[ "$pid_bench" != "$project_id" ]]; then
-  pid_match_bench="false"
+
+shape_inner="$(printf '%s' "$art_json" | jq -e '
+  type == "object"
+  and (.schema_version == "stage9_acceptance_artifact_v1")
+  and (.project_id | type == "number")
+  and (.generated_at | type == "string")
+  and (.status | type == "string")
+  and (.closure_ready | type == "boolean")
+  and (.acceptance_authority == "fast_completion_report_embed")
+  and ((.completion_report | type == "object") or (.hygiene_block != null) or (.completion_report_parse_error != null))
+  and (.external_export_metadata | type == "object")
+  and (.external_export_metadata.is_acceptance_authority == false)
+  and (.external_export_metadata.purpose == "viewer_export_informational_only")
+' >/dev/null 2>&1 && echo true || echo false)"
+
+closure_align="$(printf '%s' "$art_json" | jq -e '
+  (.closure_ready == true and .status == "ready_for_stage_transition")
+  or (.closure_ready == false and .status == "not_ready")
+' >/dev/null 2>&1 && echo true || echo false)"
+
+pid_art="$(printf '%s' "$art_json" | jq -r 'if type == "object" and (.project_id | type == "number") then .project_id else "null" end')"
+pid_match_art="true"
+if [[ "$pid_art" != "null" ]] && [[ "$pid_art" != "$project_id" ]]; then
+  pid_match_art="false"
 fi
 
 readiness="false"
 blockers='[]'
-if [[ "$rep_fast_rc" -ne 0 || "$rep_fast_st" != "ready_for_stage_transition" ]]; then
-  blockers="$(jq -n --argjson b "$blockers" '$b + ["completion_gate_fast_not_accepted"]')"
-fi
-if [[ "$ver_rc" -ne 0 || "$ver_st" != "pass" ]]; then
-  blockers="$(jq -n --argjson b "$blockers" '$b + ["verify_stage9_completion_gate_not_pass"]')"
-fi
-if [[ "$bench_rc" -ne 0 || "$bench_st" != "pass" ]]; then
-  blockers="$(jq -n --argjson b "$blockers" '$b + ["stage9_validation_benchmark_not_pass"]')"
-fi
-if [[ "$ctx_name_ok" != "true" ]]; then
-  blockers="$(jq -n --argjson b "$blockers" '$b + ["missing_or_invalid_latest_contextjson_filename"]')"
-fi
-if [[ "$pid_match_fast" != true || "$pid_match_bench" != true ]]; then
-  blockers="$(jq -n --argjson b "$blockers" '$b + ["evidence_project_id_mismatch"]')"
+if ! printf '%s' "$art_out" | jq -e . >/dev/null 2>&1; then
+  blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_stdout_not_json"]')"
+else
+  [[ "$shape_inner" == "true" ]] || blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_invalid_shape"]')"
+  [[ "$closure_align" == "true" ]] || blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_closure_ready_status_mismatch"]')"
+  [[ "$pid_match_art" == "true" ]] || blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_project_id_mismatch"]')"
+  [[ "$(printf '%s' "$art_json" | jq -r '.closure_ready // false')" == "true" ]] || blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_not_closure_ready"]')"
+  [[ "$art_rc" -eq 0 ]] || blockers="$(jq -n --argjson b "$blockers" '$b + ["acceptance_artifact_exit_nonzero"]')"
 fi
 
 if [[ "$(jq 'length' <<<"$blockers")" -eq 0 ]]; then
@@ -231,38 +232,77 @@ overall="not_ready"
 
 generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-summary="$(jq -n \
-  --arg aa fast \
-  --argjson rfc "$rep_fast_rc" \
-  --arg rst "$rep_fast_st" \
-  --argjson frfc "$rep_full_rc" \
-  --arg frs "$rep_full_st" \
-  --argjson vrc "$ver_rc" \
-  --arg vst "$ver_st" \
-  --argjson brc "$bench_rc" \
-  --arg bst "$bench_st" \
-  --arg cf "$latest_ctx_name" \
-  --argjson cok "$ctx_name_ok" \
-  '{
-    acceptance_authority: $aa,
-    completion_gate_fast: {exit_code: $rfc, status: $rst},
-    completion_gate_full_diagnostic: {exit_code: $frfc, status: $frs},
-    verify_stage9_completion_gate: {exit_code: $vrc, status: $vst},
-    benchmark: {exit_code: $brc, status: $bst},
-    latest_contextjson: {file_name: (if $cf == "" then null else $cf end), name_rule_ok: $cok}
-  }')"
+cr="$(printf '%s' "$art_json" | jq -r 'if type == "object" then (.closure_ready|tostring) else "false" end')"
+st="$(printf '%s' "$art_json" | jq -r 'if type == "object" then (.status // "not_ready") else "not_ready" end')"
 
-timings="$(jq -n \
-  --argjson b "$bench_json" \
-  'if ($b | type) == "object"
-    then {
-      fast_seconds: ($b.fast_seconds // null),
-      full_seconds: ($b.full_seconds // null),
-      speedup_ratio: ($b.speedup_ratio // null),
-      benchmark_status: ($b.status // null)
-    }
-    else {fast_seconds: null, full_seconds: null, speedup_ratio: null, benchmark_status: null}
-  end')"
+if [[ "$run_bench" == "1" ]]; then
+  summary="$(jq -n \
+    --arg aa stage9_acceptance_artifact_v1 \
+    --argjson arc "$art_rc" \
+    --arg cr "$cr" \
+    --arg st "$st" \
+    --argjson brc "$bench_rc" \
+    --arg bst "$(printf '%s' "$bench_json" | jq -r 'if type == "object" then (.status // "fail") else "fail" end')" \
+    --arg cf "$latest_ctx_name" \
+    --argjson cok "$ctx_name_ok" \
+    --argjson rb 1 \
+    '{
+      acceptance_authority: $aa,
+      acceptance_artifact: {exit_code: $arc, closure_ready: ($cr == "true"), status: $st},
+      optional_benchmark_diagnostic: { included: true, exit_code: $brc, status: $bst, diagnostic_only: true, does_not_gate_handoff: true },
+      external_export_informational: {
+        latest_contextjson_filename: (if $cf == "" then null else $cf end),
+        name_rule_matches_repo_convention: $cok,
+        is_handoff_authority: false,
+        purpose: "external_viewer_export_informational_only"
+      }
+    }')"
+else
+  summary="$(jq -n \
+    --arg aa stage9_acceptance_artifact_v1 \
+    --argjson arc "$art_rc" \
+    --arg cr "$cr" \
+    --arg st "$st" \
+    --arg cf "$latest_ctx_name" \
+    --argjson cok "$ctx_name_ok" \
+    --argjson rb 0 \
+    '{
+      acceptance_authority: $aa,
+      acceptance_artifact: {exit_code: $arc, closure_ready: ($cr == "true"), status: $st},
+      optional_benchmark_diagnostic: { included: false, diagnostic_only: true, does_not_gate_handoff: true, note: "set STAGE9_HANDOFF_RUN_BENCHMARK=1 to record timings; never required for handoff_ready" },
+      external_export_informational: {
+        latest_contextjson_filename: (if $cf == "" then null else $cf end),
+        name_rule_matches_repo_convention: $cok,
+        is_handoff_authority: false,
+        purpose: "external_viewer_export_informational_only"
+      }
+    }')"
+fi
+
+if [[ "$run_bench" == "1" ]]; then
+  timings="$(jq -n \
+    --argjson b "$bench_json" \
+    '{
+      diagnostic_only: true,
+      does_not_gate_handoff: true,
+      included: true,
+      fast_seconds: (if ($b|type)=="object" then ($b.fast_seconds // null) else null end),
+      full_seconds: (if ($b|type)=="object" then ($b.full_seconds // null) else null end),
+      speedup_ratio: (if ($b|type)=="object" then ($b.speedup_ratio // null) else null end),
+      benchmark_status: (if ($b|type)=="object" then ($b.status // null) else null end)
+    }')"
+else
+  timings="$(jq -n '{
+    diagnostic_only: true,
+    does_not_gate_handoff: true,
+    included: false,
+    fast_seconds: null,
+    full_seconds: null,
+    speedup_ratio: null,
+    benchmark_status: null,
+    note: "ordinary handoff does not run the benchmark; see run_stage9_validation_runtime_benchmark.sh"
+  }')"
+fi
 
 snap="$(jq -n \
   --arg fn "$latest_ctx_name" \
@@ -271,7 +311,9 @@ snap="$(jq -n \
   '{
     file_name: (if $fn == "" then null else $fn end),
     relative_path: (if $rp == "contextJSON/" then null else $rp end),
-    name_matches_runtime_rule: $ok
+    name_matches_runtime_rule: $ok,
+    is_handoff_authority: false,
+    purpose: "external_viewer_export_informational_only"
   }')"
 
 next="$(jq -n \
@@ -280,39 +322,59 @@ next="$(jq -n \
   '{ready_for_next_numbered_ai_task: ($rs == "true"), blockers: $bl}')"
 
 checks="$(jq -n \
-  --argjson pif "$pid_match_fast" \
-  --argjson pifull "$pid_match_full" \
-  --argjson pib "$pid_match_bench" \
+  --argjson pia "$pid_match_art" \
+  --argjson sh "$shape_inner" \
+  --argjson ca "$closure_align" \
   '{
-    completion_report_fast_project_id_matches_bundle: $pif,
-    completion_report_full_project_id_matches_bundle: $pifull,
-    benchmark_project_id_matches_bundle: $pib
+    acceptance_artifact_project_id_matches_bundle: $pia,
+    acceptance_artifact_contract_shape_ok: $sh,
+    acceptance_artifact_closure_ready_aligns_with_status: $ca
   }')"
 
-evidence="$(jq -n \
-  --argjson rf "$rep_fast_json" \
-  --argjson rfu "$rep_full_json" \
-  --argjson ve "$ver_json" \
-  --argjson be "$bench_json" \
-  --argjson rfrc "$rep_fast_rc" \
-  --argjson frfrc "$rep_full_rc" \
-  --argjson vrc "$ver_rc" \
-  --argjson brc "$bench_rc" \
-  '{
-    completion_gate_report_fast: {exit_code: $rfrc, report: $rf},
-    completion_gate_report_full_diagnostic: {exit_code: $frfrc, report: $rfu},
-    verify_stage9_completion_gate: {exit_code: $vrc, report: $ve},
-    run_stage9_validation_runtime_benchmark: {exit_code: $brc, report: $be}
-  }')"
+if [[ "$run_bench" == "1" ]]; then
+  evidence="$(jq -n \
+    --argjson art "$art_json" \
+    --argjson artrc "$art_rc" \
+    --argjson be "$bench_json" \
+    --argjson brc "$bench_rc" \
+    '{
+      stage9_acceptance_artifact: {exit_code: $artrc, report: $art},
+      optional_diagnostics: {
+        run_stage9_validation_runtime_benchmark: {
+          exit_code: $brc,
+          report: $be,
+          diagnostic_only: true,
+          does_not_gate_handoff: true
+        }
+      }
+    }')"
+else
+  evidence="$(jq -n \
+    --argjson art "$art_json" \
+    --argjson artrc "$art_rc" \
+    '{
+      stage9_acceptance_artifact: {exit_code: $artrc, report: $art},
+      optional_diagnostics: {
+        run_stage9_validation_runtime_benchmark: {
+          exit_code: null,
+          report: null,
+          skipped: true,
+          diagnostic_only: true,
+          does_not_gate_handoff: true
+        }
+      }
+    }')"
+fi
 
+bench_ran_json=0
+[[ "$run_bench" == "1" ]] && bench_ran_json=1
 diagnostics="$(jq -n \
-  --arg note "completion_gate_report_full is diagnostic only; fast path gates next_task_readiness" \
-  --argjson frfrc "$rep_full_rc" \
-  --arg fst "$rep_full_st" \
+  --arg note "AI Task 095: ordinary handoff gates on acceptance artifact only; benchmark and contextJSON are never blocking." \
+  --argjson rb "$bench_ran_json" \
   --argjson bto "$benchmark_timeout_s" \
   --argjson bfp "$bench_fast_port" \
   --argjson bup "$bench_full_port" \
-  '{full_mode_completion_gate: {exit_code: $frfrc, status: $fst}, benchmark_orchestration: {timeout_seconds: $bto, fast_port: $bfp, full_port: $bup}, note: $note}')"
+  '{handoff_model: "acceptance_artifact_primary", benchmark_ran: ($rb == 1), benchmark_orchestration_when_enabled: {timeout_seconds: $bto, fast_port: $bfp, full_port: $bup}, note: $note}')"
 
 pid_num="$project_id"
 jq -n \

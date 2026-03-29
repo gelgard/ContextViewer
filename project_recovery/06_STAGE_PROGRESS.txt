@@ -164,7 +164,8 @@ Current execution state:
 - AI Task 090 completed in part: fast smoke mode implemented for Stage 9 orchestration gates
 - AI Task 091 completed: validation runtime stability + deterministic benchmark harness; `fast` is authoritative acceptance gate, `full` is diagnostic/non-blocking with explicit timeout-step classification, duplicate full-path child invocations removed, benchmark evidence recorded
 - AI Task 092 completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/`
-- AI Task 093 completed: Stage 9 transition handoff bundle (`code/ui/get_stage9_transition_handoff_bundle.sh`, `code/ui/verify_stage9_transition_handoff_bundle.sh`) — single machine-readable pre-next-task artifact composing completion report (fast + diagnostic full), completion verifier, benchmark, and latest `contextJSON/json_*.json` filename
+- AI Task 093 completed: Stage 9 transition handoff bundle (`code/ui/get_stage9_transition_handoff_bundle.sh`, `code/ui/verify_stage9_transition_handoff_bundle.sh`) — single machine-readable pre-next-task artifact (093 baseline; superseded for ordinary gating by **095**)
+- AI Task 095 completed: transition handoff **acceptance-artifact-primary** — `get_stage9_transition_handoff_bundle.sh` gates `handoff_ready` only on `get_stage9_acceptance_artifact.sh`; benchmark and `contextJSON` filename are never blocking; optional `STAGE9_HANDOFF_RUN_BENCHMARK=1` for diagnostic timings only
 - Validation-architecture migration completed at the OS/recovery/planning layer:
   - lightweight validation model is now the default project operating model
   - one task = one primary acceptance gate
@@ -176,8 +177,8 @@ Current execution state:
 Stage 9 — **secondary-flow continuity** (current):
 - **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
 - **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
-- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`, `093`
-- **Pre-next-task handoff artifact (093):** use `get_stage9_transition_handoff_bundle.sh` (+ `verify_stage9_transition_handoff_bundle.sh`) as the transition package before opening the next numbered AI task
+- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`, `093`, `095`
+- **Pre-next-task handoff artifact (093 + 095):** use `get_stage9_transition_handoff_bundle.sh` (+ `verify_stage9_transition_handoff_bundle.sh`); ordinary readiness is **`get_stage9_acceptance_artifact.sh`**-backed per `095`
 - **Validation operating model:** lightweight / artifact-first / fast-authoritative
 - **Legacy heavy validation paths:** diagnostic-only; they must not be used as ordinary task-closure defaults
-- **Current execution anchor:** closed through **AI Task 093**; next action: open the next numbered AI task under the lightweight validation model from the 093 handoff baseline
+- **Current execution anchor:** closed through **AI Task 095** (handoff aligns with acceptance artifact); next action: open the next numbered AI task under the lightweight validation model
