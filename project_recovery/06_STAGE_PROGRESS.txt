@@ -165,10 +165,19 @@ Current execution state:
 - AI Task 091 completed: validation runtime stability + deterministic benchmark harness; `fast` is authoritative acceptance gate, `full` is diagnostic/non-blocking with explicit timeout-step classification, duplicate full-path child invocations removed, benchmark evidence recorded
 - AI Task 092 completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/`
 - AI Task 093 completed: Stage 9 transition handoff bundle (`code/ui/get_stage9_transition_handoff_bundle.sh`, `code/ui/verify_stage9_transition_handoff_bundle.sh`) — single machine-readable pre-next-task artifact composing completion report (fast + diagnostic full), completion verifier, benchmark, and latest `contextJSON/json_*.json` filename
+- Validation-architecture migration completed at the OS/recovery/planning layer:
+  - lightweight validation model is now the default project operating model
+  - one task = one primary acceptance gate
+  - diagnostics are separate and non-blocking by default
+  - artifact-first validation is mandatory for future tasks
+  - recursive orchestration is classified as architecture defect
+  - legacy heavy validators remain diagnostic-only until replaced by artifact-first acceptance flows
 
 Stage 9 — **secondary-flow continuity** (current):
 - **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
 - **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
 - **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`, `093`
 - **Pre-next-task handoff artifact (093):** use `get_stage9_transition_handoff_bundle.sh` (+ `verify_stage9_transition_handoff_bundle.sh`) as the transition package before opening the next numbered AI task
-- **Current execution anchor:** closed through **AI Task 093**; next action: open the next numbered AI task from the 093 handoff baseline
+- **Validation operating model:** lightweight / artifact-first / fast-authoritative
+- **Legacy heavy validation paths:** diagnostic-only; they must not be used as ordinary task-closure defaults
+- **Current execution anchor:** closed through **AI Task 093**; next action: open the next numbered AI task under the lightweight validation model from the 093 handoff baseline

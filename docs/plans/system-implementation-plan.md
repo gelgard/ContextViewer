@@ -4,7 +4,7 @@
 Stage 9 — Secondary Flows And Release Readiness
 
 ## Current Substage
-Closure ready after validation runtime stabilization
+Lightweight validation model active after Stage 9 handoff packaging
 
 ## Progress
 
@@ -119,8 +119,8 @@ Execution status:
 - screen-level prompt coverage now exists for shell, overview, visualization, history, and demo / handoff surfaces
 - workspace-registered package `docs/design/artifacts/task076/` is now preserved as the current base UI artifact set for the whole application
 - AI Task 077 validated: screen review revision approved / GO using the workspace-registered package `docs/design/artifacts/task076/`
-- AI Task 078 completed: Figma import and architecture sync — **authoritative UI design reference** recorded at `docs/design/approved_figma_artifact.md`; artifact package `docs/design/artifacts/task076/` registered as the current whole-application base UI reference; `docs/architecture/system-definition.md` §20 and recovery/plans/contextJSON synchronized
-- runtime truth remains contextJSON + JSON contracts; design truth is the approved artifact record until superseded
+- AI Task 078 completed: Figma import and architecture sync — **authoritative UI design reference** recorded at `docs/design/approved_figma_artifact.md`; artifact package `docs/design/artifacts/task076/` registered as the current whole-application base UI reference; `docs/architecture/system-definition.md` §20 and recovery/plans/external-viewer export synchronized
+- project-operating authority remains recovery + AGENTS + plans + runtime contracts; `contextJSON` remains an external viewer export only
 - AI Task 079 completed: post-Figma **implementation plan refinement** — production UI work decomposed into numbered slices **080–083** (see `docs/plans/implementation-plan.md` §Post-Figma roadmap); **design-sync** tasks **062–079** closed as a track; **upcoming** work is **production UI** tied to feeds, not Figma prompt authoring
 - AI Task 080 completed: approved shell + design-token layer applied to bootstrap/preview surfaces; preview HTML now exposes `render_profile=080_shell_tokens` and delivery smoke asserts `data-cv-preview-shell="080"` while preserving payload + section markers
 - AI Task 081 completed: Overview fidelity slice applied to bootstrap preview; preview HTML now exposes `render_profile=081_overview_fidelity` and renders structured feed-backed status / roadmap / progress / recent snapshot blocks while keeping shell marker and payload guarantees intact
@@ -134,14 +134,43 @@ Current:
 - Stage 9 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
 - **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
 - **Post-Figma production UI slices `080–083`: completed**
-- **Stage 9 secondary flows:** `084–089` delivered; `091` closure/runtime stabilization completed; `092` fixture support added for offline verifier-shape validation
-- **Current execution anchor:** closed through **AI Task 091**; next numbered AI task can now be opened from the stabilized Stage 9 baseline
+- **Stage 9 secondary flows:** `084–089` delivered; `091` closure/runtime stabilization completed; `092` fixture support added for offline verifier-shape validation; `093` transition handoff bundle completed
+- **Validation operating model:** lightweight / artifact-first / fast-authoritative
+- **Legacy heavy validation paths:** retained as diagnostic-only until replaced by artifact-first acceptance flows
+- **Current execution anchor:** closed through **AI Task 093**; next numbered AI task must open from the 093 handoff baseline under the lightweight validation model
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**
 - **081** — **Overview** UI slice vs `get_ui_bootstrap_bundle` / `verify_stage5_dashboard_contracts`; visual manual test vs `task064`/`task076` overview evidence — **completed**
 - **082** — **Visualization workspace** slice (tree + graph + inspector) vs visualization bundle feeds; visual manual test vs visualization export — **completed**
 - **083** — **History workspace** slice + cross-workspace smoke confirming **061**-class readiness with approved styling — **completed**
+
+## Validation Operating Model (Authoritative)
+
+- one AI task = one primary acceptance gate
+- Layer 1 + Layer 2 are Codex-side offline acceptance only
+- Layer 3 is the single live integration gate
+- Layer 4 is separate visual evidence
+- diagnostics are explicitly separate and non-blocking by default
+- benchmark paths are diagnostic-only unless a task explicitly exists to validate benchmark behavior
+- artifact-first validation is mandatory:
+  - higher-level validation must consume existing JSON artifacts instead of recomputing heavy child paths
+  - recursive orchestration is prohibited as a normal validation pattern
+- validation budgets:
+  - Layer 1 + Layer 2 target <= 30s, hard ceiling <= 60s
+  - Layer 3 target <= 60s, hard ceiling <= 120s
+  - full task closure target <= 10 minutes
+
+## Next-Task Constraint
+
+No future functional AI task may deepen the validation stack.
+
+If a future task would require:
+- another orchestration wrapper,
+- repeated heavy readiness/delivery/completion recomputation,
+- or benchmark execution inside ordinary closure evidence,
+
+then that task must first create or reuse an artifact-first validation path and reduce total validation complexity rather than increasing it.
 
 ## Post-Figma validation discipline (all slices 080+)
 - **Contract-first:** extend or reuse existing `code/ui` read-only scripts only through **new numbered tasks**; each slice lists exact shell commands for JSON contract checks
@@ -160,10 +189,11 @@ Response rule update:
   - completion-report full mode may fall back to fast-equivalent readiness while preserving timeout diagnostics
 
 Cross-cutting architecture notes:
-- contextJSON maintenance is part of architecture synchronization
+- external viewer export maintenance is part of architecture synchronization
 - architecture synchronization is workspace-first (archive fallback only if workspace is unavailable)
-- the latest timestamped context JSON is the authoritative runtime source for the visual application
-- visual state computation must come from JSON, not from markdown parsing
+- the latest timestamped context JSON is the authoritative rendering source for the external visual application only
+- project architecture / planning / testing / execution methodology must not be derived from `contextJSON`
+- visual state computation for the external viewer must come from its JSON export, not from markdown parsing
 - coding remains blocked until execution proceeds through numbered AI tasks
 - Stage 8 Figma branch rules: `docs/design/figma_design_branch_charter.md` and `docs/design/figma_prompt_workflow.md`
 - current validated external artifact registry: `docs/design/artifacts/task064/README.md`

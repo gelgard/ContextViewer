@@ -32,13 +32,10 @@ TESTING RULES
     - `timeout_step=<step_name>`
     - `exit_code` for the timed-out subprocess
     - blocker class (`benchmark_leg_timeout`, `env_network`, `port_process_hygiene`, or `contract_logic`)
-- for every UI task, dual validation is mandatory:
-  - assistant runs Playwright validation and reports:
-    - executed steps
-    - per-step result (pass/fail)
-    - visual mismatch list (if any)
+- for every UI task, Layer 4 visual validation is mandatory:
+  - Codex-side HTML marker checks are required
   - user runs manual visual validation by explicit step-by-step scenario
-  - manual visual validation is never replaced by Playwright
+  - manual visual validation is never replaced by automated browser tooling
 - validation pyramid is mandatory (see AGENTS.md §8.2):
   - Layer 1 Unit: Codex, offline, bash syntax + CLI flags, < 3s per command
   - Layer 2 Contract: Codex, offline, jq fixtures + STAGE9_HYGIENE_SKIP=1, < 10s total
@@ -51,3 +48,28 @@ TESTING RULES
 - timeout profiles: 30s (DB only), 60s (with server, default), 120s (benchmark), 420s (CI explicit only)
 - anti-loop rule: identical failure × 2 = stop and classify, never retry without a code change addressing the failure
 - STAGE9_GATE_TIMEOUT_S must be explicitly exported before every Manual Test integration block; default export value = 60
+- lightweight validation model is mandatory:
+  - each AI task has exactly one primary acceptance gate
+  - diagnostics are separate and non-blocking by default
+  - benchmark evidence is diagnostic-only unless a task explicitly defines it as the sole acceptance gate
+- artifact-first validation is mandatory:
+  - higher-level validation consumes existing JSON artifacts instead of recomputing heavy child paths
+  - repeated execution of the same heavy readiness/delivery/completion path in one unchanged validation cycle is prohibited
+- recursive orchestration is prohibited:
+  - orchestration scripts must not call other orchestration scripts as their ordinary validation path
+  - if a wrapper over a wrapper is needed, the task must be split or the lower layer must be replaced
+- validation budgets are mandatory:
+  - Layer 1 + Layer 2 target <= 30s total, hard ceiling <= 60s
+  - primary Layer 3 integration target <= 60s, hard ceiling <= 120s
+  - full task closure including manual visual review must fit within 5–10 minutes
+- Playwright is optional diagnostic tooling:
+  - it may be used for deeper UI inspection
+  - it is not the default closure path
+  - Layer 4 default evidence remains HTML marker checks + user visual confirmation
+- JSON separation is mandatory in testing methodology:
+  - `contextJSON/*` is an external viewer export only and is never a test-policy or architecture authority source
+  - fixture files and validation artifacts are separate machine-readable evidence for Layer 1/2/3 validation
+  - test instructions must explicitly name `validation artifact` when referring to acceptance/diagnostic JSON and must not call it `contextJSON`
+- commit-boundary separation is part of testing hygiene:
+  - changed-files review must distinguish functional task files from architecture-sync files and from `contextJSON/*` external export files
+  - passing validation does not mean these three classes should be committed together by default

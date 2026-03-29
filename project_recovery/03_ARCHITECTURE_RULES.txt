@@ -12,9 +12,12 @@ ARCHITECTURE RULES
    - a new populated contextJSON/json_<timestamp>.json
 6. contextJSON/json_<timestamp>.json must contain aggregated and structured project context and must not be empty.
 7. json_spec.md must be overwritten whenever JSON schema or generation logic changes.
-8. The latest timestamped JSON snapshot is the authoritative runtime source for the external visual application.
+8. The latest timestamped JSON snapshot is the authoritative runtime source for the external visual application only.
 9. The visual application must use the latest JSON for structure, statuses, roadmap, graph, and summaries.
 10. Markdown files may be opened by path for raw content display only and must not be required to compute project state.
+10a. `contextJSON/json_<timestamp>.json` must never define project architecture, planning policy, testing policy, execution policy, or development methodology.
+10b. Validation JSON artifacts are a separate class of machine-readable outputs and must not be conflated with `contextJSON` exports.
+10c. Higher-level validation may consume validation artifacts as execution evidence, but may not treat `contextJSON` as architecture authority.
 11. Context JSON must be sufficient for an external visualization application to render:
    - architecture tree
    - file purposes and update rules
@@ -33,10 +36,10 @@ ARCHITECTURE RULES
 15b. Cursor is used only for code-writing, implementation edits, development execution, and code-adjacent documentation changes required by the current AI task.
 15c. The `Cursor prompt (EN)` block must not duplicate local-agent responsibilities or repeat content already expressed in `Manual Test (exact commands)` or `What to send back for validation`.
 16. If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, the test section must also include a dedicated visual manual-test subsection with explicit viewing steps and exact visual evidence required for validation.
-16a. For each UI task, dual validation contours are mandatory and non-substitutable:
-   - assistant-side Playwright validation with explicit executed steps, per-step pass/fail, and visual mismatch list (if any);
-   - user-side manual visual validation via explicit step-by-step scenario.
-16b. Manual visual validation by the user is required even when Playwright validation passes.
+16a. For each UI task, Layer 4 visual validation is mandatory and non-substitutable:
+   - Codex-safe HTML marker checks are required;
+   - user-side manual visual validation via explicit step-by-step scenario is required.
+16b. Playwright may be used as optional diagnostic tooling for UI discrepancies, but is not part of the default closure path.
 16c. Fast smoke execution policy is mandatory by default:
    - first run the highest-level stage gate script;
    - run underlying child smoke scripts only for failure localization, diagnostics, or explicit user request;
@@ -71,9 +74,9 @@ ARCHITECTURE RULES
 17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
 18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
 19. The validated Stage 8 preview / handoff state is a preserved checkpoint and must not be replaced by the Figma design branch.
-20. The Stage 8 Figma design branch refines implementation and architecture decisions without replacing runtime truth or the original implementation path.
+20. The Stage 8 Figma design branch refines implementation and architecture decisions without replacing recovery/planning authority or the original implementation path.
 21. Prompt generation, design validation, Figma import, and post-Figma implementation refinement must execute through numbered AI tasks only.
-22. After an approved Figma artifact is imported into the workspace, architecture files, plans, recovery files, and contextJSON must be synchronized before further implementation.
+22. After an approved Figma artifact is imported into the workspace, architecture files, plans, recovery files, and the external viewer export must be synchronized before further implementation.
 23. On each Stage transition, the assistant must explicitly announce the new Stage before issuing the next AI task.
 24. Stage transition requires git flow: merge current branch into `development`, then create `feature/stage<stageNum>`.
 25. Stage transition instructions must include exact reproducible git commands.
@@ -89,6 +92,10 @@ ARCHITECTURE RULES
 31. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
 32. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
 33. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
+33a. Commit-boundary separation is mandatory:
+   - functional task files, architecture-sync files, and external viewer export files must be treated as distinct change classes.
+   - `contextJSON/*` belongs to the external viewer export class and is not automatically part of a functional task commit.
+   - if one execution cycle modifies both functional task files and architecture/export files, assistant must propose split commit boundaries before closure.
 34. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).
 35. For command "дай следующую AI task", the response format is a hard gate and must contain, in strict order:
    - `AI Task file created: /ai_tasks/NNN_*.md`
@@ -157,3 +164,36 @@ ARCHITECTURE RULES
    - identical failure twice with no code change => stop and classify
    - timeout beyond the declared layer ceiling => stop and classify
    - no blind retries against unchanged output
+58. Lightweight validation operating model is mandatory:
+   - one AI task must have exactly one primary acceptance gate
+   - diagnostics are separate, explicitly labelled, and non-blocking by default
+   - benchmark paths are diagnostic only unless explicitly declared as the single acceptance gate
+59. Artifact-first validation is a permanent architecture rule:
+   - heavy validation outputs must be treated as reusable JSON artifacts
+   - higher-level gates must consume prior artifacts instead of recomputing heavy readiness/delivery/completion paths
+   - artifact reuse is preferred over orchestration layering
+60. Recursive orchestration is an architecture defect:
+   - orchestration scripts must not invoke other orchestration scripts by default
+   - a new wrapper over an existing wrapper is prohibited unless the lower layer is collapsed or replaced
+61. Validation budgeting is an architecture constraint:
+   - Layer 1 + Layer 2 target <= 30s, hard ceiling <= 60s total
+   - primary Layer 3 integration target <= 60s, hard ceiling <= 120s
+   - full task closure target <= 10 minutes including manual visual review
+   - tasks that cannot fit this budget must be split or re-architected before execution
+62. Timeout defaults are architecture-controlled:
+   - 30s = DB-only / very small live checks
+   - 60s = default single integration acceptance gate
+   - 120s = benchmark / dual-leg diagnostics only
+   - 420s = CI-only exceptional diagnostics and must never be the ordinary local default
+63. Full restore must reconstruct the validation operating model, not just task/stage state:
+   - report current validation architecture status
+   - report migration status
+   - report heavy legacy validation warnings
+   - report next-step constraints under the lightweight model
+64. Legacy heavy validators are classified as diagnostic-only legacy paths until replaced by artifact-first acceptance flows.
+65. No future functional AI task may deepen the validation stack:
+   - if a task would introduce another orchestration layer, it must first create or reuse an artifact-first acceptance path.
+66. JSON-type separation is a hard architecture rule:
+   - `contextJSON/*` = external viewer export only
+   - validation artifacts = acceptance/diagnostic execution evidence only
+   - neither JSON class may override `project_recovery/*`, `AGENTS.md`, or planning authority.

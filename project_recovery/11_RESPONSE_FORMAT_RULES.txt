@@ -24,13 +24,10 @@ RESPONSE FORMAT RULES
   - changed-files validation instructions
   - next-step planning or local validation responsibilities
 - If a task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
-- For each UI task, both validation contours are mandatory:
-  - Assistant must run Playwright and report:
-    - steps executed
-    - result per step (pass/fail)
-    - visual mismatch list (if any)
-  - User must also execute manual visual validation by explicit step-by-step scenario
-  - Manual visual validation is mandatory and is not replaced by Playwright
+- For each UI task, Layer 4 visual validation is mandatory:
+  - Codex-side HTML marker checks must be included
+  - User must execute manual visual validation by explicit step-by-step scenario
+  - Manual visual validation is mandatory and is not replaced by automated browser tooling
 - Fast smoke execution policy (mandatory by default):
   - run one top-level orchestration gate first (stage readiness/completion gate)
   - run underlying child smoke scripts only when:
@@ -75,6 +72,11 @@ RESPONSE FORMAT RULES
 - Assistant must run `git status --short` itself during validation even if the user did not include it
 - Assistant must validate that changed files belong to current AI task scope and explicitly flag unrelated changes
 - Changed-files auto-check must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- When changed files span multiple classes, assistant must say so explicitly:
+  - functional task files
+  - architecture-sync/rule files
+  - `contextJSON/*` external viewer export files
+- If more than one class is present, assistant must propose split commit boundaries instead of implying one mixed commit by default
 - Before sending AI task response, run self-check for:
   - file existence in `ai_tasks/`
   - numbering continuity
@@ -123,6 +125,11 @@ The generated context JSON must contain aggregated and structured information, n
 
 The newest timestamped JSON must be treated as the authoritative runtime source for the visual application.
 Markdown files are referenced by path for raw content display only.
+JSON authority separation rule:
+- `contextJSON/*` is an external viewer export only
+- architecture/planning/testing/execution policy must never be derived from `contextJSON`
+- when a response refers to machine-readable validation evidence, it must call it `validation artifact` or `fixture`, not `contextJSON`
+- validation-artifact JSON and external-viewer-export JSON must remain explicitly distinct in task prompts, test blocks, and validation replies
 Visual Validation Rule (Layer 4, mandatory for every UI task):
 - every AI task that creates or modifies HTML preview content must include a dedicated Visual Validation block in Manual Test
 - Visual Validation block must contain two sub-steps:
@@ -147,3 +154,27 @@ Codex Acceptance Gate block (mandatory in every AI task response):
 - the block must be labelled "### Codex Acceptance Gate (offline, Layer 1+2)"
 - commands in this block must not require live DB, HTTP server, or network
 - maximum 7 commands per gate block; each must complete in < 10 seconds
+
+Lightweight Validation Response Rule (permanent):
+- every AI task response must declare one primary acceptance gate only
+- diagnostic commands, if any, must appear in a separate block labelled "### Diagnostics (optional, non-blocking)"
+- benchmark commands must never appear inside the primary acceptance gate unless the task explicitly exists to validate benchmark behavior itself
+- future next-task responses must not normalize recursive validation chains
+
+Fast Restore / Full Restore reporting update:
+- Fast restore must include validation model state in its one-line output:
+  - `validation=<lightweight_migrated|legacy_mixed>`
+- Full restore must explicitly report:
+  - validation architecture status
+  - migration status
+  - heavy legacy validation warnings
+  - next-step constraints under the lightweight validation model
+
+AI task authoring response update:
+- every new AI task must include a `Validation Budget` section or line with:
+  - Layer 1+2 target
+  - Layer 3 target
+  - full closure target
+- Integration Gate block must contain exactly one primary integration command path
+- Visual block must stay separate from Integration Gate
+- Playwright, if mentioned, must be labelled as optional diagnostic tooling unless the task is explicitly about browser automation

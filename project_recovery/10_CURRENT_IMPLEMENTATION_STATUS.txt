@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Stage 9 transition handoff packaged (AI Task 093)
+Lightweight validation model active after Stage 9 transition handoff packaging (AI Task 093 complete)
 
 STATUS:
 - Architecture synced with latest rules
@@ -102,7 +102,7 @@ STATUS:
 - screen prompt coverage now exists for shared shell / navigation, overview, visualization workspace, history workspace, and demo / handoff mode
 - uploaded workspace artifacts under `docs/design/artifacts/task076/` are now the preserved base UI package for the whole application until superseded by a later approved import
 - AI Task 077 validated: screen review revision approved / GO using the workspace-registered task076 package
-- AI Task 078 completed: approved Figma/UI design reference recorded at `docs/design/approved_figma_artifact.md`; primary artifact package `docs/design/artifacts/task076/`; `docs/architecture/system-definition.md` §20; plans/recovery/contextJSON aligned — design authority separate from runtime truth (latest contextJSON)
+- AI Task 078 completed: approved Figma/UI design reference recorded at `docs/design/approved_figma_artifact.md`; primary artifact package `docs/design/artifacts/task076/`; `docs/architecture/system-definition.md` §20; plans/recovery/external-viewer export aligned — design authority separate from the external `contextJSON` export
 - AI Task 079 completed: post-Figma **implementation plan refinement** — production UI decomposed into slices **080–083** (`docs/plans/implementation-plan.md`); **preserved checkpoint** remains preview/demo handoff through **061**; design authority unchanged (`approved_figma_artifact.md` + `task076/`)
 - AI Task 080 completed: production preview shell/tokens slice delivered — shared header/sidebar/nav styling applied to bootstrap preview, `render_profile=080_shell_tokens`, `data-cv-preview-shell="080"` preserved by delivery smoke, runtime semantics unchanged
 - AI Task 081 completed: Overview fidelity slice delivered — bootstrap preview now renders structured feed-backed Overview blocks with `render_profile=081_overview_fidelity`; shell continuity from **080** preserved; dashboard contracts remain `pass`; preview readiness remains `ready`
@@ -118,11 +118,22 @@ STATUS:
 - AI Task 090 delivered the first fast/full execution split for Stage 9 orchestration verifiers
 - AI Task 091 completed: validation runtime stability + deterministic benchmark harness
 - AI Task 092 completed: static offline fixture pack created under `code/test_fixtures/` for hygiene/completion-report/benchmark outputs
-- AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — one JSON transition artifact (completion gate fast+diagnostic full, completion verifier, benchmark, latest contextJSON filename); `handoff_ready` gates `next_task_readiness.ready_for_next_numbered_ai_task`
+- AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — one validation JSON transition artifact (completion gate fast+diagnostic full, completion verifier, benchmark, latest external-export filename for reference only); `handoff_ready` gates `next_task_readiness.ready_for_next_numbered_ai_task`
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
   - heavy validation watchdog output must classify `timeout_step=<delivery|handoff|readiness|secondary_gate>`
+- Lightweight validation operating model activated at the architecture / recovery / planning layer:
+  - one AI task = one primary acceptance gate
+  - diagnostics are separate and non-blocking by default
+  - benchmark paths are diagnostic-only unless explicitly declared as the sole acceptance gate
+  - artifact-first validation is mandatory
+  - recursive orchestration is classified as architecture defect
+  - legacy heavy validators are retained as diagnostic-only legacy paths until replaced
+- JSON authority separation is active:
+  - `contextJSON/*` is an external informational export for the viewer app only
+  - validation artifacts are separate JSON evidence for acceptance/diagnostics
+  - architecture, planning, testing policy, and execution methodology are governed by recovery + AGENTS + plans, never by `contextJSON`
 - Stage 9 closure evidence recorded:
   - `verify_stage9_secondary_flows_readiness_gate.sh --mode fast` => pass
   - `verify_stage9_secondary_flows_readiness_gate.sh --mode full` => pass
@@ -134,7 +145,11 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Open the next numbered AI task using the AI Task 093 transition handoff bundle as the recorded pre-next-task evidence package (closure baseline remains 091/092 validation policy + 093 bundle)
+Open the next numbered AI task using the AI Task 093 transition handoff bundle as the recorded pre-next-task evidence package, but only under the lightweight validation model:
+- the next task must define one primary acceptance gate
+- any diagnostics must be separate and optional/non-blocking
+- no future task may deepen the validation stack
+- if a future task would require another orchestration layer, it must first introduce or reuse an artifact-first validation path
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

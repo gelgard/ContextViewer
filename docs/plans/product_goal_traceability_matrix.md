@@ -11,9 +11,10 @@ It answers:
 ## Canonical Product Goal
 ContextViewer is a dashboard product that visualizes the state and evolution of an AI-driven project from `contextJSON` snapshots.
 
-Core runtime truth:
-- latest valid contextJSON snapshot is the active runtime source
+External viewer runtime source:
+- latest valid contextJSON snapshot is the active rendering source for the external viewer application only
 - markdown is display-only (never primary runtime computation input)
+- project architecture, planning, testing policy, and execution methodology are not derived from `contextJSON`
 
 Primary user outcomes:
 - understand current project status quickly
@@ -79,7 +80,7 @@ Primary user outcomes:
 - stage-based execution via numbered AI tasks only
 
 ## Requirement IDs
-- `PG-RT-001`: Runtime truth = latest valid JSON snapshot.
+- `PG-RT-001`: External viewer rendering source = latest valid JSON snapshot.
 - `PG-RT-002`: Markdown not used for runtime state computation.
 - `PG-OV-001`: Overview includes status/roadmap/changes/progress.
 - `PG-AR-001`: Architecture tree with inspector panel interaction.
@@ -124,7 +125,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 076` is completed.
 - `docs/design/artifacts/task076/` is preserved as the current base UI artifact package for the whole application and may be used as the default visual reference in future branch tasks until superseded by a later approved import.
 - `AI Task 077` is validated as `approve / GO` using the workspace-registered package under `docs/design/artifacts/task076/`.
-- `AI Task 078` is completed: authoritative UI design reference recorded at `docs/design/approved_figma_artifact.md`; `docs/architecture/system-definition.md` §20; primary package `docs/design/artifacts/task076/`; runtime truth unchanged (contextJSON / contracts).
+- `AI Task 078` is completed: authoritative UI design reference recorded at `docs/design/approved_figma_artifact.md`; `docs/architecture/system-definition.md` §20; primary package `docs/design/artifacts/task076/`; external viewer export unchanged (`contextJSON`) and separate from project-operating authority.
 - `AI Task 079` is completed: post-Figma **implementation plan refinement** — roadmap **`080–083`** in `docs/plans/implementation-plan.md`; separates **completed design-sync (062–079)** from **upcoming production UI**; preserves **061** checkpoint.
 - `AI Task 080` is completed: shared shell + design tokens applied to bootstrap preview; `render_profile=080_shell_tokens`; delivery smoke confirms `data-cv-preview-shell="080"` while preserving bootstrap payload markers.
 - `AI Task 081` is completed: Overview surface fidelity applied to bootstrap preview; `render_profile=081_overview_fidelity`; shell marker/payload preserved; dashboard contracts and preview readiness remain successful.
@@ -139,7 +140,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 090` is created and active: Stage 9 fast-smoke mode implementation (`--mode fast|full`, fast-by-default) for orchestration verifiers and runtime benchmark closure evidence.
 - `AI Task 091` is completed: Stage 9 validation runtime stability + deterministic benchmark harness; acceptance policy is `fast`-authoritative, while `full` is diagnostic/non-blocking and emits explicit `timeout_step` / fallback diagnostics when full-only legs degrade.
 - `AI Task 092` is completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/` to support no-network shape validation.
+- `AI Task 093` is completed: Stage 9 transition handoff bundle unifies machine-readable closure evidence and latest external-export filename reference.
 - Requirement mapping for **091** (complete):
+  - `PG-EX-001`
+  - `PG-UX-001`
+  - `PG-RT-001`
+  - `PG-RT-002`
+- Requirement mapping for **093** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
   - `PG-RT-001`
@@ -203,6 +210,21 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-PL-001`
   - `PG-UX-001`
   - `PG-EX-001`
+
+## Validation Architecture Status
+
+- Stage 9 is active and migrated to the lightweight validation operating model at the architecture / planning / recovery layer.
+- Authoritative validation policy:
+  - one AI task = one primary acceptance gate
+  - diagnostics are separate and non-blocking by default
+  - benchmark evidence is diagnostic-only unless explicitly declared otherwise
+  - artifact-first validation is mandatory
+  - recursive orchestration is classified as an architecture defect
+- JSON authority separation:
+  - `contextJSON/*` is an external viewer export only
+  - validation artifacts are separate execution evidence
+  - project-operating authority remains recovery + AGENTS + plans
+- Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks
 - `062` — Stage 8 Figma Design Branch Charter And Prompt Workflow — **completed** (charter + workflow in `docs/design/`)

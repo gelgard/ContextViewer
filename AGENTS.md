@@ -21,7 +21,7 @@ When entering the project:
 
 1. Load:
    - project_recovery/*
-   - latest contextJSON snapshot
+   - latest contextJSON snapshot (informational external-export status only)
    - this file (AGENTS.md)
 
 2. Determine:
@@ -51,7 +51,7 @@ Always use sources in this order:
 3. docs/architecture/*
 4. docs/plans/*
 5. ai_tasks/*
-6. contextJSON/json_<latest>.json
+6. contextJSON/json_<latest>.json (informational external-export status only)
 7. codebase (validation only)
 
 Never override higher-priority sources.
@@ -65,16 +65,17 @@ Never override higher-priority sources.
 - docs/architecture/ → system design
 - docs/plans/ → execution plan
 - ai_tasks/ → execution layer
-- contextJSON/ → runtime snapshots
+- contextJSON/ → external viewer export snapshots (informational only; not project-OS authority)
 - code/ → validation only
-- docs/design/approved_figma_artifact.md → **authoritative UI design reference** (post–**AI Task 078**); does not override JSON runtime truth
+- docs/design/approved_figma_artifact.md → **authoritative UI design reference** (post–**AI Task 078**); does not override recovery/planning authority
 
 
 ---
 
 ## 5. ARCHITECTURE BOUNDARIES
 
-- contextJSON → runtime truth
+- contextJSON → external informational export for the viewer application only
+- validation JSON artifacts → execution evidence only for acceptance/diagnostics
 - markdown docs → descriptive only
 - project_recovery → state authority
 - ai_tasks → only execution mechanism
@@ -85,6 +86,7 @@ Forbidden:
 - inventing state
 - skipping layers
 - executing outside AI tasks
+- using `contextJSON` to define architecture, planning, methodology, testing policy, or execution policy
 
 
 ---
@@ -94,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 9
-- Substage: Closure ready after validation runtime stabilization
+- Substage: Lightweight validation model active (artifact-first, fast-authoritative, diagnostic paths separated)
 
 Next required action:
-→ create and execute the next numbered AI task; AI Task 091 is closed and AI Task 092 fixture support is complete
+→ create and execute the next numbered AI task under the lightweight validation model; heavy legacy validation paths are diagnostic-only and must not become the default acceptance route
 
 
 ---
@@ -143,6 +145,11 @@ Supported commands:
   - run one top-level stage gate first
   - run child smoke scripts separately only for diagnostics/failure localization or explicit user request
   - avoid repeated heavy smoke runs in the same validation cycle when no code changed
+- lightweight validation model is mandatory:
+  - every task has exactly one primary acceptance gate
+  - diagnostics are separate, explicitly labelled, and non-blocking by default
+  - benchmark paths are diagnostic only and must never be part of routine task closure
+  - orchestration-of-orchestration is prohibited unless a lower layer is removed or replaced
 - validation profile lock is mandatory:
   - `fast` is the default and required mode for routine acceptance checks
   - `full` is allowed only when:
@@ -153,6 +160,11 @@ Supported commands:
     - `fast` is the authoritative closure gate
     - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged code-validation cycle
     - diagnostic `full` failures must be reported explicitly and cannot silently replace `fast` acceptance evidence
+- artifact-first validation is mandatory:
+  - validation outputs are first-class JSON artifacts
+  - higher-level validation must consume existing artifacts instead of recomputing heavy child paths
+  - the same heavy readiness/delivery/completion path must not be recomputed in the same unchanged validation cycle
+  - if a task requires a new wrapper over an existing wrapper, the task must first collapse or replace the lower validation layer
 - anti-hang validation policy is mandatory:
   - do not run heavy UI smoke scripts concurrently on the same local port
   - parallel runs must use distinct ports per process
@@ -161,17 +173,23 @@ Supported commands:
   - before each heavy UI validation cycle, stale validation/server processes from prior interrupted runs must be cleaned up
   - if a run is interrupted by user, the next step must begin with process-state verification and cleanup
   - each heavy child step must have bounded watchdog execution and timeout classification (`timeout_step=<name>`)
-- for every UI task, dual validation contours are mandatory:
-  - assistant-side Playwright run with explicit executed steps, per-step pass/fail, and visual mismatch list (if any)
-  - user-side manual visual validation via explicit step-by-step scenario
-  - manual visual validation is required even when Playwright passes
+- for every UI task, Layer 4 visual validation is mandatory:
+  - Codex-safe HTML marker checks must be included in the task acceptance package
+  - user-side manual browser validation via explicit step-by-step scenario is mandatory
+  - screenshot or confirmed checklist is required as visual evidence
+  - Playwright is optional diagnostic tooling only and must not be the default or required closure path
+- validation budgeting is mandatory:
+  - Layer 1 + Layer 2 acceptance should fit within 30 seconds total and must fit within 60 seconds
+  - Layer 3 primary integration acceptance should fit within 60 seconds and must fit within 120 seconds
+  - full task closure including user visual validation should fit within 5–10 minutes
+  - if a task cannot fit this budget, it must be split or re-architected before execution
 - validated preview / handoff state is the current Stage 8 checkpoint and must remain preserved while the Figma design branch is developed
 - the Stage 8 Figma design branch refines the implementation plan and must not replace or invalidate the original architecture / runtime model
 - Figma prompt generation, Figma-result validation, Figma import, and post-Figma implementation refinement must all execute through numbered AI tasks
 - in the Stage 8 Figma design branch, the local agent authors prompt packs for a third-party Figma-generation system; the user then returns the generated Figma artifacts to the workspace for validation, import, and implementation-plan refinement
-- once an approved Figma artifact is returned to the workspace, it becomes the authoritative UI design reference for implementation decisions, but never replaces JSON as runtime truth
+- once an approved Figma artifact is returned to the workspace, it becomes the authoritative UI design reference for implementation decisions, but never replaces recovery/planning authority
 - if a Figma validation gate fails because the returned external artifact bundle is structurally incomplete, a numbered fallback AI task may assemble an architecture-derived evidence package from the current architecture, preserved design baseline, and returned uploaded workspace artifacts; that fallback package must be explicitly labeled as non-native external output, cannot be misrepresented as a full external export, and must not rely on an external Figma link as authoritative evidence
-- after Figma artifact import or design sync, architecture files and contextJSON must be synchronized before continuing implementation
+- after Figma artifact import or design sync, architecture files and the external viewer export must be synchronized before continuing implementation
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
@@ -188,28 +206,33 @@ Fast restore (mandatory before each new AI task) must read only:
 - `AGENTS.md`
 - `docs/plans/system-implementation-plan.md`
 - `docs/plans/product_goal_traceability_matrix.md`
-- `contextJSON/json_<latest>.json` (metadata + plan + traceability sections)
+- `contextJSON/json_<latest>.json` (external-export status only; never as authority for project operating rules)
 
 Fast restore output must include:
 - one-line summary only
 - current stage / current task / next tasks
 - gate status (Goal Alignment / Requirement mapping)
+- validation model status (`lightweight_migrated` | `legacy_mixed`)
 - readiness status: `ready` or `blocked`
 
 Fast restore response format:
-`FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
+`FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | validation=<lightweight_migrated|legacy_mixed> | readiness=<ready|blocked>`
 
 Full restore must traverse all layers:
 - full `project_recovery/*`
 - full `docs/architecture/*`
 - full `docs/plans/*`
 - relevant `ai_tasks/*`
-- latest contextJSON snapshot validation
+- latest contextJSON snapshot validation as external-export status only
 
 Full restore output must include:
 - complete state reconstruction
 - drift/conflict audit
 - architecture/plan/recovery sync status
+- validation architecture status
+- migration status
+- heavy legacy validation path warnings
+- next-step policy under the lightweight validation model
 - explicit blockers and required fixes (if any)
 - if the Figma design branch is active, include current design-branch checkpoint, next design tasks, and imported-design sync status when available
 
@@ -316,6 +339,44 @@ SCOPE BOUNDARY RULE:
 - fixing out-of-scope files to make tests pass is a scope violation
 
 
+## 8.5 ARTIFACT-FIRST VALIDATION POLICY (permanent)
+
+Validation artifacts are part of the project operating system.
+
+- every heavy validation step must emit machine-readable JSON that can be consumed by higher layers
+- higher-level gates must prefer reading previously produced validation artifacts over re-running children
+- re-running the same heavy child path in the same unchanged validation cycle is prohibited
+- orchestration scripts may compose leaf verifiers or existing artifacts, but must not recursively orchestrate other orchestration scripts by default
+- benchmark evidence is diagnostic metadata:
+  - it may be stored, reported, or consumed
+  - it must not be required for ordinary task acceptance unless explicitly called out as the single primary acceptance gate
+- legacy heavy validators remain allowed only as diagnostic tools until replaced by artifact-first acceptance flows
+
+
+## 8.6 ACCEPTANCE GATE AUTHORING POLICY (permanent)
+
+Every future AI task must be authored under the lightweight validation model.
+
+- one task = one primary acceptance gate
+- Layer 1 + Layer 2 must be executable by Codex offline without live infrastructure
+- Layer 3 must contain exactly one primary integration command block for closure evidence
+- Layer 4 must be separate from Layer 3 and must request visual evidence only when the task touches UI/HTML preview
+- diagnostics must appear in a separate block labelled as optional / non-blocking
+- if a task would require recursive validation or multiple heavy integration gates, it must be split before execution
+- no new task may deepen the validation stack unless it reduces overall validation complexity and explicitly replaces a lower wrapper
+
+
+## 8.7 LIGHTWEIGHT VALIDATION MIGRATION STATUS (permanent)
+
+Current architectural decision:
+
+- Stage 9 remains active
+- the project OS is migrated to the lightweight validation model at the architecture / planning / recovery layer
+- legacy heavy validation scripts still exist in runtime code and are classified as diagnostic-only legacy paths unless they are the single explicit primary acceptance gate for a task
+- future tasks must not normalize or reintroduce recursive heavy validation
+- `обнови полный контекст` must restore the project under this new operating model, not under the older recursive validation assumptions
+
+
 ---
 
 ## 9. ARCHITECTURE UPDATE PROTOCOL
@@ -339,11 +400,14 @@ When command is triggered:
 
 ## 10. CONTEXTJSON RULES
 
-- latest snapshot = runtime truth
+- latest snapshot = external viewer export truth only
 - filename must include timestamp
 - invalid snapshots must be marked
-- markdown cannot override JSON
+- markdown cannot override the external export payload for the viewer application
 - history is preserved
+- contextJSON must never define architecture, planning, testing policy, execution policy, or project methodology
+- validation artifacts must remain separate from `contextJSON` exports
+- `contextJSON` is not a validation artifact and is not a project-OS authority source
 
 
 ---
@@ -367,10 +431,11 @@ When command is triggered:
 - forbidden inside `Cursor prompt (EN)`: `Manual Test` sections, `What to send back for validation`, architecture-update instructions, next-step planning, changed-files validation instructions, or local-agent validation responsibilities
 - `Manual Test (exact commands)` and `What to send back for validation` remain mandatory response blocks in the local agent response, but must stay outside the `Cursor prompt (EN)` block
 - when an AI task affects UI, frontend, HTML preview, browser output, or any visual product surface, tests must also include a dedicated visual manual-test section with explicit viewing steps and exact visual evidence to send back for validation
-- for each UI task, both validation contours are mandatory and non-substitutable:
-  - assistant must run Playwright and provide: executed steps, per-step pass/fail, visual mismatch list (if any)
+- for each UI task, Layer 4 visual validation is mandatory:
+  - assistant must include Codex-safe HTML marker checks
   - user must run manual visual validation by explicit step-by-step scenario
-  - manual visual validation is mandatory and not replaced by Playwright
+  - manual visual validation is mandatory and is not replaced by automated browser tooling
+  - Playwright may be mentioned only as optional diagnostics, never as the default closure path
 - fast smoke execution policy is mandatory by default:
   - run one highest-level orchestration gate first
   - run lower-level smoke scripts only for diagnostics, failure localization, or explicit user request
@@ -401,6 +466,10 @@ When command is triggered:
 - assistant must run `git status --short` itself during validation even if the user did not include it
 - changed-files validation assumes one commit boundary per task; if unrelated changes are detected, assistant must flag them explicitly
 - changed-files validation must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- commit-boundary separation is mandatory:
+  - functional task changes must be isolated from architecture-sync changes whenever possible
+  - external viewer export updates under `contextJSON/*` must be treated as separate sync/export boundary, not as part of the functional task boundary, unless the task explicitly owns export generation
+  - if a task produces both functional changes and architecture/export sync changes, assistant must explicitly propose split commit boundaries before closure
 - before sending any AI task response, run self-check:
   - file exists in `ai_tasks/`
   - numbering is continuous
