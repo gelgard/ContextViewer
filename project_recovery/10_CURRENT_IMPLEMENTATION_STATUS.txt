@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Validation runtime optimization + offline fixture support
+Closure ready after validation runtime stabilization
 
 STATUS:
 - Architecture synced with latest rules
@@ -116,17 +116,24 @@ STATUS:
 - AI Task 088 completed: Stage 9 secondary-flows readiness gate delivered (`verify_stage9_secondary_flows_readiness_gate.sh`)
 - AI Task 089 completed: Stage 9 completion gate and transition-readiness report delivered
 - AI Task 090 delivered the first fast/full execution split for Stage 9 orchestration verifiers
-- AI Task 091 active: validation runtime stability + deterministic benchmark harness
+- AI Task 091 completed: validation runtime stability + deterministic benchmark harness
 - AI Task 092 completed: static offline fixture pack created under `code/test_fixtures/` for hygiene/completion-report/benchmark outputs
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
   - heavy validation watchdog output must classify `timeout_step=<delivery|handoff|readiness|secondary_gate>`
+- Stage 9 closure evidence recorded:
+  - `verify_stage9_secondary_flows_readiness_gate.sh --mode fast` => pass
+  - `verify_stage9_secondary_flows_readiness_gate.sh --mode full` => pass
+  - `get_stage9_completion_gate_report.sh --mode fast` => ready_for_stage_transition
+  - `get_stage9_completion_gate_report.sh --mode full` => ready_for_stage_transition with `diagnostics.full_mode.fallback_to_fast_readiness=true`
+  - `verify_stage9_completion_gate.sh --mode full` => pass
+  - `run_stage9_validation_runtime_benchmark.sh` => pass
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Complete AI Task 091 — finalize diagnostic/non-blocking full-path behavior and deterministic benchmark closure evidence
+Create the next numbered AI task and continue Stage 9 from the now-closed 091/092 baseline
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

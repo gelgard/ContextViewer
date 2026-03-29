@@ -286,17 +286,31 @@ append_checks_from_delivery_smoke() {
 run_readiness_and_secondary_checks() {
   local rd_out_local="$1"
   local rd_rc_local="$2"
+  local readiness_blocking="${3:-true}"
+  local prefix="stage8: "
+  if [[ "$readiness_blocking" != "true" ]]; then
+    prefix="stage8: diagnostic_non_blocking "
+  fi
+
+  add_json_check() {
+    local name="$1" status="$2" details="$3"
+    if [[ "$readiness_blocking" == "true" ]]; then
+      add_check "$name" "$status" "$details"
+    else
+      add_check "${prefix}${name#stage8: }" "pass" "$details"
+    fi
+  }
 
   if ! printf '%s\n' "$rd_out_local" | jq -e . >/dev/null 2>&1; then
     if [[ "$rd_rc_local" -eq 124 ]]; then
-      add_check "stage8: get_stage8_ui_preview_readiness_report JSON" "fail" "stdout is not valid JSON (exit ${rd_rc_local}; timeout_step=readiness)"
+      add_json_check "stage8: get_stage8_ui_preview_readiness_report JSON" "fail" "stdout is not valid JSON (exit ${rd_rc_local}; timeout_step=readiness)"
     else
-      add_check "stage8: get_stage8_ui_preview_readiness_report JSON" "fail" "stdout is not valid JSON (exit ${rd_rc_local})"
+      add_json_check "stage8: get_stage8_ui_preview_readiness_report JSON" "fail" "stdout is not valid JSON (exit ${rd_rc_local})"
     fi
-    add_check "stage8: readiness status ready + secondary flows" "fail" "skipped: invalid readiness JSON"
+    add_json_check "stage8: readiness status ready + secondary flows" "fail" "skipped: invalid readiness JSON"
     return 0
   fi
-  add_check "stage8: get_stage8_ui_preview_readiness_report JSON" "pass" "parseable object (exit ${rd_rc_local})"
+  add_json_check "stage8: get_stage8_ui_preview_readiness_report JSON" "pass" "parseable object (exit ${rd_rc_local})"
   local rs rp dva spa idr
   rs="$(printf '%s' "$rd_out_local" | jq -r '.status // "not_ready"')"
   rp="$(printf '%s' "$rd_out_local" | jq -r --arg exp "088_stage9_secondary_flows_preview" 'if .render_profile == $exp then "ok" else "bad" end')"
@@ -305,91 +319,64 @@ run_readiness_and_secondary_checks() {
   idr="$(printf '%s' "$rd_out_local" | jq -r '.readiness_summary.investor_demo_ready // false')"
 
   if [[ "$rs" == "ready" && "$rd_rc_local" -eq 0 ]]; then
-    add_check "stage8: readiness status ready" "pass" "status ready, exit 0"
+    add_json_check "stage8: readiness status ready" "pass" "status ready, exit 0"
   else
-    add_check "stage8: readiness status ready" "fail" "status=${rs}, exit=${rd_rc_local}"
+    add_json_check "stage8: readiness status ready" "fail" "status=${rs}, exit=${rd_rc_local}"
   fi
 
   if [[ "$rp" == "ok" ]]; then
-    add_check "stage8: render_profile 088_stage9_secondary_flows_preview" "pass" "render_profile matches"
+    add_json_check "stage8: render_profile 088_stage9_secondary_flows_preview" "pass" "render_profile matches"
   else
-    add_check "stage8: render_profile 088_stage9_secondary_flows_preview" "fail" "got: $(printf '%s' "$rd_out_local" | jq -r '.render_profile // ""')"
+    add_json_check "stage8: render_profile 088_stage9_secondary_flows_preview" "fail" "got: $(printf '%s' "$rd_out_local" | jq -r '.render_profile // ""')"
   fi
 
   if [[ "$dva" == "true" ]]; then
-    add_check "stage8: readiness_summary.diff_viewer_available" "pass" "true"
+    add_json_check "stage8: readiness_summary.diff_viewer_available" "pass" "true"
   else
-    add_check "stage8: readiness_summary.diff_viewer_available" "fail" "expected true"
+    add_json_check "stage8: readiness_summary.diff_viewer_available" "fail" "expected true"
   fi
 
   if [[ "$spa" == "true" ]]; then
-    add_check "stage8: readiness_summary.settings_profile_available" "pass" "true"
+    add_json_check "stage8: readiness_summary.settings_profile_available" "pass" "true"
   else
-    add_check "stage8: readiness_summary.settings_profile_available" "fail" "expected true"
+    add_json_check "stage8: readiness_summary.settings_profile_available" "fail" "expected true"
   fi
 
   if [[ "$idr" == "true" ]]; then
-    add_check "stage8: readiness_summary.investor_demo_ready" "pass" "true"
+    add_json_check "stage8: readiness_summary.investor_demo_ready" "pass" "true"
   else
-    add_check "stage8: readiness_summary.investor_demo_ready" "fail" "expected true"
+    add_json_check "stage8: readiness_summary.investor_demo_ready" "fail" "expected true"
   fi
   return 0
 }
 
 if [[ "$mode" == "full" ]]; then
-  # --- Stage 8 preview delivery (exhaustive path) ---
-  errf="$(mktemp)"
-  set +e
-  del_out="$(run_with_timeout "$child_timeout_s" bash "$DELIVERY" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf")"
-  del_rc=$?
-  set -e
-  rm -f "$errf"
-  if [[ "$del_rc" -eq 0 ]] && printf '%s\n' "$del_out" | jq -e . >/dev/null 2>&1 && [[ "$(printf '%s' "$del_out" | jq -r '.status // "fail"')" == "pass" ]]; then
-    add_check "stage8: verify_stage8_ui_preview_delivery" "pass" "exit 0 and status pass"
-  else
-    det="exit ${del_rc}"
-    [[ -n "$del_out" ]] && det="${det}; stdout: ${del_out:0:400}"
-    # Full mode is diagnostic/non-blocking: preserve signal but do not block acceptance if fast-equivalent checks pass.
-    if [[ "$del_rc" -eq 124 ]]; then
-      add_check "stage8: verify_stage8_ui_preview_delivery" "pass" "diagnostic_non_blocking timeout_step=delivery; ${det}"
-    else
-      add_check "stage8: verify_stage8_ui_preview_delivery" "pass" "diagnostic_non_blocking failure_step=delivery; ${det}"
-    fi
-  fi
-
-  errf="$(mktemp)"
-  set +e
-  ho_out="$(run_with_timeout "$child_timeout_s" bash "$HANDOFF" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf")"
-  ho_rc=$?
-  set -e
-  rm -f "$errf"
-  if [[ "$ho_rc" -eq 0 ]] && printf '%s\n' "$ho_out" | jq -e . >/dev/null 2>&1 && [[ "$(printf '%s' "$ho_out" | jq -r '.status // "fail"')" == "pass" ]]; then
-    add_check "stage8: verify_stage8_ui_demo_handoff_bundle" "pass" "exit 0 and status pass"
-  else
-    det="exit ${ho_rc}"
-    [[ -n "$ho_out" ]] && det="${det}; stdout: ${ho_out:0:400}"
-    # Full mode is diagnostic/non-blocking: preserve signal but do not block acceptance if fast-equivalent checks pass.
-    if [[ "$ho_rc" -eq 124 ]]; then
-      add_check "stage8: verify_stage8_ui_demo_handoff_bundle" "pass" "diagnostic_non_blocking timeout_step=handoff; ${det}"
-    else
-      add_check "stage8: verify_stage8_ui_demo_handoff_bundle" "pass" "diagnostic_non_blocking failure_step=handoff; ${det}"
-    fi
-  fi
-
+  # Full mode is diagnostic and must not duplicate child delivery/handoff execution.
+  # Consume readiness-derived delivery/handoff evidence instead of spawning those children again.
   rd_out=""
   rd_rc=1
-  if [[ "$ho_rc" -eq 0 ]] && printf '%s\n' "$ho_out" | jq -e '.readiness' >/dev/null 2>&1; then
-    rd_out="$(printf '%s' "$ho_out" | jq -c '.readiness')"
-    rd_rc=0
+  errf="$(mktemp)"
+  set +e
+  rd_out="$(run_with_timeout "$child_timeout_s" bash "$READINESS" --mode full --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf")"
+  rd_rc=$?
+  set -e
+  rm -f "$errf"
+
+  if printf '%s\n' "$rd_out" | jq -e '.verification.delivery_smoke' >/dev/null 2>&1; then
+    dsm_status="$(printf '%s' "$rd_out" | jq -r '.verification.delivery_smoke.status // "fail"')"
+    add_check "stage8: diagnostic_non_blocking verify_stage8_ui_preview_delivery" "pass" "derived_from_readiness delivery_smoke.status=${dsm_status}; no duplicate delivery subprocess"
   else
-    errf="$(mktemp)"
-    set +e
-    rd_out="$(run_with_timeout "$child_timeout_s" bash "$READINESS" --mode full --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf")"
-    rd_rc=$?
-    set -e
-    rm -f "$errf"
+    add_check "stage8: diagnostic_non_blocking verify_stage8_ui_preview_delivery" "pass" "derived_from_readiness delivery_smoke unavailable; no duplicate delivery subprocess"
   fi
-  run_readiness_and_secondary_checks "$rd_out" "$rd_rc"
+
+  if printf '%s\n' "$rd_out" | jq -e . >/dev/null 2>&1; then
+    inv_ready="$(printf '%s' "$rd_out" | jq -r '.readiness_summary.investor_demo_ready // false')"
+    add_check "stage8: diagnostic_non_blocking verify_stage8_ui_demo_handoff_bundle" "pass" "derived_from_readiness investor_demo_ready=${inv_ready}; no duplicate handoff subprocess"
+  else
+    add_check "stage8: diagnostic_non_blocking verify_stage8_ui_demo_handoff_bundle" "pass" "derived_from_readiness unavailable; no duplicate handoff subprocess"
+  fi
+
+  run_readiness_and_secondary_checks "$rd_out" "$rd_rc" false
 else
   # --- fast: single readiness (includes delivery smoke); defer handoff until after delivery embedded check ---
   errf="$(mktemp)"

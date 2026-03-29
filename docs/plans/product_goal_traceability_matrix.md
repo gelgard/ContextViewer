@@ -137,8 +137,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 088` is completed: Stage 9 secondary-flows readiness gate (`verify_stage9_secondary_flows_readiness_gate.sh`).
 - `AI Task 089` is completed: Stage 9 completion / transition readiness gate (`get_stage9_completion_gate_report.sh`, `verify_stage9_completion_gate.sh`) — proves **084–088** stable for next-stage transition.
 - `AI Task 090` is created and active: Stage 9 fast-smoke mode implementation (`--mode fast|full`, fast-by-default) for orchestration verifiers and runtime benchmark closure evidence.
-- `AI Task 091` is created and active: Stage 9 validation runtime stability + deterministic benchmark harness; acceptance policy is now `fast`-authoritative, while `full` is diagnostic/non-blocking and must emit explicit `timeout_step` / blocker classification.
+- `AI Task 091` is completed: Stage 9 validation runtime stability + deterministic benchmark harness; acceptance policy is `fast`-authoritative, while `full` is diagnostic/non-blocking and emits explicit `timeout_step` / fallback diagnostics when full-only legs degrade.
 - `AI Task 092` is completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/` to support no-network shape validation.
+- Requirement mapping for **091** (complete):
+  - `PG-EX-001`
+  - `PG-UX-001`
+  - `PG-RT-001`
+  - `PG-RT-002`
 - **Stage 9 closure evidence:** run `bash code/ui/verify_stage9_completion_gate.sh --project-id <id>` (requires DB + preview stack); report `status` must be `ready_for_stage_transition` for transition GO.
 - Requirement mapping for **092** (complete):
   - `PG-EX-001`

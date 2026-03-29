@@ -4,7 +4,7 @@
 Stage 9 — Secondary Flows And Release Readiness
 
 ## Current Substage
-Validation runtime optimization + offline fixture support
+Closure ready after validation runtime stabilization
 
 ## Progress
 
@@ -134,8 +134,8 @@ Current:
 - Stage 9 active — **preserved checkpoint:** JSON-driven preview / demo handoff through **AI Task 061** remains the non-negotiable implementation baseline
 - **Design authority:** `docs/design/approved_figma_artifact.md` + primary package `docs/design/artifacts/task076/` (`docs/design/figma_design_branch_charter.md`)
 - **Post-Figma production UI slices `080–083`: completed**
-- **Stage 9 secondary flows:** `084–089` delivered; `092` fixture support added for offline verifier-shape validation
-- **Current execution anchor:** **AI Task 091** (validation runtime stability, deterministic benchmark harness, and fast-authoritative acceptance policy)
+- **Stage 9 secondary flows:** `084–089` delivered; `091` closure/runtime stabilization completed; `092` fixture support added for offline verifier-shape validation
+- **Current execution anchor:** closed through **AI Task 091**; next numbered AI task can now be opened from the stabilized Stage 9 baseline
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**
@@ -157,6 +157,7 @@ Response rule update:
   - `fast` is the required acceptance mode for routine closure
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
   - heavy validation watchdogs must report explicit `timeout_step` classification
+  - completion-report full mode may fall back to fast-equivalent readiness while preserving timeout diagnostics
 
 Cross-cutting architecture notes:
 - contextJSON maintenance is part of architecture synchronization

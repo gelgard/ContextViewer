@@ -93,7 +93,7 @@ od_base="$(basename "$od_abs")"
 
 is_our_http_server_cmd() {
   local c="$1"
-  [[ "$c" == *"python"* ]] && [[ "$c" == *"http.server"* ]] \
+  [[ "$c" == *"python"* || "$c" == *"Python"* ]] && [[ "$c" == *"http.server"* ]] \
     && { [[ "$c" == *"$od_abs"* ]] || [[ "$c" == *"$od_base"* ]] || [[ "$c" == *"contextviewer_ui_preview"* ]]; }
 }
 
@@ -137,6 +137,25 @@ kill_pid_term() {
 }
 
 ports_json="$(printf '%s\n' "${ports[@]}" | jq -cn -R '[inputs | tonumber]')"
+
+if command -v pgrep >/dev/null 2>&1 && [[ "$clean" == true ]]; then
+  for pat in \
+    'verify_stage9_secondary_flows_readiness_gate\.sh' \
+    'verify_stage9_completion_gate\.sh' \
+    'get_stage9_completion_gate_report\.sh'; do
+    while read -r pid; do
+      [[ -z "$pid" ]] && continue
+      should_skip_pid "$pid" && continue
+      cmd="$(ps -p "$pid" -o command= 2>/dev/null | tr '\n' ' ' || true)"
+      is_stale_verifier_cmd "$cmd" || continue
+      kill_pid_term "$pid" "stale_verifier_pgrep_${pat}"
+    done < <(pgrep -f "$pat" 2>/dev/null || true)
+  done
+fi
+
+if [[ "$clean" == true ]] && [[ "$(jq 'length' <<<"$cleaned_json")" -gt 0 ]] 2>/dev/null; then
+  sleep 0.35
+fi
 
 for port in "${ports[@]}"; do
   if [[ ! "$port" =~ ^[0-9]+$ ]] || [[ "$port" -lt 1 ]]; then
@@ -184,21 +203,6 @@ if [[ "$(jq 'length' <<<"$foreign_final")" -gt 0 ]]; then
   fi
 else
   add_chk "port_listeners" "pass" "no blocking foreign listeners on requested ports"
-fi
-
-if command -v pgrep >/dev/null 2>&1 && [[ "$clean" == true ]]; then
-  for pat in \
-    'verify_stage9_secondary_flows_readiness_gate\.sh' \
-    'verify_stage9_completion_gate\.sh' \
-    'get_stage9_completion_gate_report\.sh'; do
-    while read -r pid; do
-      [[ -z "$pid" ]] && continue
-      should_skip_pid "$pid" && continue
-      cmd="$(ps -p "$pid" -o command= 2>/dev/null | tr '\n' ' ' || true)"
-      is_stale_verifier_cmd "$cmd" || continue
-      kill_pid_term "$pid" "stale_verifier_pgrep_${pat}"
-    done < <(pgrep -f "$pat" 2>/dev/null || true)
-  done
 fi
 
 st="ok"

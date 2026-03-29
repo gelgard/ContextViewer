@@ -94,10 +94,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 9
-- Substage: Validation runtime optimization + offline fixture support
+- Substage: Closure ready after validation runtime stabilization
 
 Next required action:
-→ complete AI Task 091 (diagnostic/non-blocking full-path closure evidence); AI Task 092 fixture support is complete
+→ create and execute the next numbered AI task; AI Task 091 is closed and AI Task 092 fixture support is complete
 
 
 ---
