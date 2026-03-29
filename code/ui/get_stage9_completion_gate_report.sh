@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # AI Task 089: Stage 9 completion / transition readiness report (read-only orchestration; stdout = one JSON object).
 # AI Task 090/091: --mode fast|full (default fast) — fast is mandatory acceptance path; full is diagnostics/non-blocking.
+# AI Task 094: default --mode fast consumes get_stage9_acceptance_artifact.sh (single inner fast run; no benchmark).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ACCEPTANCE="${SCRIPT_DIR}/get_stage9_acceptance_artifact.sh"
 DIFF_VERIFY="${SCRIPT_DIR}/../diff/verify_stage9_diff_viewer_contracts.sh"
 SETTINGS_VERIFY="${SCRIPT_DIR}/../settings/verify_stage9_settings_profile_contracts.sh"
 DELIVERY="${SCRIPT_DIR}/verify_stage8_ui_preview_delivery.sh"
@@ -46,6 +48,8 @@ Optional:
   --invalid-project-id <value>  passed to children (default: abc)
   env STAGE9_GATE_TIMEOUT_S     child timeout seconds (default 420, minimum 30)
   env STAGE9_HYGIENE_SKIP=1    skip ensure_stage9_validation_runtime_hygiene.sh preflight (diagnostics only)
+  env STAGE9_COMPLETION_LEGACY_FAST=1   force legacy inline fast path (skip acceptance artifact wrapper; diagnostics only)
+  --skip-hygiene-preflight      internal: run fast core only (used by get_stage9_acceptance_artifact.sh only)
 
 Preflight: runs ensure_stage9_validation_runtime_hygiene.sh (--clean) for --port and --output-dir;
   on failure prints the normal report JSON shape with status not_ready and exits 3 without
@@ -68,12 +72,17 @@ output_dir="/tmp/contextviewer_ui_preview"
 invalid_id="abc"
 mode="fast"
 child_timeout_s="${STAGE9_GATE_TIMEOUT_S:-420}"
+skip_hygiene_preflight="0"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help)
       usage
       exit 0
+      ;;
+    --skip-hygiene-preflight)
+      skip_hygiene_preflight="1"
+      shift
       ;;
     --project-id)
       if [[ -z "${2:-}" ]]; then
@@ -130,6 +139,11 @@ fi
 
 if [[ "$mode" != "fast" && "$mode" != "full" ]]; then
   echo "error: --mode must be fast or full, got: $mode" >&2
+  exit 2
+fi
+
+if [[ "$skip_hygiene_preflight" == "1" && "$mode" != "fast" ]]; then
+  echo "error: --skip-hygiene-preflight is only valid with --mode fast" >&2
   exit 2
 fi
 
@@ -255,7 +269,7 @@ readiness_investor_demo_true() {
 }
 
 hygiene_skip="${STAGE9_HYGIENE_SKIP:-0}"
-if [[ "$hygiene_skip" != "1" ]]; then
+if [[ "$skip_hygiene_preflight" != "1" && "$hygiene_skip" != "1" ]]; then
   set +e
   hygiene_out="$(bash "$HYGIENE" --port "$port" --output-dir "$output_dir" --clean 2>/dev/null)"
   hygiene_rc=$?
@@ -375,7 +389,7 @@ if [[ "$mode" == "full" ]]; then
       failed_checks: (if $st == "pass" then 0 else 1 end),
       generated_at: $ga
     }')"
-else
+elif [[ "$mode" == "fast" && ( "$skip_hygiene_preflight" == "1" || "${STAGE9_COMPLETION_LEGACY_FAST:-0}" == "1" ) ]]; then
   diff_out="$(run_child bash "$DIFF_VERIFY" --project-id "$project_id" --invalid-project-id "$invalid_id")"
   diff_rc=$?
 
@@ -454,6 +468,30 @@ else
       failed_checks: (if $st == "pass" then 0 else 1 end),
       generated_at: $ga
     }')"
+elif [[ "$mode" == "fast" ]]; then
+  if [[ ! -f "$ACCEPTANCE" || ! -x "$ACCEPTANCE" ]]; then
+    echo "error: missing or not executable: $ACCEPTANCE" >&2
+    exit 1
+  fi
+  set +e
+  art_out="$(run_child bash "$ACCEPTANCE" --skip-hygiene --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+  art_rc=$?
+  set -e
+  if ! printf '%s' "$art_out" | jq -e . >/dev/null 2>&1; then
+    echo "error: get_stage9_acceptance_artifact.sh returned non-JSON stdout (exit ${art_rc})" >&2
+    exit 3
+  fi
+  cr="$(printf '%s' "$art_out" | jq -c '.completion_report // empty')"
+  if [[ -z "$cr" || "$cr" == "null" ]]; then
+    echo "error: acceptance artifact missing completion_report" >&2
+    exit 3
+  fi
+  printf '%s\n' "$cr" | jq -c .
+  st="$(printf '%s' "$cr" | jq -r '.status // "not_ready"')"
+  if [[ "$st" == "ready_for_stage_transition" ]]; then
+    exit 0
+  fi
+  exit 3
 fi
 
 diff_json="$(safe_json_or_null "$diff_out")"

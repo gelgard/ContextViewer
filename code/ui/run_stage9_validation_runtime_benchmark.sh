@@ -10,6 +10,10 @@ usage() {
   cat <<'USAGE'
 run_stage9_validation_runtime_benchmark.sh — wall-clock benchmark for get_stage9_completion_gate_report.sh
 
+Diagnostic / timing only: not part of the default Stage 9 ordinary-closure acceptance path.
+Primary acceptance is get_stage9_acceptance_artifact.sh + verify_stage9_acceptance_artifact.sh
+(fast completion evidence; no benchmark).
+
 Runs runtime hygiene, then --mode fast and --mode full on the same project with the same bounded
 child timeout. Prints exactly one JSON object:
   status            pass | fail

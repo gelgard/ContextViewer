@@ -6,13 +6,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPORT="${SCRIPT_DIR}/get_stage9_completion_gate_report.sh"
 HYGIENE="${SCRIPT_DIR}/ensure_stage9_validation_runtime_hygiene.sh"
+ACCEPT_VERIFY="${SCRIPT_DIR}/verify_stage9_acceptance_artifact.sh"
 
 usage() {
   cat <<'USAGE'
 verify_stage9_completion_gate.sh — Stage 9 completion / transition gate smoke tests
 
-Runs get_stage9_completion_gate_report.sh, validates the machine-readable closure contract,
-and negative CLI behavior on the report script. Prints exactly one JSON object:
+AI Task 094 — --mode fast: runs verify_stage9_acceptance_artifact.sh (primary gate; consumes
+  acceptance artifact / embedded completion JSON) plus negative CLI checks on the report script.
+  Does not re-invoke get_stage9_completion_gate_report.sh for the positive path.
+
+--mode full: legacy diagnostic path — hygiene + live get_stage9_completion_gate_report.sh
+  (heavy chain), same shape checks as before.
+
+Prints exactly one JSON object:
   status        pass | fail
   checks        array of { name, status, details }
   failed_checks integer
@@ -134,6 +141,10 @@ if [[ ! -f "$REPORT" || ! -x "$REPORT" ]]; then
   echo "error: missing or not executable: $REPORT" >&2
   exit 1
 fi
+if [[ ! -f "$ACCEPT_VERIFY" || ! -x "$ACCEPT_VERIFY" ]]; then
+  echo "error: missing or not executable: $ACCEPT_VERIFY" >&2
+  exit 1
+fi
 if [[ ! -f "$HYGIENE" || ! -x "$HYGIENE" ]]; then
   echo "error: missing or not executable: $HYGIENE" >&2
   exit 1
@@ -169,13 +180,71 @@ if [[ ! "$project_id" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
-hygiene_skip="${STAGE9_HYGIENE_SKIP:-0}"
-if [[ "$hygiene_skip" != "1" ]]; then
+if [[ "$mode" == "fast" ]]; then
+  set +e
+  va_out="$(bash "$ACCEPT_VERIFY" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>/dev/null)"
+  set -e
+  if printf '%s' "$va_out" | jq -e . >/dev/null 2>&1; then
+    checks="$(printf '%s' "$va_out" | jq -c '.checks')"
+  else
+    checks="$(jq -n \
+      --arg raw "${va_out:0:240}" \
+      '[{name: "verify_stage9_acceptance_artifact", status: "fail", details: ("non-JSON stdout: " + $raw)}]')"
+  fi
+else
+  checks='[]'
+  hygiene_skip="${STAGE9_HYGIENE_SKIP:-0}"
+  if [[ "$hygiene_skip" != "1" ]]; then
+    errf="$(mktemp)"
+    set +e
+    hy_out="$(python3 - 60 bash "$HYGIENE" --port "$port" --output-dir "$output_dir" --clean 2>"$errf" <<'PY'
+import subprocess
+import sys
+timeout_s = int(sys.argv[1])
+cmd = sys.argv[2:]
+try:
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
+    if proc.stdout:
+        sys.stdout.write(proc.stdout)
+    if proc.stderr:
+        sys.stderr.write(proc.stderr)
+    sys.exit(proc.returncode)
+except subprocess.TimeoutExpired as exc:
+    out = exc.stdout or ""
+    err = exc.stderr or ""
+    if isinstance(out, bytes):
+        out = out.decode("utf-8", errors="replace")
+    if isinstance(err, bytes):
+        err = err.decode("utf-8", errors="replace")
+    if out:
+        sys.stdout.write(out)
+    if err:
+        sys.stderr.write(err)
+    sys.stderr.write(f"error: timeout after {timeout_s}s: {' '.join(cmd)}\n")
+    sys.exit(124)
+PY
+)"
+    hy_rc=$?
+    set -e
+    rm -f "$errf"
+    if [[ "$hy_rc" -eq 0 ]] && printf '%s\n' "$hy_out" | jq -e . >/dev/null 2>&1 && [[ "$(printf '%s' "$hy_out" | jq -r '.status // "fail"')" == "ok" ]]; then
+      add_check "completion: validation_runtime_hygiene" "pass" "hygiene status ok"
+    else
+      det="exit ${hy_rc}"
+      [[ -n "$hy_out" ]] && det="${det}; $(printf '%s' "$hy_out" | jq -c . 2>/dev/null || echo "${hy_out:0:500}")"
+      add_check "completion: validation_runtime_hygiene" "fail" "$det"
+    fi
+  else
+    add_check "completion: validation_runtime_hygiene" "pass" "STAGE9_HYGIENE_SKIP=1"
+  fi
+
+  # --- diagnostic: live completion report (--mode full) ---
   errf="$(mktemp)"
   set +e
-  hy_out="$(python3 - 60 bash "$HYGIENE" --port "$port" --output-dir "$output_dir" --clean 2>"$errf" <<'PY'
+  rep_out="$(python3 - "$child_timeout_s" bash "$REPORT" --mode "$mode" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf" <<'PY'
 import subprocess
 import sys
+
 timeout_s = int(sys.argv[1])
 cmd = sys.argv[2:]
 try:
@@ -200,133 +269,89 @@ except subprocess.TimeoutExpired as exc:
     sys.exit(124)
 PY
 )"
-  hy_rc=$?
+  rep_rc=$?
   set -e
   rm -f "$errf"
-  if [[ "$hy_rc" -eq 0 ]] && printf '%s\n' "$hy_out" | jq -e . >/dev/null 2>&1 && [[ "$(printf '%s' "$hy_out" | jq -r '.status // "fail"')" == "ok" ]]; then
-    add_check "completion: validation_runtime_hygiene" "pass" "hygiene status ok"
+
+  shape_ok="false"
+  if printf '%s\n' "$rep_out" | jq -e . >/dev/null 2>&1; then
+    if printf '%s\n' "$rep_out" | jq -e '
+        type == "object"
+        and (.project_id | type == "number")
+        and (.generated_at | type == "string")
+        and (.status | type == "string")
+        and (.stage9_completed_tasks | type == "array")
+        and (.verification | type == "object")
+        and (.consistency_checks | type == "object")
+        and (.transition_readiness | type == "object")
+        and (.verification | has("verify_stage9_diff_viewer_contracts"))
+        and (.verification | has("verify_stage9_settings_profile_contracts"))
+        and (.verification | has("verify_stage8_ui_preview_delivery"))
+        and (.verification | has("verify_stage8_ui_demo_handoff_bundle"))
+        and (.verification | has("get_stage8_ui_preview_readiness_report"))
+        and (.verification | has("verify_stage9_secondary_flows_readiness_gate"))
+        and (.consistency_checks | has("all_stage9_closure_verifiers_pass"))
+      ' >/dev/null 2>&1; then
+      shape_ok="true"
+      add_check "completion: report JSON contract shape" "pass" "required keys and nested verification entries"
+    else
+      add_check "completion: report JSON contract shape" "fail" "missing or wrong types for required keys"
+    fi
   else
-    det="exit ${hy_rc}"
-    [[ -n "$hy_out" ]] && det="${det}; $(printf '%s' "$hy_out" | jq -c . 2>/dev/null || echo "${hy_out:0:500}")"
-    add_check "completion: validation_runtime_hygiene" "fail" "$det"
+    add_check "completion: report JSON contract shape" "fail" "stdout is not valid JSON (report exit ${rep_rc})"
   fi
-else
-  add_check "completion: validation_runtime_hygiene" "pass" "STAGE9_HYGIENE_SKIP=1"
-fi
 
-# --- positive: full completion report ---
-errf="$(mktemp)"
-set +e
-rep_out="$(python3 - "$child_timeout_s" bash "$REPORT" --mode "$mode" --project-id "$project_id" --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>"$errf" <<'PY'
-import subprocess
-import sys
-
-timeout_s = int(sys.argv[1])
-cmd = sys.argv[2:]
-try:
-    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
-    if proc.stdout:
-        sys.stdout.write(proc.stdout)
-    if proc.stderr:
-        sys.stderr.write(proc.stderr)
-    sys.exit(proc.returncode)
-except subprocess.TimeoutExpired as exc:
-    out = exc.stdout or ""
-    err = exc.stderr or ""
-    if isinstance(out, bytes):
-        out = out.decode("utf-8", errors="replace")
-    if isinstance(err, bytes):
-        err = err.decode("utf-8", errors="replace")
-    if out:
-        sys.stdout.write(out)
-    if err:
-        sys.stderr.write(err)
-    sys.stderr.write(f"error: timeout after {timeout_s}s: {' '.join(cmd)}\n")
-    sys.exit(124)
-PY
-)"
-rep_rc=$?
-set -e
-rm -f "$errf"
-
-shape_ok="false"
-if printf '%s\n' "$rep_out" | jq -e . >/dev/null 2>&1; then
-  if printf '%s\n' "$rep_out" | jq -e '
-      type == "object"
-      and (.project_id | type == "number")
-      and (.generated_at | type == "string")
-      and (.status | type == "string")
-      and (.stage9_completed_tasks | type == "array")
-      and (.verification | type == "object")
-      and (.consistency_checks | type == "object")
-      and (.transition_readiness | type == "object")
-      and (.verification | has("verify_stage9_diff_viewer_contracts"))
-      and (.verification | has("verify_stage9_settings_profile_contracts"))
-      and (.verification | has("verify_stage8_ui_preview_delivery"))
-      and (.verification | has("verify_stage8_ui_demo_handoff_bundle"))
-      and (.verification | has("get_stage8_ui_preview_readiness_report"))
-      and (.verification | has("verify_stage9_secondary_flows_readiness_gate"))
-      and (.consistency_checks | has("all_stage9_closure_verifiers_pass"))
-    ' >/dev/null 2>&1; then
-    shape_ok="true"
-    add_check "completion: report JSON contract shape" "pass" "required keys and nested verification entries"
+  if [[ "$shape_ok" == "true" ]]; then
+    exp_tasks="$(jq -n '["084","085","086","087","088"]')"
+    if printf '%s\n' "$rep_out" | jq -e --argjson ex "$exp_tasks" '.stage9_completed_tasks == $ex' >/dev/null 2>&1; then
+      add_check "completion: stage9_completed_tasks canonical list" "pass" "084–088 in order"
+    else
+      add_check "completion: stage9_completed_tasks canonical list" "fail" "expected [084,085,086,087,088]"
+    fi
   else
-    add_check "completion: report JSON contract shape" "fail" "missing or wrong types for required keys"
+    add_check "completion: stage9_completed_tasks canonical list" "fail" "skipped: shape failed"
   fi
-else
-  add_check "completion: report JSON contract shape" "fail" "stdout is not valid JSON (report exit ${rep_rc})"
-fi
 
-if [[ "$shape_ok" == "true" ]]; then
-  exp_tasks="$(jq -n '["084","085","086","087","088"]')"
-  if printf '%s\n' "$rep_out" | jq -e --argjson ex "$exp_tasks" '.stage9_completed_tasks == $ex' >/dev/null 2>&1; then
-    add_check "completion: stage9_completed_tasks canonical list" "pass" "084–088 in order"
+  if [[ "$shape_ok" == "true" ]]; then
+    if printf '%s\n' "$rep_out" | jq -e '.status == "ready_for_stage_transition"' >/dev/null 2>&1; then
+      add_check "completion: status ready_for_stage_transition" "pass" "status matches"
+    else
+      st="$(printf '%s' "$rep_out" | jq -r '.status // "null"')"
+      add_check "completion: status ready_for_stage_transition" "fail" "got: ${st} (report exit ${rep_rc})"
+    fi
   else
-    add_check "completion: stage9_completed_tasks canonical list" "fail" "expected [084,085,086,087,088]"
+    add_check "completion: status ready_for_stage_transition" "fail" "skipped: shape failed"
   fi
-else
-  add_check "completion: stage9_completed_tasks canonical list" "fail" "skipped: shape failed"
-fi
 
-if [[ "$shape_ok" == "true" ]]; then
-  if printf '%s\n' "$rep_out" | jq -e '.status == "ready_for_stage_transition"' >/dev/null 2>&1; then
-    add_check "completion: status ready_for_stage_transition" "pass" "status matches"
+  if [[ "$shape_ok" == "true" ]]; then
+    if printf '%s\n' "$rep_out" | jq -e '.consistency_checks.all_stage9_closure_verifiers_pass == true' >/dev/null 2>&1; then
+      add_check "completion: all_stage9_closure_verifiers_pass" "pass" "true"
+    else
+      add_check "completion: all_stage9_closure_verifiers_pass" "fail" "expected true"
+    fi
   else
-    st="$(printf '%s' "$rep_out" | jq -r '.status // "null"')"
-    add_check "completion: status ready_for_stage_transition" "fail" "got: ${st} (report exit ${rep_rc})"
+    add_check "completion: all_stage9_closure_verifiers_pass" "fail" "skipped: shape failed"
   fi
-else
-  add_check "completion: status ready_for_stage_transition" "fail" "skipped: shape failed"
-fi
 
-if [[ "$shape_ok" == "true" ]]; then
-  if printf '%s\n' "$rep_out" | jq -e '.consistency_checks.all_stage9_closure_verifiers_pass == true' >/dev/null 2>&1; then
-    add_check "completion: all_stage9_closure_verifiers_pass" "pass" "true"
+  if [[ "$shape_ok" == "true" ]]; then
+    if [[ "$rep_rc" -eq 0 ]]; then
+      add_check "completion: get_stage9_completion_gate_report exit 0" "pass" "exit 0 when ready"
+    else
+      add_check "completion: get_stage9_completion_gate_report exit 0" "fail" "expected exit 0 when ready, got ${rep_rc}"
+    fi
   else
-    add_check "completion: all_stage9_closure_verifiers_pass" "fail" "expected true"
+    add_check "completion: get_stage9_completion_gate_report exit 0" "fail" "skipped: shape failed"
   fi
-else
-  add_check "completion: all_stage9_closure_verifiers_pass" "fail" "skipped: shape failed"
-fi
 
-if [[ "$shape_ok" == "true" ]]; then
-  if [[ "$rep_rc" -eq 0 ]]; then
-    add_check "completion: get_stage9_completion_gate_report exit 0" "pass" "exit 0 when ready"
+  if [[ "$shape_ok" == "true" ]]; then
+    if printf '%s\n' "$rep_out" | jq -e '.transition_readiness.closure_evidence_complete == true' >/dev/null 2>&1; then
+      add_check "completion: transition_readiness.closure_evidence_complete" "pass" "true"
+    else
+      add_check "completion: transition_readiness.closure_evidence_complete" "fail" "expected true"
+    fi
   else
-    add_check "completion: get_stage9_completion_gate_report exit 0" "fail" "expected exit 0 when ready, got ${rep_rc}"
+    add_check "completion: transition_readiness.closure_evidence_complete" "fail" "skipped: shape failed"
   fi
-else
-  add_check "completion: get_stage9_completion_gate_report exit 0" "fail" "skipped: shape failed"
-fi
-
-if [[ "$shape_ok" == "true" ]]; then
-  if printf '%s\n' "$rep_out" | jq -e '.transition_readiness.closure_evidence_complete == true' >/dev/null 2>&1; then
-    add_check "completion: transition_readiness.closure_evidence_complete" "pass" "true"
-  else
-    add_check "completion: transition_readiness.closure_evidence_complete" "fail" "expected true"
-  fi
-else
-  add_check "completion: transition_readiness.closure_evidence_complete" "fail" "skipped: shape failed"
 fi
 
 run_neg_exit() {
