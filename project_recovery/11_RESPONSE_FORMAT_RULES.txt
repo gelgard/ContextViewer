@@ -44,6 +44,10 @@ RESPONSE FORMAT RULES
     - user explicitly requested `full`, or
     - `fast` failed and deeper diagnostics are required
   - do not launch `full` preemptively as a default validation route
+  - acceptance policy:
+    - `fast` is the authoritative closure gate
+    - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
+    - report `full` failures explicitly as diagnostics (do not silently override `fast` acceptance)
 - Anti-hang test-instruction policy (mandatory):
   - instructions must avoid parallel heavy UI smoke runs on the same port
   - if parallel runs are required, each command set must use a unique port
@@ -52,6 +56,7 @@ RESPONSE FORMAT RULES
   - if a command appears stalled, instructions must include safe stop + diagnostic rerun steps
   - before any new heavy run, assistant must verify and clean stale processes from interrupted prior runs
   - after user interruption, assistant must report process-state check result before restarting heavy validation
+  - timeout diagnostics must include explicit `timeout_step` classification and blocker class
 - If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
 - If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
 - On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
@@ -118,3 +123,27 @@ The generated context JSON must contain aggregated and structured information, n
 
 The newest timestamped JSON must be treated as the authoritative runtime source for the visual application.
 Markdown files are referenced by path for raw content display only.
+Visual Validation Rule (Layer 4, mandatory for every UI task):
+- every AI task that creates or modifies HTML preview content must include a dedicated Visual Validation block in Manual Test
+- Visual Validation block must contain two sub-steps:
+
+  Sub-step A — HTML structure check (Codex-safe, < 5 seconds, no browser):
+    grep -q 'render_profile="<expected>"' <output_dir>/index.html
+    grep -q 'data-section="<section>"' <output_dir>/index.html  [repeat for each expected section]
+
+  Sub-step B — Manual browser open (user, instant):
+    open <output_dir>/index.html
+    OR: python3 -m http.server <port> --directory <output_dir> & ; open http://localhost:<port>
+
+- Visual evidence to send back: screenshot OR confirmed checklist of visible sections
+- Visual validation is a separate evidence block; it does not replace Layer 3 integration evidence
+- Playwright is optional for Layer 4; HTML grep + browser open is sufficient and always preferred
+- Visual Validation block must appear as the last sub-section of Manual Test, clearly labelled "### Visual (Layer 4)"
+
+Codex Acceptance Gate block (mandatory in every AI task response):
+- every AI task response must include an explicit "Codex Acceptance Gate" block
+- this block contains only Layer 1 + Layer 2 commands
+- each command must include an expected exit code or expected output
+- the block must be labelled "### Codex Acceptance Gate (offline, Layer 1+2)"
+- commands in this block must not require live DB, HTTP server, or network
+- maximum 7 commands per gate block; each must complete in < 10 seconds

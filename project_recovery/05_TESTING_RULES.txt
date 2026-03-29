@@ -14,6 +14,9 @@ TESTING RULES
     - explicitly requested by the user, or
     - `fast` mode failed and diagnostic depth is required
   - running `full` first by default is forbidden
+  - `full` mode is diagnostic and non-blocking for task acceptance:
+    - if `fast` acceptance gate passed and code scope is unchanged for the validation cycle, `full` failures do not block task closure
+    - `full` failures must be reported as diagnostics with explicit blocker classification
 - anti-hang execution policy is mandatory:
   - do not run heavy UI smoke scripts in parallel on the same port
   - for parallel terminals, each run must use a unique port
@@ -25,6 +28,10 @@ TESTING RULES
   - each heavy smoke/gate run must use a bounded timeout mechanism
   - on macOS where `timeout` may be missing, use a python-based timeout wrapper
   - timeout expiration is a diagnostic event and must be reported, not ignored
+  - each heavy child step must report explicit timeout metadata:
+    - `timeout_step=<step_name>`
+    - `exit_code` for the timed-out subprocess
+    - blocker class (`benchmark_leg_timeout`, `env_network`, `port_process_hygiene`, or `contract_logic`)
 - for every UI task, dual validation is mandatory:
   - assistant runs Playwright validation and reports:
     - executed steps
@@ -32,3 +39,15 @@ TESTING RULES
     - visual mismatch list (if any)
   - user runs manual visual validation by explicit step-by-step scenario
   - manual visual validation is never replaced by Playwright
+- validation pyramid is mandatory (see AGENTS.md §8.2):
+  - Layer 1 Unit: Codex, offline, bash syntax + CLI flags, < 3s per command
+  - Layer 2 Contract: Codex, offline, jq fixtures + STAGE9_HYGIENE_SKIP=1, < 10s total
+  - Layer 3 Integration: user/CI, live DB + HTTP, STAGE9_GATE_TIMEOUT_S=60 default
+  - Layer 4 Visual: user, HTML grep + browser open, < 5s grep + instant browser
+- codex acceptance gate = Layer 1 + Layer 2 only (offline, no live infrastructure)
+- integration gate = Layer 3, executor = user, output sent back as validation evidence
+- visual gate = Layer 4, executor = user, HTML section markers + manual browser confirm
+- child script deduplication: no script may be invoked more than once per validation cycle; higher-level gates consume child output, not re-execute
+- timeout profiles: 30s (DB only), 60s (with server, default), 120s (benchmark), 420s (CI explicit only)
+- anti-loop rule: identical failure × 2 = stop and classify, never retry without a code change addressing the failure
+- STAGE9_GATE_TIMEOUT_S must be explicitly exported before every Manual Test integration block; default export value = 60

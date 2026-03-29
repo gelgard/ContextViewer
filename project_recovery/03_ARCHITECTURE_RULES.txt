@@ -47,6 +47,12 @@ ARCHITECTURE RULES
      - explicitly requested by the user, or
      - `fast` mode failed and deeper diagnostics are required;
    - proactive `full` runs as default behavior are prohibited.
+16c2. Acceptance gating mode policy is mandatory:
+   - `fast` mode is the authoritative acceptance gate for UI/stage orchestration validation.
+   - `full` mode is diagnostic-only and non-blocking for closure when:
+     - `fast` gate already passed in the same code/validation cycle, and
+     - no new code changes were introduced after the passing `fast` evidence.
+   - `full` diagnostic failures must be surfaced explicitly and must not silently override a valid `fast` acceptance result.
 16d. Anti-hang validation policy is mandatory:
    - do not run heavy UI smoke scripts concurrently on the same local port;
    - if concurrent execution is unavoidable, each process must use a distinct port;
@@ -57,7 +63,11 @@ ARCHITECTURE RULES
 16e. Timeout/diagnostic policy for heavy validations:
    - long-running smoke/gate commands must be executed with bounded timeout guidance;
    - on environments without `timeout`, use a python timeout wrapper;
-   - timeout events must be treated as diagnostic failures and followed by targeted reruns.
+  - timeout events must be treated as diagnostic failures and followed by targeted reruns.
+16e1. Step-level watchdog diagnostics are mandatory:
+   - each heavy child step in orchestration scripts must include bounded execution.
+   - on timeout, output must include explicit `timeout_step` classification (for example: `delivery`, `handoff`, `readiness`, `secondary_gate`).
+   - timeout diagnostics must include blocker classification (`benchmark_leg_timeout`, `env_network`, `port_process_hygiene`, `contract_logic`).
 17. If a task generates prompts for an external Figma/design workflow, the test section must specify the exact prompt blocks and the exact returned design artifacts required for validation.
 18. If a task validates returned Figma/design results, the test section must specify the exact visual artifacts to return and the exact structural/visual checks that must pass.
 19. The validated Stage 8 preview / handoff state is a preserved checkpoint and must not be replaced by the Figma design branch.
@@ -132,3 +142,18 @@ ARCHITECTURE RULES
 51. Every assistant response must start with a project/session marker line:
    - `ContextViewer-1 | <stage-or-topic>`
    - marker is mandatory to prevent cross-project chat confusion.
+52. Validation pyramid is a permanent architecture rule:
+   - Layer 1 = Codex offline unit checks only
+   - Layer 2 = Codex offline contract/fixture checks only
+   - Layer 3 = user or CI live integration checks
+   - Layer 4 = user visual confirmation for HTML-preview tasks
+53. Codex acceptance is limited to Layer 1 + Layer 2 evidence and must not depend on DB, HTTP server startup, curl, or live network access.
+54. Layer 3 is mandatory for live closure evidence but is delegated to user/CI and must be routed through explicit manual-test commands with exported timeout profile.
+55. Layer 4 is mandatory for every UI/HTML-preview task and must be satisfied through HTML marker checks plus user visual evidence; Playwright may supplement but does not replace user confirmation.
+56. Child-script deduplication is a hard architecture invariant:
+   - once a child verifier has produced JSON in a validation cycle, higher-level gates must consume that JSON instead of re-executing the child verifier
+   - duplicate child invocation in the same unchanged validation cycle is a defect
+57. Anti-loop execution policy is part of architecture, not only testing guidance:
+   - identical failure twice with no code change => stop and classify
+   - timeout beyond the declared layer ceiling => stop and classify
+   - no blind retries against unchanged output

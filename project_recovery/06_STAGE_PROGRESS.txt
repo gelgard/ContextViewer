@@ -161,10 +161,12 @@ Current execution state:
 - AI Task 087 completed: settings/profile preview surface integrated into standalone shell
 - AI Task 088 completed: secondary-flows readiness gate (`verify_stage9_secondary_flows_readiness_gate.sh`)
 - AI Task 089 completed: completion gate and transition readiness (`get_stage9_completion_gate_report.sh`, `verify_stage9_completion_gate.sh`)
-- AI Task 090 created and active: fast smoke mode implementation for Stage 9 orchestration gates
+- AI Task 090 completed in part: fast smoke mode implemented for Stage 9 orchestration gates
+- AI Task 091 created and active: validation runtime stability + deterministic benchmark harness; `fast` is authoritative acceptance gate, `full` is diagnostic/non-blocking with explicit timeout-step classification
+- AI Task 092 completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/`
 
 Stage 9 — **secondary-flow continuity** (current):
 - **Runtime truth:** latest contextJSON + JSON/DB-backed contracts only
 - **Design authority:** `docs/design/approved_figma_artifact.md` + `docs/design/artifacts/task076/`
-- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`
-- **Current execution anchor:** **AI Task 090**
+- **Completed in Stage 9:** `084`, `085`, `086`, `087`, `088`, `089`, `092`
+- **Current execution anchor:** **AI Task 091**

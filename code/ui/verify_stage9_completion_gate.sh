@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # AI Task 089: Stage 9 completion gate smoke (stdout = one JSON report).
-# AI Task 090: --mode fast|full (default fast) — forwarded to get_stage9_completion_gate_report.sh.
+# AI Task 090/091: --mode fast|full (default fast) — fast authoritative; full diagnostics/non-blocking.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPORT="${SCRIPT_DIR}/get_stage9_completion_gate_report.sh"
+HYGIENE="${SCRIPT_DIR}/ensure_stage9_validation_runtime_hygiene.sh"
 
 usage() {
   cat <<'USAGE'
@@ -22,8 +23,13 @@ Required:
 
 Optional:
   --mode <fast|full>            fast (default); passed to get_stage9_completion_gate_report.sh
+                                (`full` diagnostics are non-blocking when fast-equivalent acceptance passes)
   --port <n>, --output-dir <path>, --invalid-project-id <value>  (passed to report; defaults match report script)
   env STAGE9_GATE_TIMEOUT_S     child timeout seconds (default 420, minimum 30)
+  env STAGE9_HYGIENE_SKIP=1    skip ensure_stage9_validation_runtime_hygiene.sh preflight (diagnostics only)
+
+Preflight (AI Task 091): ensure_stage9_validation_runtime_hygiene.sh --clean for the same --port and
+  --output-dir before invoking the completion report (bounded 60s subprocess).
 
 Invalid --mode: stderr + exit 2.
 
@@ -128,6 +134,10 @@ if [[ ! -f "$REPORT" || ! -x "$REPORT" ]]; then
   echo "error: missing or not executable: $REPORT" >&2
   exit 1
 fi
+if [[ ! -f "$HYGIENE" || ! -x "$HYGIENE" ]]; then
+  echo "error: missing or not executable: $HYGIENE" >&2
+  exit 1
+fi
 
 checks='[]'
 
@@ -157,6 +167,51 @@ if [[ ! "$project_id" =~ ^[0-9]+$ ]]; then
       generated_at: $ga
     }'
   exit 1
+fi
+
+hygiene_skip="${STAGE9_HYGIENE_SKIP:-0}"
+if [[ "$hygiene_skip" != "1" ]]; then
+  errf="$(mktemp)"
+  set +e
+  hy_out="$(python3 - 60 bash "$HYGIENE" --port "$port" --output-dir "$output_dir" --clean 2>"$errf" <<'PY'
+import subprocess
+import sys
+timeout_s = int(sys.argv[1])
+cmd = sys.argv[2:]
+try:
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
+    if proc.stdout:
+        sys.stdout.write(proc.stdout)
+    if proc.stderr:
+        sys.stderr.write(proc.stderr)
+    sys.exit(proc.returncode)
+except subprocess.TimeoutExpired as exc:
+    out = exc.stdout or ""
+    err = exc.stderr or ""
+    if isinstance(out, bytes):
+        out = out.decode("utf-8", errors="replace")
+    if isinstance(err, bytes):
+        err = err.decode("utf-8", errors="replace")
+    if out:
+        sys.stdout.write(out)
+    if err:
+        sys.stderr.write(err)
+    sys.stderr.write(f"error: timeout after {timeout_s}s: {' '.join(cmd)}\n")
+    sys.exit(124)
+PY
+)"
+  hy_rc=$?
+  set -e
+  rm -f "$errf"
+  if [[ "$hy_rc" -eq 0 ]] && printf '%s\n' "$hy_out" | jq -e . >/dev/null 2>&1 && [[ "$(printf '%s' "$hy_out" | jq -r '.status // "fail"')" == "ok" ]]; then
+    add_check "completion: validation_runtime_hygiene" "pass" "hygiene status ok"
+  else
+    det="exit ${hy_rc}"
+    [[ -n "$hy_out" ]] && det="${det}; $(printf '%s' "$hy_out" | jq -c . 2>/dev/null || echo "${hy_out:0:500}")"
+    add_check "completion: validation_runtime_hygiene" "fail" "$det"
+  fi
+else
+  add_check "completion: validation_runtime_hygiene" "pass" "STAGE9_HYGIENE_SKIP=1"
 fi
 
 # --- positive: full completion report ---

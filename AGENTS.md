@@ -94,10 +94,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 9
-- Substage: Validation runtime optimization (fast smoke mode)
+- Substage: Validation runtime optimization + offline fixture support
 
 Next required action:
-→ complete AI Task 090 (fast smoke mode validation and closure evidence)
+→ complete AI Task 091 (diagnostic/non-blocking full-path closure evidence); AI Task 092 fixture support is complete
 
 
 ---
@@ -149,6 +149,10 @@ Supported commands:
     - user explicitly requests full diagnostics, or
     - `fast` failed and failure localization is required
   - running `full` preemptively as a default path is prohibited
+  - acceptance policy:
+    - `fast` is the authoritative closure gate
+    - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged code-validation cycle
+    - diagnostic `full` failures must be reported explicitly and cannot silently replace `fast` acceptance evidence
 - anti-hang validation policy is mandatory:
   - do not run heavy UI smoke scripts concurrently on the same local port
   - parallel runs must use distinct ports per process
@@ -156,6 +160,7 @@ Supported commands:
   - long-running commands must be executed with bounded-time guidance; timeout events require diagnostic rerun
   - before each heavy UI validation cycle, stale validation/server processes from prior interrupted runs must be cleaned up
   - if a run is interrupted by user, the next step must begin with process-state verification and cleanup
+  - each heavy child step must have bounded watchdog execution and timeout classification (`timeout_step=<name>`)
 - for every UI task, dual validation contours are mandatory:
   - assistant-side Playwright run with explicit executed steps, per-step pass/fail, and visual mismatch list (if any)
   - user-side manual visual validation via explicit step-by-step scenario
@@ -235,6 +240,84 @@ Blocked response format:
 
 ---
 
+## 8.2 VALIDATION LAYER POLICY (permanent)
+
+All validation is organized into four independent layers. Each layer has a designated executor. No layer substitutes for another. No layer can be skipped by its designated executor.
+
+Layer 1 — Unit (executor: Codex agent, mandatory):
+- scope: bash syntax check, --help exit 0, missing required arg exit 2, invalid flag value exit 1 or 2
+- timeout: 3 seconds per command (hard ceiling)
+- environment: fully offline — no DB, no HTTP, no network
+- gate: Codex must pass Layer 1 before marking any task as complete
+
+Layer 2 — Contract (executor: Codex agent, mandatory):
+- scope: JSON shape validation, jq parsing, fixture-based contract checks, STAGE9_HYGIENE_SKIP=1 mock-mode outputs
+- timeout: 10 seconds total for all Layer 2 commands combined
+- environment: fully offline — fixtures from code/test_fixtures/*.json, no live infrastructure
+- gate: Codex must pass Layer 2 before marking any task as complete
+- required env: STAGE9_HYGIENE_SKIP=1 for any script that calls hygiene preflight
+
+Layer 3 — Integration (executor: user or CI, mandatory for task closure):
+- scope: live DB (psql/Neon), HTTP server startup, curl to localhost, full orchestration gate
+- timeout default: STAGE9_GATE_TIMEOUT_S=60 for single verifier; STAGE9_GATE_TIMEOUT_S=120 for benchmark
+- timeout STAGE9_GATE_TIMEOUT_S=420 is reserved for explicit CI diagnostics only; never the default
+- gate: user provides Layer 3 output as "What to send back for validation"
+
+Layer 4 — Visual (executor: user, mandatory for every task touching HTML preview):
+- scope: HTML section marker presence (grep, no browser), render_profile attribute check, manual browser open
+- timeout: 5 seconds for HTML grep checks; browser open is instant
+- tool: bash grep on HTML file + open file in browser (no Playwright required for Layer 4)
+- gate: user confirms section checklist or provides screenshot as visual evidence
+
+Child-script deduplication rule (permanent):
+- a child script invoked by a lower-level gate must NOT be re-invoked by a higher-level gate in the same validation cycle
+- the higher-level gate must consume the child gate's JSON output, not re-execute it
+- duplicate child invocations within one validation cycle are a defect, not a safety measure
+
+
+## 8.3 INTEGRATION TIMEOUT PROFILES (permanent)
+
+STAGE9_GATE_TIMEOUT_S preset values — use the lowest sufficient profile:
+
+  30  — DB contract check only (no server startup, no HTTP)
+  60  — single verifier with server startup included (default for Manual Test blocks)
+  120 — full benchmark with two sequential legs (fast + full)
+  420 — legacy full-stack CI diagnostics only; explicitly labelled when used; never the default
+
+When authoring Manual Test blocks in AI task responses:
+- always export STAGE9_GATE_TIMEOUT_S before the first integration command
+- default export value: 60
+- benchmark evidence: 120
+- never omit the export — unset timeout inherits the script default of 420
+
+
+## 8.4 ANTI-LOOP EXECUTION POLICY (permanent)
+
+Codex agent must follow these rules unconditionally to prevent infinite retry cycles:
+
+IDENTICAL FAILURE RULE:
+- if the same command produces the same error output on two consecutive runs → STOP
+- do not retry without a code change that addresses the specific failure
+- classify and report: {blocked: true, cause: "<unit_syntax|contract_shape|env_infra|timeout>", command: "<cmd>", output: "<first 200 chars>"}
+
+TIMEOUT STOP RULE:
+- Layer 1 commands: stop if > 3 seconds
+- Layer 2 commands: stop if total > 10 seconds
+- if a command exceeds its ceiling → classify as env_infra or timeout, mark check as "fail: timeout>{N}s", continue to next check
+
+INFRA DEPENDENCY RULE:
+- if a command requires psql, curl, HTTP server startup, or any live network call → do not run it
+- mark as: "skipped: requires_live_infra — delegate to Layer 3 (user)"
+- this is not a failure; it is correct routing
+
+SCOPE BOUNDARY RULE:
+- Codex modifies only files listed in the AI task's "Files to Create / Update" section
+- if a Layer 1/2 check fails because a file outside scope has an issue → report it, do not fix it
+- fixing out-of-scope files to make tests pass is a scope violation
+
+
+---
+
 ## 9. ARCHITECTURE UPDATE PROTOCOL
 
 When command is triggered:
@@ -292,6 +375,10 @@ When command is triggered:
   - run one highest-level orchestration gate first
   - run lower-level smoke scripts only for diagnostics, failure localization, or explicit user request
   - do not repeat identical heavy smoke runs in one validation cycle without code changes
+  - `full`-mode runs are diagnostic evidence; they are non-blocking for acceptance when `fast` gate evidence already passed and code did not change
+- watchdog timeout diagnostics are mandatory for heavy validation:
+  - long-running child steps must report explicit `timeout_step=<step_name>`
+  - include blocker classification (`benchmark_leg_timeout`, `env_network`, `port_process_hygiene`, `contract_logic`)
 - anti-hang test policy is mandatory:
   - test instructions must avoid concurrent heavy smoke runs on the same port
   - if concurrent runs are required, assign unique ports explicitly

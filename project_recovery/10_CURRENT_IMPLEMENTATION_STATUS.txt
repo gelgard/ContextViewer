@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Secondary flows implementation (diff/settings contract + preview surfaces)
+Validation runtime optimization + offline fixture support
 
 STATUS:
 - Architecture synced with latest rules
@@ -115,12 +115,18 @@ STATUS:
 - AI Task 087 completed: Stage 9 settings/profile preview surface delivered (`settings-workspace`, readiness/handoff integration)
 - AI Task 088 completed: Stage 9 secondary-flows readiness gate delivered (`verify_stage9_secondary_flows_readiness_gate.sh`)
 - AI Task 089 completed: Stage 9 completion gate and transition-readiness report delivered
-- AI Task 090 active: Stage 9 fast-smoke mode implementation for orchestration verifiers (`--mode fast|full`, fast-by-default)
+- AI Task 090 delivered the first fast/full execution split for Stage 9 orchestration verifiers
+- AI Task 091 active: validation runtime stability + deterministic benchmark harness
+- AI Task 092 completed: static offline fixture pack created under `code/test_fixtures/` for hygiene/completion-report/benchmark outputs
+- Stage 9 validation policy updated:
+  - `fast` is the authoritative acceptance gate
+  - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
+  - heavy validation watchdog output must classify `timeout_step=<delivery|handoff|readiness|secondary_gate>`
 - Goal Traceability Layer activated (`docs/plans/product_goal_traceability_matrix.md`)
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Complete AI Task 090 — validate fast-vs-full runtime benchmark and closure evidence
+Complete AI Task 091 — finalize diagnostic/non-blocking full-path behavior and deterministic benchmark closure evidence
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

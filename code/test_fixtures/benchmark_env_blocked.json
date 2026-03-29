@@ -1,0 +1,22 @@
+{
+  "status": "fail",
+  "project_id": 1,
+  "fast_seconds": 0.0,
+  "full_seconds": 0.0,
+  "speedup_ratio": null,
+  "checks": [
+    {
+      "name": "benchmark:hygiene_pre",
+      "status": "pass",
+      "details": "hygiene status ok"
+    },
+    {
+      "name": "benchmark:fast_completion_report",
+      "status": "fail",
+      "details": "exit 1 (0.0s); class=env_network"
+    }
+  ],
+  "failed_checks": 1,
+  "blocker_class": "env_network",
+  "generated_at": "2026-03-29T00:00:00Z"
+}

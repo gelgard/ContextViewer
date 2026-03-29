@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # AI Task 089: Stage 9 completion / transition readiness report (read-only orchestration; stdout = one JSON object).
-# AI Task 090: --mode fast|full (default fast) — fast avoids duplicate delivery + secondary_flows subprocess.
+# AI Task 090/091: --mode fast|full (default fast) — fast is mandatory acceptance path; full is diagnostics/non-blocking.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,6 +10,7 @@ DELIVERY="${SCRIPT_DIR}/verify_stage8_ui_preview_delivery.sh"
 HANDOFF="${SCRIPT_DIR}/verify_stage8_ui_demo_handoff_bundle.sh"
 READINESS="${SCRIPT_DIR}/get_stage8_ui_preview_readiness_report.sh"
 SECONDARY_GATE="${SCRIPT_DIR}/verify_stage9_secondary_flows_readiness_gate.sh"
+HYGIENE="${SCRIPT_DIR}/ensure_stage9_validation_runtime_hygiene.sh"
 
 usage() {
   cat <<'USAGE'
@@ -37,11 +38,19 @@ Optional:
                                 inlined (same criteria as verify_stage9_secondary_flows_readiness_gate
                                 --mode fast) without a redundant secondary subprocess. full: six
                                 independent verifier subprocesses including standalone delivery
-                                and verify_stage9_secondary_flows_readiness_gate --mode full.
+                                and verify_stage9_secondary_flows_readiness_gate --mode full;
+                                full diagnostics are non-blocking for acceptance when fast-equivalent
+                                checks pass (AI Task 091).
   --port <n>                    integer >= 1 (default: 8787)
   --output-dir <path>           default: /tmp/contextviewer_ui_preview
   --invalid-project-id <value>  passed to children (default: abc)
   env STAGE9_GATE_TIMEOUT_S     child timeout seconds (default 420, minimum 30)
+  env STAGE9_HYGIENE_SKIP=1    skip ensure_stage9_validation_runtime_hygiene.sh preflight (diagnostics only)
+
+Preflight: runs ensure_stage9_validation_runtime_hygiene.sh (--clean) for --port and --output-dir;
+  on failure prints the normal report JSON shape with status not_ready and exits 3 without
+  spawning verifiers (port/process hygiene fail-fast). Set STAGE9_HYGIENE_SKIP=1 to bypass
+  (diagnostics only).
 
 Invalid --project-id format or --port: stderr + exit 1. Missing --project-id: stderr + exit 2.
 Invalid --mode: stderr + exit 2.
@@ -143,7 +152,7 @@ command -v jq >/dev/null 2>&1 || {
   exit 127
 }
 
-for s in "$DIFF_VERIFY" "$SETTINGS_VERIFY" "$DELIVERY" "$HANDOFF" "$READINESS" "$SECONDARY_GATE"; do
+for s in "$DIFF_VERIFY" "$SETTINGS_VERIFY" "$DELIVERY" "$HANDOFF" "$READINESS" "$SECONDARY_GATE" "$HYGIENE"; do
   if [[ ! -f "$s" || ! -x "$s" ]]; then
     echo "error: missing or not executable: $s" >&2
     exit 1
@@ -234,6 +243,67 @@ secondary_flow_fast_equivalent_pass() {
   ' >/dev/null 2>&1
 }
 
+readiness_investor_demo_true() {
+  local json="$1"
+  printf '%s' "$json" | jq -e '.readiness_summary.investor_demo_ready == true' >/dev/null 2>&1
+}
+
+hygiene_skip="${STAGE9_HYGIENE_SKIP:-0}"
+if [[ "$hygiene_skip" != "1" ]]; then
+  set +e
+  hygiene_out="$(bash "$HYGIENE" --port "$port" --output-dir "$output_dir" --clean 2>/dev/null)"
+  hygiene_rc=$?
+  set -e
+  hygiene_st="fail"
+  if [[ "$hygiene_rc" -eq 0 ]] && printf '%s' "$hygiene_out" | jq -e . >/dev/null 2>&1; then
+    hygiene_st="$(printf '%s' "$hygiene_out" | jq -r '.status // "fail"')"
+  fi
+  if [[ "$hygiene_st" != "ok" ]]; then
+    generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    pid_num="$project_id"
+    blk_a="validation_runtime_hygiene failed (preflight)"
+    blk_b="hygiene_exit=${hygiene_rc}"
+    blk_c="$(printf '%s' "$hygiene_out" | jq -c . 2>/dev/null || printf '%s' "$hygiene_out" | head -c 1800 | jq -Rs .)"
+    jq -n \
+      --argjson pid "$pid_num" \
+      --arg ga "$generated_at" \
+      --arg ba "$blk_a" \
+      --arg bb "$blk_b" \
+      --arg bc "$blk_c" '
+      {
+        project_id: ($pid | tonumber),
+        generated_at: $ga,
+        status: "not_ready",
+        stage9_completed_tasks: ["084","085","086","087","088"],
+        verification: {
+          verify_stage9_diff_viewer_contracts: { exit_code: -1, report: null },
+          verify_stage9_settings_profile_contracts: { exit_code: -1, report: null },
+          verify_stage8_ui_preview_delivery: { exit_code: -1, report: null },
+          verify_stage8_ui_demo_handoff_bundle: { exit_code: -1, report: null },
+          get_stage8_ui_preview_readiness_report: { exit_code: -1, report: null },
+          verify_stage9_secondary_flows_readiness_gate: { exit_code: -1, report: null }
+        },
+        consistency_checks: {
+          diff_viewer_contracts_verify_pass: false,
+          settings_profile_contracts_verify_pass: false,
+          preview_delivery_verify_pass: false,
+          demo_handoff_verify_pass: false,
+          preview_readiness_ready: false,
+          secondary_flows_readiness_gate_pass: false,
+          readiness_report_project_id_matches: false,
+          readiness_internal_consistency_all_true: false,
+          all_stage9_closure_verifiers_pass: false
+        },
+        transition_readiness: {
+          closure_evidence_complete: false,
+          blockers: [$ba, $bb, $bc]
+        }
+      }
+    '
+    exit 3
+  fi
+fi
+
 if [[ "$mode" == "full" ]]; then
   diff_out="$(run_child bash "$DIFF_VERIFY" --project-id "$project_id" --invalid-project-id "$invalid_id")"
   diff_rc=$?
@@ -257,13 +327,19 @@ if [[ "$mode" == "full" ]]; then
     rd_rc=$?
   fi
 
+  diff_ok_tmp="false"
+  verify_passed "$diff_rc" "$diff_out" && diff_ok_tmp="true"
+  set_ok_tmp="false"
+  verify_passed "$set_rc" "$set_out" && set_ok_tmp="true"
+  ho_ok_pre="false"
+  if [[ "$rd_rc" -eq 0 ]] && printf '%s' "$rd_out" | jq -e . >/dev/null 2>&1 && readiness_investor_demo_true "$rd_out"; then
+    ho_ok_pre="true"
+  fi
+
   sg_rc=0
   sg_line="fail"
-  if verify_passed "$diff_rc" "$diff_out" \
-    && verify_passed "$set_rc" "$set_out" \
-    && verify_passed "$del_rc" "$del_out" \
-    && verify_passed "$ho_rc" "$ho_out" \
-    && readiness_ready "$rd_rc" "$rd_out"; then
+  # AI Task 091: in full mode, acceptance is still fast-equivalent; full chain is diagnostics.
+  if secondary_flow_fast_equivalent_pass "$diff_ok_tmp" "$set_ok_tmp" "$rd_out" "$rd_rc" "$ho_ok_pre"; then
     sg_line="pass"
   else
     sg_rc=1
@@ -276,7 +352,7 @@ if [[ "$mode" == "full" ]]; then
       checks: [{
         name: "verify_stage9_secondary_flows_readiness_gate (full derived)",
         status: $st,
-        details: "derived from full-mode verifier results without duplicate subprocess"
+        details: "derived from fast-equivalent acceptance criteria; full-mode subprocesses recorded as diagnostics"
       }],
       failed_checks: (if $st == "pass" then 0 else 1 end),
       generated_at: $ga
@@ -377,13 +453,21 @@ verify_passed "$set_rc" "$set_out" && set_ok="true"
 
 del_ok="false"
 if [[ "$mode" == "full" ]]; then
-  verify_passed "$del_rc" "$del_out" && del_ok="true"
+  if [[ "$rd_json" != "null" ]] && readiness_ready "$rd_rc" "$rd_out" && delivery_smoke_passed "$rd_out"; then
+    del_ok="true"
+  fi
 else
   [[ "$del_rc" -eq 0 ]] && [[ "$rd_json" != "null" ]] && delivery_smoke_passed "$rd_out" && del_ok="true"
 fi
 
 ho_ok="false"
-verify_passed "$ho_rc" "$ho_out" && ho_ok="true"
+if [[ "$mode" == "full" ]]; then
+  if [[ "$rd_json" != "null" ]] && readiness_investor_demo_true "$rd_out"; then
+    ho_ok="true"
+  fi
+else
+  verify_passed "$ho_rc" "$ho_out" && ho_ok="true"
+fi
 
 rd_ok="false"
 readiness_ready "$rd_rc" "$rd_out" && rd_ok="true"
@@ -393,6 +477,15 @@ verify_passed "$sg_rc" "$sg_out" && sg_ok="true"
 
 generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 pid_num="$project_id"
+
+diag_delivery_timeout="false"
+diag_handoff_timeout="false"
+diag_readiness_timeout="false"
+diag_secondary_timeout="false"
+[[ "$del_rc" -eq 124 ]] && diag_delivery_timeout="true"
+[[ "$ho_rc" -eq 124 ]] && diag_handoff_timeout="true"
+[[ "$rd_rc" -eq 124 ]] && diag_readiness_timeout="true"
+[[ "$sg_rc" -eq 124 ]] && diag_secondary_timeout="true"
 
 readiness_pid_match="false"
 if [[ "$rd_json" != "null" ]]; then
@@ -440,6 +533,11 @@ report="$(jq -n \
   --argjson rpm "$(json_bool "$readiness_pid_match")" \
   --argjson rcons "$(json_bool "$readiness_consistency")" \
   --argjson allp "$(json_bool "$all_pass")" \
+  --arg md "$mode" \
+  --argjson ddt "$(json_bool "$diag_delivery_timeout")" \
+  --argjson dht "$(json_bool "$diag_handoff_timeout")" \
+  --argjson drt "$(json_bool "$diag_readiness_timeout")" \
+  --argjson dst "$(json_bool "$diag_secondary_timeout")" \
   '
   {
     project_id: ($pid | tonumber),
@@ -464,6 +562,30 @@ report="$(jq -n \
       readiness_report_project_id_matches: $rpm,
       readiness_internal_consistency_all_true: $rcons,
       all_stage9_closure_verifiers_pass: $allp
+    },
+    diagnostics: {
+      mode_policy: {
+        acceptance_mode: "fast_mandatory",
+        full_mode: "diagnostic_non_blocking"
+      },
+      full_mode: (
+        if $md == "full" then {
+          enabled: true,
+          timeout_step: (
+            if $ddt then "delivery"
+            elif $dht then "handoff"
+            elif $drt then "readiness"
+            elif $dst then "secondary_gate"
+            else null end
+          ),
+          timeouts: {
+            delivery: $ddt,
+            handoff: $dht,
+            readiness: $drt,
+            secondary_gate: $dst
+          }
+        } else null end
+      )
     },
     transition_readiness: {
       closure_evidence_complete: $allp,

@@ -1,0 +1,89 @@
+{
+  "project_id": 1,
+  "generated_at": "2026-03-29T00:00:00Z",
+  "status": "not_ready",
+  "stage9_completed_tasks": ["084", "085", "086", "087", "088"],
+  "verification": {
+    "verify_stage9_diff_viewer_contracts": {
+      "exit_code": 0,
+      "report": {
+        "status": "pass",
+        "checks": [],
+        "failed_checks": 0,
+        "generated_at": "2026-03-29T00:00:00Z"
+      }
+    },
+    "verify_stage9_settings_profile_contracts": {
+      "exit_code": 0,
+      "report": {
+        "status": "pass",
+        "checks": [],
+        "failed_checks": 0,
+        "generated_at": "2026-03-29T00:00:00Z"
+      }
+    },
+    "verify_stage8_ui_preview_delivery": {
+      "exit_code": 124,
+      "report": null
+    },
+    "verify_stage8_ui_demo_handoff_bundle": {
+      "exit_code": 0,
+      "report": {
+        "status": "pass",
+        "checks": [],
+        "failed_checks": 0,
+        "generated_at": "2026-03-29T00:00:00Z"
+      }
+    },
+    "get_stage8_ui_preview_readiness_report": {
+      "exit_code": 0,
+      "report": {
+        "project_id": 1,
+        "generated_at": "2026-03-29T00:00:00Z",
+        "status": "ready"
+      }
+    },
+    "verify_stage9_secondary_flows_readiness_gate": {
+      "exit_code": 1,
+      "report": {
+        "status": "fail",
+        "checks": [],
+        "failed_checks": 1,
+        "generated_at": "2026-03-29T00:00:00Z"
+      }
+    }
+  },
+  "consistency_checks": {
+    "diff_viewer_contracts_verify_pass": true,
+    "settings_profile_contracts_verify_pass": true,
+    "preview_delivery_verify_pass": false,
+    "demo_handoff_verify_pass": true,
+    "preview_readiness_ready": true,
+    "secondary_flows_readiness_gate_pass": false,
+    "readiness_report_project_id_matches": true,
+    "readiness_internal_consistency_all_true": true,
+    "all_stage9_closure_verifiers_pass": false
+  },
+  "diagnostics": {
+    "mode_policy": {
+      "acceptance_mode": "fast_mandatory",
+      "full_mode": "diagnostic_non_blocking"
+    },
+    "full_mode": {
+      "enabled": true,
+      "timeout_step": "delivery",
+      "timeouts": {
+        "delivery": true,
+        "handoff": false,
+        "readiness": false,
+        "secondary_gate": false
+      }
+    }
+  },
+  "transition_readiness": {
+    "closure_evidence_complete": false,
+    "blockers": [
+      "verify_stage8_ui_preview_delivery did not pass"
+    ]
+  }
+}

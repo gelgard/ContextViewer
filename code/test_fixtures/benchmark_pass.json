@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "project_id": 1,
+  "fast_seconds": 2.1,
+  "full_seconds": 8.4,
+  "speedup_ratio": 4.0,
+  "checks": [
+    {
+      "name": "benchmark:hygiene_pre",
+      "status": "pass",
+      "details": "hygiene status ok"
+    },
+    {
+      "name": "benchmark:fast_completion_report",
+      "status": "pass",
+      "details": "exit 0, status ready_for_stage_transition (2.1s)"
+    },
+    {
+      "name": "benchmark:hygiene_between_legs",
+      "status": "pass",
+      "details": "hygiene status ok"
+    },
+    {
+      "name": "benchmark:full_completion_report",
+      "status": "pass",
+      "details": "exit 0, status ready_for_stage_transition (8.4s)"
+    },
+    {
+      "name": "benchmark:expected_speedup",
+      "status": "pass",
+      "details": "full_seconds (8.4) > fast_seconds (2.1)"
+    }
+  ],
+  "failed_checks": 0,
+  "blocker_class": null,
+  "generated_at": "2026-03-29T00:00:00Z"
+}
