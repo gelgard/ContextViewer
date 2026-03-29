@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 9 — Secondary Flows And Release Readiness
 
 CURRENT SUBSTAGE:
-Lightweight validation model — Stage 9 release-readiness is handoff-primary (AI Task 096 complete)
+Lightweight validation model — Stage 9 stage-transition package is release-primary (AI Task 097 complete)
 
 STATUS:
 - Architecture synced with latest rules
@@ -121,6 +121,7 @@ STATUS:
 - AI Task 093 completed: `get_stage9_transition_handoff_bundle.sh` + `verify_stage9_transition_handoff_bundle.sh` — transition JSON artifact baseline
 - AI Task 095 completed: handoff bundle gates `handoff_ready` only on `get_stage9_acceptance_artifact.sh` (embedded report); benchmark not in ordinary path; `contextJSON/*` informational only; optional `STAGE9_HANDOFF_RUN_BENCHMARK=1` for diagnostic timings
 - AI Task 096 completed: `get_stage9_release_readiness_bundle.sh` + `verify_stage9_release_readiness_bundle.sh` — `release_ready` from `get_stage9_transition_handoff_bundle.sh` only (no benchmark in ordinary release path; `contextJSON` non-authoritative)
+- AI Task 097 completed: `get_stage9_stage_transition_package.sh` + `verify_stage9_stage_transition_package.sh` — `stage_transition_ready` from `get_stage9_release_readiness_bundle.sh` only (no benchmark in ordinary path; `contextJSON` non-authoritative)
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -147,7 +148,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Open the next numbered AI task using the **AI Task 096** release-readiness bundle (handoff-primary, `handoff_ready` → `release_ready`) as the recorded release evidence baseline where applicable, only under the lightweight validation model:
+Open the next numbered AI task or proceed with stage transition using the **AI Task 097** stage-transition package (`release_ready` → `stage_transition_ready`, release-bundle primary) as the recorded baseline where applicable, only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
