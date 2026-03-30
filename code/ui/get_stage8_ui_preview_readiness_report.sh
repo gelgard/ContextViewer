@@ -8,6 +8,7 @@
 # AI Task 088: settings section; render_profile 088_stage9_secondary_flows_preview; settings_surface_state; investor gate includes settings.
 # AI Task 102: fast artifact path reads diff comparison flags from embedded payload and live diff contract.
 # AI Task 103: fast delivery checks Task 103 diff preview fidelity markers when comparison_ready.
+# AI Task 105: fast delivery checks change-inspector preview markers when comparison_ready.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -392,6 +393,15 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff preview fidelity (103)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-preview="105"' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: diff change inspector preview (105)" "pass" "data-cv-diff-inspector-preview present"
+      else
+        add_fast_check "delivery-fast: diff change inspector preview (105)" "fail" "regenerate preview for Task 105 inspector integration"
+      fi
+    else
+      add_fast_check "delivery-fast: diff change inspector preview (105)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

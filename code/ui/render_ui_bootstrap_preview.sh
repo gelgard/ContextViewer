@@ -6,6 +6,7 @@
 # AI Task 083: history workspace fidelity + cross-surface handoff readiness (feed-only history UI).
 # AI Task 085: contract-backed diff viewer surface (get_diff_viewer_contract_bundle.sh only).
 # AI Task 103: comparison-ready diff scan fidelity — stat strip, snapshot cards, panel markers (truth from 084/085 only).
+# AI Task 105: comparison-ready changed-key UI from get_stage10_diff_change_inspector_contract.sh when inspector_ready (fallback: same jq as 104 on diff contract).
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -13,6 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BOOTSTRAP="${SCRIPT_DIR}/get_ui_bootstrap_bundle.sh"
 DIFF_CONTRACT="${SCRIPT_DIR}/../diff/get_diff_viewer_contract_bundle.sh"
 SETTINGS_CONTRACT="${SCRIPT_DIR}/../settings/get_settings_profile_contract_bundle.sh"
+CHANGE_INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
@@ -39,6 +41,11 @@ Options:
   --project-id <id>             Required. Non-negative integer; project must exist.
   --output <path>               Required. Destination HTML file path.
   --invalid-project-id <value> Optional. Passed to bootstrap (default: abc)
+
+When diff contract reports comparison_ready, this script may invoke
+  get_stage10_diff_change_inspector_contract.sh (Task 105) for changed-key UI truth
+  (bounded by STAGE9_GATE_TIMEOUT_S, default 420s, min 30). Falls back to inline
+  inspector-shaped metadata from the diff contract if the inspector is not inspector_ready.
 USAGE
 }
 
@@ -157,6 +164,73 @@ if ! printf '%s\n' "$diff_json" | jq -e . >/dev/null 2>&1; then
   exit 3
 fi
 
+child_timeout_s="${STAGE9_GATE_TIMEOUT_S:-420}"
+preview_out_dir="$(cd "$(dirname "$output_path")" && pwd)"
+
+run_bounded_preview() {
+  python3 - "$child_timeout_s" "$@" <<'PY'
+import subprocess
+import sys
+timeout_s = int(sys.argv[1])
+cmd = sys.argv[2:]
+try:
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
+    if proc.stdout:
+        sys.stdout.write(proc.stdout)
+    if proc.stderr:
+        sys.stderr.write(proc.stderr)
+    sys.exit(proc.returncode)
+except subprocess.TimeoutExpired as exc:
+    out = exc.stdout or ""
+    err = exc.stderr or ""
+    if isinstance(out, bytes):
+        out = out.decode("utf-8", errors="replace")
+    if isinstance(err, bytes):
+        err = err.decode("utf-8", errors="replace")
+    if out:
+        sys.stdout.write(out)
+    if err:
+        sys.stderr.write(err)
+    sys.stderr.write(f"error: timeout after {timeout_s}s: {' '.join(cmd)}\n")
+    sys.exit(124)
+PY
+}
+
+insp_inline="$(printf '%s' "$diff_json" | jq -c '
+  (.latest_snapshot.projection // {}) as $latest
+  | (.previous_snapshot.projection // {}) as $previous
+  | (.diff_summary.changed_top_level_keys // [])
+  | map(. as $key | {
+      key: $key,
+      latest_value_type: (($latest[$key] | type) // "null"),
+      previous_value_type: (($previous[$key] | type) // "null"),
+      latest_value_present: ($latest | has($key)),
+      previous_value_present: ($previous | has($key)),
+      changed: true
+    })
+')"
+diff_merged="$(jq -n --argjson d "$diff_json" --argjson ins "$insp_inline" '$d + {changed_key_inspector: $ins}')"
+
+if printf '%s' "$diff_json" | jq -e '.comparison_ready == true' >/dev/null 2>&1; then
+  if [[ -f "$CHANGE_INSPECTOR" && -x "$CHANGE_INSPECTOR" ]] \
+    && [[ "$child_timeout_s" =~ ^[0-9]+$ ]] && [[ "$child_timeout_s" -ge 30 ]]; then
+    set +e
+    insp_out="$(run_bounded_preview bash "$CHANGE_INSPECTOR" --project-id "$project_id" --output-dir "$preview_out_dir" --invalid-project-id "$invalid_id")"
+    insp_rc=$?
+    set -e
+    if [[ "$insp_rc" -eq 0 ]] \
+      && printf '%s' "$insp_out" | jq -e . >/dev/null 2>&1 \
+      && printf '%s' "$insp_out" | jq -e '.status == "inspector_ready"' >/dev/null 2>&1; then
+      insp_rows="$(printf '%s' "$insp_out" | jq -c '.changed_key_inspector')"
+      diff_merged="$(jq -n --argjson d "$diff_json" --argjson ins "$insp_rows" '$d + {changed_key_inspector: $ins, change_inspector_contract: {integrated: true, source: "get_stage10_diff_change_inspector_contract.sh"}}')"
+    else
+      diff_merged="$(jq -n --argjson dm "$diff_merged" '$dm + {change_inspector_contract: {integrated: false, source: "inline_jq_par_stage10_104"}}')"
+    fi
+  else
+    diff_merged="$(jq -n --argjson dm "$diff_merged" '$dm + {change_inspector_contract: {integrated: false, source: "inline_jq_par_stage10_104"}}')"
+  fi
+fi
+
 if [[ ! -f "$SETTINGS_CONTRACT" || ! -x "$SETTINGS_CONTRACT" ]]; then
   echo "error: missing or not executable: $SETTINGS_CONTRACT" >&2
   exit 1
@@ -179,7 +253,7 @@ if ! printf '%s\n' "$settings_json" | jq -e . >/dev/null 2>&1; then
   exit 3
 fi
 
-full_payload="$(jq -n --argjson b "$boot_json" --argjson d "$diff_json" --argjson sp "$settings_json" '$b | .ui_sections.diff_viewer = $d | .ui_sections.settings_profile = $sp')"
+full_payload="$(jq -n --argjson b "$boot_json" --argjson d "$diff_merged" --argjson sp "$settings_json" '$b | .ui_sections.diff_viewer = $d | .ui_sections.settings_profile = $sp')"
 
 proj_name="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.name // "—"')"
 proj_snapshots="$(printf '%s' "$boot_json" | jq -r '.ui_sections.overview.project_overview.total_valid_snapshots // 0')"
@@ -995,6 +1069,73 @@ def fmt_key_list(items, cap):
     return "".join(parts)
 
 
+def fmt_changed_inspector(rows, fallback_keys, cap, cic):
+    if not isinstance(cic, dict):
+        cic = {}
+    rows = rows if isinstance(rows, list) else []
+    src_note = (
+        "Integrated from <code>get_stage10_diff_change_inspector_contract.sh</code>."
+        if cic.get("integrated")
+        else "Contract-aligned drilldown (same <code>changed_key_inspector</code> shape as Stage 104)."
+    )
+    if not rows and not fallback_keys:
+        return (
+            '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
+            'data-cv-changed-inspector-count="0" role="group">'
+            '<p class="diff-inspector-lead muted">' + src_note + "</p>"
+            '<p class="muted mono">(no changed top-level keys)</p></div>'
+        )
+    if not rows and fallback_keys:
+        return (
+            '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" role="group">'
+            '<p class="diff-inspector-lead muted">' + src_note + "</p>"
+            + fmt_key_list(fallback_keys, cap)
+            + "</div>"
+        )
+    parts_i = [
+        '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
+        'role="group" aria-label="Changed key drilldown" data-cv-changed-inspector-count="'
+        + esc_attr(str(len(rows)))
+        + '">',
+        '<p class="diff-inspector-lead muted">' + src_note + "</p>",
+        '<div class="diff-inspector-rows" role="list">',
+    ]
+    for row in rows[:cap]:
+        k = row.get("key")
+        lt = row.get("latest_value_type") or "null"
+        pt = row.get("previous_value_type") or "null"
+        lp = row.get("latest_value_present")
+        pp = row.get("previous_value_present")
+        parts_i.append(
+            '<div class="diff-inspector-row" role="listitem" data-cv-inspector-key="'
+            + esc_attr(str(k))
+            + '">'
+            '<div class="diff-inspector-key mono">' + esc(str(k)) + "</div>"
+            '<dl class="diff-inspector-types">'
+            '<dt class="muted">Latest type</dt><dd><span class="diff-type-pill">'
+            + esc(str(lt))
+            + "</span></dd>"
+            '<dt class="muted">Previous type</dt><dd><span class="diff-type-pill diff-type-pill--prev">'
+            + esc(str(pt))
+            + "</span></dd>"
+            "</dl>"
+            '<p class="diff-inspector-flags mono muted">present: latest <strong>'
+            + esc(str(lp))
+            + "</strong> · previous <strong>"
+            + esc(str(pp))
+            + "</strong></p>"
+            "</div>"
+        )
+    if len(rows) > cap:
+        parts_i.append(
+            '<p class="muted mono diff-inspector-cap">… +'
+            + esc(str(len(rows) - cap))
+            + " keys</p>"
+        )
+    parts_i.append("</div></div>")
+    return "".join(parts_i)
+
+
 with open(os.environ["BOOT_JSON_FILE"], encoding="utf-8") as _bf:
     boot = json.load(_bf)
 
@@ -1064,7 +1205,7 @@ if comp_bool:
         + esc_attr(n_rem)
         + '" data-cv-diff-changed-count="'
         + esc_attr(n_chg)
-        + '"'
+        + '" data-cv-diff-inspector-preview="105"'
     )
 
 wr_class = "diff-workspace"
@@ -1173,10 +1314,22 @@ parts.append('<h3 id="diff-rem-h" class="diff-panel-title">Removed top-level key
 parts.append(fmt_key_list(ds.get("removed_top_level_keys"), 120))
 parts.append("</section>")
 parts.append(
-    '<section class="diff-key-panel" aria-labelledby="diff-chg-h" data-cv-diff-panel="changed">'
+    '<section class="diff-key-panel diff-key-panel--changed-inspector" aria-labelledby="diff-chg-h" data-cv-diff-panel="changed">'
 )
 parts.append('<h3 id="diff-chg-h" class="diff-panel-title">Changed top-level keys</h3>')
-parts.append(fmt_key_list(ds.get("changed_top_level_keys"), 120))
+
+cic = dv.get("change_inspector_contract") or {}
+if comp_bool:
+    parts.append(
+        fmt_changed_inspector(
+            dv.get("changed_key_inspector"),
+            changed_keys,
+            120,
+            cic,
+        )
+    )
+else:
+    parts.append(fmt_key_list(ds.get("changed_top_level_keys"), 120))
 parts.append("</section></div>")
 
 parts.append('<div class="diff-cc-wrap"><h4 class="diff-cc-heading">Contract consistency</h4>')
@@ -1184,10 +1337,16 @@ parts.append('<dl class="diff-cc-dl mono muted">')
 for k in sorted(ccdv.keys()):
     parts.append("<dt>" + esc(k) + "</dt><dd>" + esc(ccdv.get(k)) + "</dd>")
 parts.append("</dl></div>")
-parts.append(
-    '<p class="diff-foot muted">Sources: <code class="mono">get_diff_viewer_contract_bundle.sh</code>'
-    " only — top-level key semantics match Stage 4 diff summary; no markdown or invented analytics.</p>"
+foot_src = (
+    "<code class=\"mono\">get_diff_viewer_contract_bundle.sh</code>"
+    + (
+        " and <code class=\"mono\">get_stage10_diff_change_inspector_contract.sh</code> (changed-key drilldown when comparison-ready and inspector_ready)"
+        if comp_bool
+        else ""
+    )
+    + " — top-level key semantics match Stage 4 diff summary; no markdown or invented analytics."
 )
+parts.append('<p class="diff-foot muted">Sources: ' + foot_src + "</p>")
 parts.append("</div>")
 print("".join(parts), end="")
 PYDIFF
@@ -2098,6 +2257,63 @@ tmp_html="$(mktemp)"
     overflow: auto;
   }
   ul.diff-key-list li { margin: var(--cv-space-1) 0; word-break: break-all; }
+  .diff-key-panel--changed-inspector {
+    border-color: color-mix(in srgb, var(--cv-primary) 22%, transparent);
+  }
+  .diff-inspector-wrap {
+    margin-top: var(--cv-space-2);
+  }
+  .diff-inspector-lead {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+  .diff-inspector-lead code { font-size: 0.68rem; }
+  .diff-inspector-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-3);
+  }
+  .diff-inspector-row {
+    padding: var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: var(--cv-surface-lowest);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 14%, transparent);
+  }
+  .diff-inspector-key {
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-bottom: var(--cv-space-2);
+    word-break: break-all;
+  }
+  .diff-inspector-types {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--cv-space-1) var(--cv-space-3);
+    font-size: 0.75rem;
+    align-items: center;
+  }
+  .diff-inspector-types dt { margin: 0; }
+  .diff-inspector-types dd { margin: 0; }
+  .diff-type-pill {
+    display: inline-block;
+    padding: 0.12rem 0.45rem;
+    border-radius: var(--cv-radius-sm);
+    font-weight: 600;
+    font-size: 0.6875rem;
+    background: color-mix(in srgb, var(--cv-tertiary) 14%, var(--cv-surface-low));
+    border: 1px solid color-mix(in srgb, var(--cv-tertiary) 28%, transparent);
+  }
+  .diff-type-pill--prev {
+    background: color-mix(in srgb, var(--cv-outline-variant) 12%, var(--cv-surface-low));
+    border-color: color-mix(in srgb, var(--cv-outline-variant) 25%, transparent);
+  }
+  .diff-inspector-flags {
+    margin: var(--cv-space-2) 0 0;
+    font-size: 0.6875rem;
+  }
+  .diff-inspector-cap { margin: var(--cv-space-2) 0 0; }
   .diff-cc-wrap {
     padding: var(--cv-space-3);
     background: color-mix(in srgb, var(--cv-primary) 5%, var(--cv-surface-lowest));

@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 diff **change inspector contract** (AI Task 104) adds a machine-readable changed-key interaction artifact above the **103** comparison-ready preview fidelity baseline and is gated by `verify_stage10_diff_change_inspector_contract.sh`; benchmark remains diagnostic-only; `contextJSON/*` export-only
+Stage 10 **diff inspector preview integration** (AI Task 105) connects **`get_stage10_diff_change_inspector_contract.sh`** into **`render_ui_bootstrap_preview`** for comparison-ready changed-key drilldown UI, gated by **`verify_stage10_diff_change_inspector_preview.sh`**, above the **104** contract baseline; benchmark diagnostic-only; `contextJSON/*` export-only
 
 STATUS:
 - Architecture synced with latest rules
@@ -129,6 +129,7 @@ STATUS:
 - AI Task 102 completed: Diff comparison **implementation baseline** — `get_stage8_ui_preview_readiness_report` fast artifact path + `render_ui_bootstrap_preview` align `diff_viewer_comparison_ready` with `get_diff_viewer_contract_bundle`; `get_stage10_execution_surface_manifest.sh` may fallback to the fast preview-readiness leaf artifact for current-project surface truth; product goals PG-AR-001 / PG-EX-001 / PG-UX-001 / PG-RT-001 / PG-RT-002 are satisfied on the diff readiness bundle; live diff readiness verifier passes on comparison-ready projects with two valid snapshots
 - AI Task 103 completed: **Diff comparison preview fidelity** — richer comparison-ready diff section (counts strip, snapshot cards, panel markers); `verify_stage10_diff_comparison_preview_fidelity.sh` validates HTML vs `get_diff_viewer_contract_bundle`; Stage 8 fast delivery checks fidelity markers when `comparison_ready`; goals PG-OV-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 104 completed: **Diff change inspector contract** — `get_stage10_diff_change_inspector_contract.sh` + `verify_stage10_diff_change_inspector_contract.sh` expose machine-readable changed-key drilldown metadata above the comparison-ready diff baseline using `get_stage10_diff_comparison_readiness_bundle.sh` as primary authority and `get_diff_viewer_contract_bundle.sh` as existing diff truth; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
+- AI Task 105 completed: **Inspector preview integration** — `render_ui_bootstrap_preview` consumes the **104** contract when `inspector_ready` (inline 104-shaped fallback otherwise); `verify_stage10_diff_change_inspector_preview.sh` + Stage 8 fast delivery check; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -155,7 +156,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Continue Stage 10 execution using **`get_stage10_diff_change_inspector_contract.sh`** for machine-readable changed-key drilldown metadata, **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 preview now integrates **`get_stage10_diff_change_inspector_contract.sh`** into **`render_ui_bootstrap_preview`** (inspector UI + **`verify_stage10_diff_change_inspector_preview.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
