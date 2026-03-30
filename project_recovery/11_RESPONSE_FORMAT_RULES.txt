@@ -56,7 +56,7 @@ RESPONSE FORMAT RULES
   - timeout diagnostics must include explicit `timeout_step` classification and blocker class
 - If a task generates prompts for an external Figma/design workflow, tests must include the exact prompt blocks to use and the exact returned artifacts required for validation
 - If a task validates returned Figma/design results, tests must include the exact artifacts to return and the exact structural and visual checks that must pass
-- On Stage transition, always announce the new Stage and provide exact git commands to merge into `development` and create `feature/stage<stageNum>`
+- On Stage transition, always announce the new Stage and provide exact git commands to merge into `main` and create `feature/stage<stageNum>`
 - For command "дай следующую AI task", the response is valid only if `ai_tasks/NNN_*.md` was created before sending
 - AI task response must include: `AI Task file created: /ai_tasks/NNN_*.md`
 - For command "дай следующую AI task", response must use strict block order:

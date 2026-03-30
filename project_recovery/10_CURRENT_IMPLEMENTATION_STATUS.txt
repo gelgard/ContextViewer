@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Lightweight validation model — Stage 10 execution-entry is Stage 9 transition-primary (AI Task 098 complete)
+Lightweight validation model — execution-surface manifest (AI Task 099) is the first operational runtime artifact above the execution-entry bundle (AI Task 098); Stage 9 transition-package chain remains entry-primary
 
 STATUS:
 - Architecture synced with latest rules
@@ -123,6 +123,7 @@ STATUS:
 - AI Task 096 completed: `get_stage9_release_readiness_bundle.sh` + `verify_stage9_release_readiness_bundle.sh` — `release_ready` from `get_stage9_transition_handoff_bundle.sh` only (no benchmark in ordinary release path; `contextJSON` non-authoritative)
 - AI Task 097 completed: `get_stage9_stage_transition_package.sh` + `verify_stage9_stage_transition_package.sh` — `stage_transition_ready` from `get_stage9_release_readiness_bundle.sh` only (no benchmark in ordinary path; `contextJSON` non-authoritative)
 - AI Task 098 completed: `get_stage10_execution_entry_bundle.sh` + `verify_stage10_execution_entry_bundle.sh` — `stage10_entry_ready` from `get_stage9_stage_transition_package.sh` only (opens Stage 10; no benchmark in ordinary entry path; `contextJSON` non-authoritative)
+- AI Task 099 completed: `get_stage10_execution_surface_manifest.sh` + `verify_stage10_execution_surface_manifest.sh` — execution-surface readiness manifest derived only from the 098 entry bundle (overview/visualization/history/diff/settings); benchmark not in ordinary manifest path; `contextJSON/*` export metadata only
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -149,11 +150,13 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Continue Stage 10 execution using the **AI Task 098** execution-entry bundle (`stage_transition_ready` → `stage10_entry_ready`, Stage 9 transition-package primary) as the recorded entry baseline where applicable, only under the lightweight validation model:
+Continue Stage 10 execution using **`get_stage10_execution_surface_manifest.sh`** for core surface readiness (**overview / visualization / history / diff / settings**) and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
 - if a future task would require another orchestration layer, it must first introduce or reuse an artifact-first validation path
+- **`run_stage9_validation_runtime_benchmark`** remains diagnostic-only and is not part of the ordinary manifest path
+- **`contextJSON/*`** is external viewer export metadata only, not manifest or runtime authority
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements

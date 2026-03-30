@@ -44,7 +44,7 @@ Rules:
   - imported approved Figma artifacts become authoritative UI design references for implementation
   - if a Figma validation gate fails due to incomplete returned artifacts, a numbered fallback AI task may assemble an architecture-derived evidence package, but it must be explicitly labeled as fallback evidence, must not be represented as native external output, and must rely only on uploaded workspace artifacts rather than an external Figma link
   - after Figma import, architecture / plan / recovery / contextJSON must be resynchronized
-- preserve and synchronize stage-transition git rules (announce new stage, merge to `development`, create `feature/stage<stageNum>`)
+- preserve and synchronize stage-transition git rules (announce new stage, merge to `main`, create `feature/stage<stageNum>`)
 - preserve and synchronize AI-task creation gate for "дай следующую AI task"
 - preserve and synchronize strict next-task response format gate with block order:
   1) `AI Task file created: /ai_tasks/NNN_*.md`

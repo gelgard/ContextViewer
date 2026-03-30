@@ -94,14 +94,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9 | 004-023; **084**, **086**; **089** (completion gate verifies contract-only closure) | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098** | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
 | PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-9 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089** Stage 9 secondary flows + closure gate | implemented |
-| PG-EX-001 | Stage 2-9 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089** (incl. **089** machine-readable Stage 9 completion gate) | implemented |
+| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098** | implemented |
+| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098** | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -141,6 +141,10 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 091` is completed: Stage 9 validation runtime stability + deterministic benchmark harness; acceptance policy is `fast`-authoritative, while `full` is diagnostic/non-blocking and emits explicit `timeout_step` / fallback diagnostics when full-only legs degrade.
 - `AI Task 092` is completed: static offline fixture pack for Stage 9 verifier outputs under `code/test_fixtures/` to support no-network shape validation.
 - `AI Task 093` is completed: Stage 9 transition handoff bundle unifies machine-readable closure evidence and latest external-export filename reference.
+- `AI Task 095` is completed: Stage 9 transition handoff is now acceptance-artifact-primary.
+- `AI Task 096` is completed: Stage 9 release-readiness bundle is now handoff-primary.
+- `AI Task 097` is completed: Stage 9 stage-transition package is now release-primary.
+- `AI Task 098` is completed: Stage 10 execution-entry bundle is now Stage 9 transition-primary.
 - Requirement mapping for **091** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
@@ -213,7 +217,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 
 ## Validation Architecture Status
 
-- Stage 9 is active and migrated to the lightweight validation operating model at the architecture / planning / recovery layer.
+- Stage 10 is active and inherits the lightweight validation operating model established during Stage 9 closure migration.
 - Authoritative validation policy:
   - one AI task = one primary acceptance gate
   - diagnostics are separate and non-blocking by default
@@ -224,6 +228,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `contextJSON/*` is an external viewer export only
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
+- Current Stage 10 execution-entry authority is `AI Task 098`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks

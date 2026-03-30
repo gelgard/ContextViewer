@@ -95,11 +95,11 @@ Forbidden:
 
 - Architecture: LOCKED
 - Execution: ACTIVE
-- Stage: Stage 9
-- Substage: Lightweight validation model active (artifact-first, fast-authoritative, diagnostic paths separated)
+- Stage: Stage 10
+- Substage: Execution entry active from Stage 9 transition authority (lightweight artifact-first validation model)
 
 Next required action:
-→ create and execute the next numbered AI task under the lightweight validation model; heavy legacy validation paths are diagnostic-only and must not become the default acceptance route
+→ create and execute the next numbered AI task under Stage 10 entry authority; heavy legacy validation paths remain diagnostic-only and must not become the default acceptance route
 
 
 ---
@@ -191,7 +191,7 @@ Supported commands:
 - if a Figma validation gate fails because the returned external artifact bundle is structurally incomplete, a numbered fallback AI task may assemble an architecture-derived evidence package from the current architecture, preserved design baseline, and returned uploaded workspace artifacts; that fallback package must be explicitly labeled as non-native external output, cannot be misrepresented as a full external export, and must not rely on an external Figma link as authoritative evidence
 - after Figma artifact import or design sync, architecture files and the external viewer export must be synchronized before continuing implementation
 - when a new Stage begins, explicitly announce the stage transition
-- before starting tasks for a new Stage, merge current branch into `development` and create `feature/stage<stageNum>`
+- before starting tasks for a new Stage, merge current branch into `main` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
 - if the AI task file is missing, response must stop and switch to file creation
 
@@ -370,7 +370,7 @@ Every future AI task must be authored under the lightweight validation model.
 
 Current architectural decision:
 
-- Stage 9 remains active
+- Stage 10 is active
 - the project OS is migrated to the lightweight validation model at the architecture / planning / recovery layer
 - legacy heavy validation scripts still exist in runtime code and are classified as diagnostic-only legacy paths unless they are the single explicit primary acceptance gate for a task
 - future tasks must not normalize or reintroduce recursive heavy validation
@@ -451,7 +451,7 @@ When command is triggered:
   - include safe-stop + diagnostic-rerun instructions when a long command appears stalled
 - when an AI task generates prompts for an external Figma/design system, tests must specify the exact prompt blocks to use externally and the exact returned evidence required for validation (for example: Figma link, exported frames, page list, component inventory, screenshots)
 - when an AI task validates returned Figma/design results, tests must specify the exact artifacts the user must send back (link/export/screenshots/page map/component list) and the exact visual/structural checks to confirm
-- on stage transition, include exact git commands for merge-to-`development` and branch creation `feature/stage<stageNum>`
+- on stage transition, include exact git commands for merge-to-`main` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
 - for "дай следующую AI task", response is valid only in this strict block order:
   1) `AI Task file created: /ai_tasks/NNN_*.md`
