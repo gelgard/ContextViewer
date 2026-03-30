@@ -7,6 +7,7 @@
 # AI Task 085: diff viewer section; render_profile + diff_viewer_state in preview_summary.
 # AI Task 088: settings section; render_profile 088_stage9_secondary_flows_preview; settings_surface_state; investor gate includes settings.
 # AI Task 102: fast artifact path reads diff comparison flags from embedded payload and live diff contract.
+# AI Task 103: fast delivery checks Task 103 diff preview fidelity markers when comparison_ready.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -380,6 +381,17 @@ else
       add_fast_check "delivery-fast: diff marker" "pass" 'found data-section="diff"'
     else
       add_fast_check "delivery-fast: diff marker" "fail" 'missing data-section="diff"'
+    fi
+    prep_cmp="$(printf '%s' "$prepare_json" | jq -r '.preview_summary.diff_viewer_state.comparison_ready // false')"
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-fidelity="103"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'data-cv-diff-comparison-ready="true"' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: diff preview fidelity (103)" "pass" "comparison-ready fidelity markers"
+      else
+        add_fast_check "delivery-fast: diff preview fidelity (103)" "fail" "regenerate preview (prepare_ui_preview_launch) for Task 103 markers"
+      fi
+    else
+      add_fast_check "delivery-fast: diff preview fidelity (103)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

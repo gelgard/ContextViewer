@@ -5,6 +5,7 @@
 # AI Task 082: visualization workspace fidelity — unified tree + graph + inspector from visualization_workspace bundle only.
 # AI Task 083: history workspace fidelity + cross-surface handoff readiness (feed-only history UI).
 # AI Task 085: contract-backed diff viewer surface (get_diff_viewer_contract_bundle.sh only).
+# AI Task 103: comparison-ready diff scan fidelity — stat strip, snapshot cards, panel markers (truth from 084/085 only).
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -1024,6 +1025,17 @@ if not isinstance(n_valid, int):
     except (TypeError, ValueError):
         n_valid = 0
 
+added_keys = ds.get("added_top_level_keys")
+removed_keys = ds.get("removed_top_level_keys")
+changed_keys = ds.get("changed_top_level_keys")
+if not isinstance(added_keys, list):
+    added_keys = []
+if not isinstance(removed_keys, list):
+    removed_keys = []
+if not isinstance(changed_keys, list):
+    changed_keys = []
+n_add, n_rem, n_chg = len(added_keys), len(removed_keys), len(changed_keys)
+
 empty_st = bool(vc.get("empty_state"))
 single_st = bool(vc.get("single_snapshot_only"))
 hint = vc.get("hint") or ""
@@ -1036,12 +1048,36 @@ elif single_st or not comp:
     state_label = "Single snapshot only"
 else:
     state_class = "diff-state-ready"
-    state_label = "Comparison ready"
+    state_label = "Comparison ready — two newest valid snapshots"
+
+comp_bool = comp is True
+fidelity_attr = (
+    ' data-cv-diff-fidelity="103" data-cv-diff-comparison-ready="'
+    + ("true" if comp_bool else "false")
+    + '"'
+)
+if comp_bool:
+    fidelity_attr += (
+        ' data-cv-diff-added-count="'
+        + esc_attr(n_add)
+        + '" data-cv-diff-removed-count="'
+        + esc_attr(n_rem)
+        + '" data-cv-diff-changed-count="'
+        + esc_attr(n_chg)
+        + '"'
+    )
+
+wr_class = "diff-workspace"
+if comp_bool:
+    wr_class += " diff-workspace--compare-ready"
 
 parts = []
 parts.append(
-    '<div class="diff-workspace" role="region" data-cv-diff-surface="085" '
-    'aria-label="Diff viewer from snapshot contract bundle">'
+    '<div class="'
+    + wr_class
+    + '" role="region" data-cv-diff-surface="085"'
+    + fidelity_attr
+    + ' aria-label="Diff viewer from snapshot contract bundle">'
 )
 parts.append('<header class="diff-workspace-header">')
 parts.append(
@@ -1058,46 +1094,87 @@ parts.append(
     + esc(str(n_valid))
     + "</span></div>"
 )
+if comp_bool:
+    parts.append(
+        '<div class="diff-compare-summary" role="group" aria-label="Top-level key delta counts">'
+        '<p class="diff-compare-summary-lead">Comparing <strong>latest</strong> vs <strong>previous</strong> valid snapshot — scan counts, then key lists below.</p>'
+        '<ul class="diff-stat-chips">'
+        '<li><span class="diff-stat-label">Added keys</span>'
+        '<span class="diff-stat-value diff-stat-value--add" data-cv-stat="added">'
+        + esc(str(n_add))
+        + "</span></li>"
+        '<li><span class="diff-stat-label">Removed keys</span>'
+        '<span class="diff-stat-value diff-stat-value--rem" data-cv-stat="removed">'
+        + esc(str(n_rem))
+        + "</span></li>"
+        '<li><span class="diff-stat-label">Changed keys</span>'
+        '<span class="diff-stat-value diff-stat-value--chg" data-cv-stat="changed">'
+        + esc(str(n_chg))
+        + "</span></li>"
+        "</ul></div>"
+    )
 parts.append('<p class="diff-hint muted">' + esc(hint) + "</p>")
 parts.append('<div class="diff-snap-row">')
-parts.append('<div class="diff-snap-card">')
-parts.append('<h4 class="diff-snap-title">Latest</h4>')
+lid = ls.get("snapshot_id")
+pid = ps.get("snapshot_id")
+lts = ls.get("snapshot_timestamp")
+pts = ps.get("snapshot_timestamp")
 parts.append(
-    '<p class="mono diff-snap-line">id '
-    + esc(ls.get("snapshot_id"))
-    + "</p>"
+    '<div class="diff-snap-card diff-snap-card--latest" data-cv-diff-role="latest" data-cv-snapshot-id="'
+    + esc_attr(lid)
+    + '">'
+)
+parts.append('<h4 class="diff-snap-title">Latest valid snapshot</h4>')
+parts.append(
+    '<p class="mono diff-snap-line diff-snap-line--id">id <span class="diff-snap-id">'
+    + esc(lid)
+    + "</span></p>"
 )
 parts.append(
-    '<p class="mono diff-snap-line muted">'
-    + esc(ls.get("snapshot_timestamp"))
-    + "</p>"
+    '<p class="mono diff-snap-line muted diff-snap-line--ts"><time datetime="'
+    + esc_attr(lts)
+    + '">'
+    + esc(lts)
+    + "</time></p>"
 )
 parts.append("</div>")
-parts.append('<div class="diff-snap-card">')
-parts.append('<h4 class="diff-snap-title">Previous (newer − 1)</h4>')
 parts.append(
-    '<p class="mono diff-snap-line">id '
-    + esc(ps.get("snapshot_id"))
-    + "</p>"
+    '<div class="diff-snap-card diff-snap-card--previous" data-cv-diff-role="previous" data-cv-snapshot-id="'
+    + esc_attr(pid)
+    + '">'
+)
+parts.append('<h4 class="diff-snap-title">Previous valid snapshot <span class="diff-snap-sub">(newer − 1)</span></h4>')
+parts.append(
+    '<p class="mono diff-snap-line diff-snap-line--id">id <span class="diff-snap-id">'
+    + esc(pid)
+    + "</span></p>"
 )
 parts.append(
-    '<p class="mono diff-snap-line muted">'
-    + esc(ps.get("snapshot_timestamp"))
-    + "</p>"
+    '<p class="mono diff-snap-line muted diff-snap-line--ts"><time datetime="'
+    + esc_attr(pts)
+    + '">'
+    + esc(pts)
+    + "</time></p>"
 )
 parts.append("</div></div>")
 parts.append("</header>")
 
 parts.append('<div class="diff-grid-keys">')
-parts.append('<section class="diff-key-panel" aria-labelledby="diff-add-h">')
+parts.append(
+    '<section class="diff-key-panel" aria-labelledby="diff-add-h" data-cv-diff-panel="added">'
+)
 parts.append('<h3 id="diff-add-h" class="diff-panel-title">Added top-level keys</h3>')
 parts.append(fmt_key_list(ds.get("added_top_level_keys"), 120))
 parts.append("</section>")
-parts.append('<section class="diff-key-panel" aria-labelledby="diff-rem-h">')
+parts.append(
+    '<section class="diff-key-panel" aria-labelledby="diff-rem-h" data-cv-diff-panel="removed">'
+)
 parts.append('<h3 id="diff-rem-h" class="diff-panel-title">Removed top-level keys</h3>')
 parts.append(fmt_key_list(ds.get("removed_top_level_keys"), 120))
 parts.append("</section>")
-parts.append('<section class="diff-key-panel" aria-labelledby="diff-chg-h">')
+parts.append(
+    '<section class="diff-key-panel" aria-labelledby="diff-chg-h" data-cv-diff-panel="changed">'
+)
 parts.append('<h3 id="diff-chg-h" class="diff-panel-title">Changed top-level keys</h3>')
 parts.append(fmt_key_list(ds.get("changed_top_level_keys"), 120))
 parts.append("</section></div>")
@@ -1898,10 +1975,61 @@ tmp_html="$(mktemp)"
     color: var(--cv-on-surface);
   }
   .diff-state-ready {
-    background: color-mix(in srgb, var(--cv-tertiary) 12%, var(--cv-surface-lowest));
+    background: color-mix(in srgb, var(--cv-tertiary) 18%, var(--cv-surface-lowest));
     color: var(--cv-on-surface);
+    border: 1px solid color-mix(in srgb, var(--cv-tertiary) 35%, transparent);
+  }
+  .diff-workspace--compare-ready .diff-workspace-header {
+    border-left-color: var(--cv-tertiary);
+    border-left-width: 4px;
   }
   .diff-state-meta { font-weight: 600; opacity: 0.9; }
+  .diff-compare-summary {
+    margin: 0 0 var(--cv-space-3);
+    padding: var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: color-mix(in srgb, var(--cv-tertiary) 8%, var(--cv-surface-lowest));
+    border: 1px solid color-mix(in srgb, var(--cv-tertiary) 22%, transparent);
+  }
+  .diff-compare-summary-lead {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--cv-on-surface);
+  }
+  .diff-stat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cv-space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .diff-stat-chips li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--cv-space-2);
+    padding: var(--cv-space-1) var(--cv-space-3);
+    border-radius: var(--cv-radius-sm);
+    background: var(--cv-surface-lowest);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 14%, transparent);
+    font-size: 0.75rem;
+  }
+  .diff-stat-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.625rem;
+    color: var(--cv-on-surface-variant);
+  }
+  .diff-stat-value {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+  }
+  .diff-stat-value--add { color: color-mix(in srgb, var(--cv-tertiary) 90%, var(--cv-on-surface)); }
+  .diff-stat-value--rem { color: color-mix(in srgb, var(--cv-outline-variant) 70%, var(--cv-on-surface)); }
+  .diff-stat-value--chg { color: color-mix(in srgb, var(--cv-primary) 85%, var(--cv-on-surface)); }
   .diff-hint { margin: 0 0 var(--cv-space-3); font-size: 0.8125rem; }
   .diff-snap-row {
     display: grid;
@@ -1918,6 +2046,13 @@ tmp_html="$(mktemp)"
     border-radius: var(--cv-radius-sm);
     border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 16%, transparent);
   }
+  .diff-snap-card--latest {
+    border-color: color-mix(in srgb, var(--cv-tertiary) 40%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--cv-tertiary) 15%, transparent);
+  }
+  .diff-snap-card--previous {
+    border-color: color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
+  }
   .diff-snap-title {
     margin: 0 0 var(--cv-space-2);
     font-size: 0.6875rem;
@@ -1926,7 +2061,14 @@ tmp_html="$(mktemp)"
     letter-spacing: 0.05em;
     color: var(--cv-on-surface-variant);
   }
+  .diff-snap-sub {
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--cv-on-surface-variant);
+  }
   .diff-snap-line { margin: 0; font-size: 0.8125rem; }
+  .diff-snap-id { font-weight: 700; }
   .diff-grid-keys {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

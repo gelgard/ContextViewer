@@ -4,7 +4,7 @@
 Stage 10 — Execution Entry
 
 ## Current Substage
-Lightweight validation model active after Stage 10 execution-entry bundle adoption
+Lightweight validation model active with Stage 10 diff comparison implementation-ready baseline above execution summary / manifest / entry authority
 
 ## Progress
 
@@ -137,7 +137,8 @@ Current:
 - **Stage 9 closure chain:** `084–089` delivered; `091` closure/runtime stabilization completed; `092` fixture support added for offline verifier-shape validation; `093`, `095`, `096`, `097` closure-chain artifacts completed; `098` opens Stage 10 entry
 - **Validation operating model:** lightweight / artifact-first / fast-authoritative
 - **Legacy heavy validation paths:** retained as diagnostic-only until replaced by artifact-first acceptance flows
-- **Current execution anchor:** open on **AI Task 098** execution-entry bundle baseline; next numbered AI task must continue Stage 10 under the lightweight validation model
+- **Stage 10 runtime chain:** `098` entry bundle, `099` surface manifest, `100` readiness summary, `101` exploratory diff-readiness artifact, `102` diff comparison implementation-ready baseline
+- **Current execution anchor:** open on **AI Task 102** diff-comparison-ready baseline; next numbered AI task must continue Stage 10 under the lightweight validation model from this runtime baseline instead of reopening generic transition wrappers
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**

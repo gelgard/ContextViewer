@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Execution entry active from Stage 9 transition authority (lightweight artifact-first validation model)
+- Substage: Diff comparison implementation-ready baseline active above Stage 10 summary / manifest / entry authority (lightweight artifact-first validation model)
 
 Next required action:
-→ create and execute the next numbered AI task under Stage 10 entry authority; heavy legacy validation paths remain diagnostic-only and must not become the default acceptance route
+→ create and execute the next numbered AI task under the Stage 10 diff-comparison-ready baseline; use diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---
