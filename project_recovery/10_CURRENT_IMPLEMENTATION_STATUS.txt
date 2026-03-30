@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Lightweight validation model — execution-surface manifest (AI Task 099) is the first operational runtime artifact above the execution-entry bundle (AI Task 098); Stage 9 transition-package chain remains entry-primary
+Lightweight validation model — execution-readiness summary bundle (AI Task 100) is the compact operational readiness artifact above the execution-surface manifest (AI Task 099); entry bundle (098) and Stage 9 transition chain remain below
 
 STATUS:
 - Architecture synced with latest rules
@@ -124,6 +124,7 @@ STATUS:
 - AI Task 097 completed: `get_stage9_stage_transition_package.sh` + `verify_stage9_stage_transition_package.sh` — `stage_transition_ready` from `get_stage9_release_readiness_bundle.sh` only (no benchmark in ordinary path; `contextJSON` non-authoritative)
 - AI Task 098 completed: `get_stage10_execution_entry_bundle.sh` + `verify_stage10_execution_entry_bundle.sh` — `stage10_entry_ready` from `get_stage9_stage_transition_package.sh` only (opens Stage 10; no benchmark in ordinary entry path; `contextJSON` non-authoritative)
 - AI Task 099 completed: `get_stage10_execution_surface_manifest.sh` + `verify_stage10_execution_surface_manifest.sh` — execution-surface readiness manifest derived only from the 098 entry bundle (overview/visualization/history/diff/settings); benchmark not in ordinary manifest path; `contextJSON/*` export metadata only
+- AI Task 100 completed: `get_stage10_execution_readiness_summary_bundle.sh` + `verify_stage10_execution_readiness_summary_bundle.sh` — compact readiness summary derived only from the 099 surface manifest (overall readiness, core surfaces, next Stage 10 task suitability); benchmark not in ordinary summary path; `contextJSON/*` export metadata only
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -150,13 +151,13 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Continue Stage 10 execution using **`get_stage10_execution_surface_manifest.sh`** for core surface readiness (**overview / visualization / history / diff / settings**) and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Continue Stage 10 execution using **`get_stage10_execution_readiness_summary_bundle.sh`** for compact day-to-day readiness (**`execution_readiness_ready`** / next-task suitability), **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
 - if a future task would require another orchestration layer, it must first introduce or reuse an artifact-first validation path
-- **`run_stage9_validation_runtime_benchmark`** remains diagnostic-only and is not part of the ordinary manifest path
-- **`contextJSON/*`** is external viewer export metadata only, not manifest or runtime authority
+- **`run_stage9_validation_runtime_benchmark`** remains diagnostic-only and is not part of the ordinary manifest or summary path
+- **`contextJSON/*`** is external viewer export metadata only, not summary, manifest, or runtime authority
 
 CRITICAL:
 UI-facing tasks must include dedicated visual manual-test instructions with exact visual evidence requirements
