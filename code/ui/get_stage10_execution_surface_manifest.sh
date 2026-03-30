@@ -4,6 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENTRY="${SCRIPT_DIR}/get_stage10_execution_entry_bundle.sh"
+PREVIEW_READY="${SCRIPT_DIR}/get_stage8_ui_preview_readiness_report.sh"
 
 usage() {
   cat <<'USAGE'
@@ -79,6 +80,7 @@ fi
 
 command -v jq >/dev/null 2>&1 || { echo "error: jq is required" >&2; exit 127; }
 [[ -f "$ENTRY" && -x "$ENTRY" ]] || { echo "error: missing or not executable: $ENTRY" >&2; exit 1; }
+[[ -f "$PREVIEW_READY" && -x "$PREVIEW_READY" ]] || { echo "error: missing or not executable: $PREVIEW_READY" >&2; exit 1; }
 
 run_bounded() {
   python3 - "$child_timeout_s" "$@" <<'PY'
@@ -127,6 +129,8 @@ if [[ "$json_ok" == "true" ]]; then
 fi
 
 RS="null"
+fallback_json="null"
+fallback_rc=-1
 if [[ "$json_ok" == "true" ]]; then
   RS="$(printf '%s' "$entry_json" | jq -c '
     (
@@ -135,6 +139,17 @@ if [[ "$json_ok" == "true" ]]; then
       | .verification.get_stage8_ui_preview_readiness_report.report.readiness_summary
     ) // null
   ' 2>/dev/null || echo 'null')"
+fi
+
+if [[ "$RS" == "null" ]]; then
+  set +e
+  fallback_out="$(run_bounded bash "$PREVIEW_READY" --project-id "$project_id" --mode fast --port "$port" --output-dir "$output_dir" --invalid-project-id "$invalid_id")"
+  fallback_rc=$?
+  set -e
+  if printf '%s' "$fallback_out" | jq -e . >/dev/null 2>&1; then
+    fallback_json="$(printf '%s' "$fallback_out" | jq -c .)"
+    RS="$(printf '%s' "$fallback_json" | jq -c '.readiness_summary // null' 2>/dev/null || echo 'null')"
+  fi
 fi
 
 if [[ "$RS" != "null" ]] && printf '%s' "$RS" | jq -e . >/dev/null 2>&1; then
@@ -179,7 +194,13 @@ if printf '%s' "$surfaces" | jq -e '
 fi
 
 manifest_ready="false"
-if [[ "$json_ok" == "true" ]] && [[ "$ent_rc" -eq 0 ]] && [[ "$ent_st" == "stage10_entry_ready" ]] && [[ "$RS" != "null" ]] && [[ "$all_five" == "true" ]]; then
+fallback_ready="false"
+if [[ "$fallback_json" != "null" ]] && printf '%s' "$fallback_json" | jq -e '.status == "ready"' >/dev/null 2>&1; then
+  fallback_ready="true"
+fi
+if [[ "$RS" != "null" ]] && [[ "$all_five" == "true" ]] && {
+  [[ "$json_ok" == "true" && "$ent_rc" -eq 0 && "$ent_st" == "stage10_entry_ready" ]] || [[ "$fallback_ready" == "true" ]];
+}; then
   manifest_ready="true"
 fi
 
@@ -192,7 +213,11 @@ if [[ "$RS" != "null" ]] && printf '%s' "$RS" | jq -e 'type == "object"' >/dev/n
 fi
 
 src_note="entry_bundle.stage9_transition…handoff…acceptance_artifact.completion_report.readiness_summary"
-[[ "$RS" == "null" ]] && src_note="unavailable (missing or incomplete embedded completion/readiness chain)"
+if [[ "$RS" == "null" ]]; then
+  src_note="unavailable (missing or incomplete embedded completion/readiness chain)"
+elif [[ "$fallback_ready" == "true" ]] && [[ "$json_ok" != "true" || "$ent_rc" -ne 0 || "$ent_st" != "stage10_entry_ready" ]]; then
+  src_note="fallback: get_stage8_ui_preview_readiness_report.sh --mode fast .readiness_summary"
+fi
 
 ext_m="null"
 if [[ "$json_ok" == "true" ]]; then
@@ -211,6 +236,8 @@ rs_ok=0
 [[ "$RS" != "null" ]] && rs_ok=1
 ent_ok=0
 [[ "$json_ok" == "true" && "$ent_rc" -eq 0 && "$ent_st" == "stage10_entry_ready" ]] && ent_ok=1
+fb_ok=0
+[[ "$fallback_ready" == "true" ]] && fb_ok=1
 
 af_json=0
 [[ "$all_five" == "true" ]] && af_json=1
@@ -219,16 +246,18 @@ cc="$(jq -n \
   --argjson jok "$jok" \
   --argjson rso "$rs_ok" \
   --argjson ent "$ent_ok" \
+  --argjson fb "$fb_ok" \
   --argjson af "$af_json" \
   --arg ost "$overall" \
   '{
     entry_bundle_stdout_valid_json: ($jok == 1),
     readiness_summary_extracted: ($rso == 1),
     entry_bundle_stage10_entry_ready: ($ent == 1),
+    runtime_preview_readiness_fallback_ready: ($fb == 1),
     all_core_execution_surfaces_available: ($af == 1),
     manifest_status_reflects_gates: (
       ($ost == "manifest_ready")
-      == (($jok == 1) and ($rso == 1) and ($ent == 1) and ($af == 1))
+      == (($rso == 1) and (($ent == 1) or ($fb == 1)) and ($af == 1))
     )
   }')"
 
@@ -237,7 +266,7 @@ diag="$(jq -n \
     primary_authority_script: "get_stage10_execution_entry_bundle.sh",
     ordinary_path_invokes_benchmark: false,
     benchmark_remains_diagnostic_only: true,
-    note: "AI Task 099: surfaces derived from embedded readiness_summary only; no standalone benchmark or lower-layer re-orchestration."
+    note: "AI Task 099 / 102: prefer embedded Stage 10 entry-chain readiness_summary; when unavailable for the current project, fallback to get_stage8_ui_preview_readiness_report.sh --mode fast as a leaf artifact. No benchmark and no recursive heavy orchestration."
   }')"
 
 generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

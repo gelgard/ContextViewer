@@ -25,6 +25,7 @@ Optional:
 Stdout: schema_version stage10_execution_readiness_summary_bundle_v1, status
   (execution_readiness_ready | not_execution_readiness_ready), primary_authority,
   overall_execution_readiness, core_surface_availability, next_stage10_task_readiness,
+  readiness_summary_diff_fields (excerpt: empty_state_only, comparison_ready),
   surface_manifest (compact audit), external_export_metadata, consistency_checks, diagnostics.
 
 Exit 0 when status is execution_readiness_ready (manifest exit 0 and manifest_ready).
@@ -254,8 +255,31 @@ diag="$(jq -n \
     primary_authority_script: "get_stage10_execution_surface_manifest.sh",
     ordinary_path_invokes_benchmark: false,
     benchmark_remains_diagnostic_only: true,
-    note: "AI Task 100: compact readiness summary derived from surface manifest only; no benchmark or lower-layer re-orchestration."
+    note: "AI Task 100 / 102: compact readiness summary from surface manifest; diff excerpt fields follow Stage 8 readiness (two-snapshot comparison_ready); no benchmark or lower-layer re-orchestration."
   }')"
+
+rs_diff="$(jq -n '{
+  source: "surface_manifest.readiness_summary_excerpt",
+  excerpt_present: false,
+  diff_viewer_empty_state_only: null,
+  diff_viewer_comparison_ready: null
+}')"
+if [[ "$json_ok" == "true" ]]; then
+  rs_diff="$(printf '%s' "$mf_json" | jq -c '{
+    source: "surface_manifest.readiness_summary_excerpt",
+    excerpt_present: ((.readiness_summary_excerpt != null) and (.readiness_summary_excerpt | type == "object")),
+    diff_viewer_empty_state_only: (
+      if (.readiness_summary_excerpt | type == "object")
+      then (.readiness_summary_excerpt.diff_viewer_empty_state_only // null)
+      else null end
+    ),
+    diff_viewer_comparison_ready: (
+      if (.readiness_summary_excerpt | type == "object")
+      then (.readiness_summary_excerpt.diff_viewer_comparison_ready // null)
+      else null end
+    )
+  }')"
+fi
 
 generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 pid_num="$project_id"
@@ -269,6 +293,7 @@ jq -n \
   --argjson ov "$ov_exec" \
   --argjson cs "$core_surf" \
   --argjson nx "$next_tr" \
+  --argjson rsd "$rs_diff" \
   --argjson ext "$ext" \
   --argjson cc "$cc" \
   --argjson dg "$diag" \
@@ -281,6 +306,7 @@ jq -n \
     overall_execution_readiness: $ov,
     core_surface_availability: $cs,
     next_stage10_task_readiness: $nx,
+    readiness_summary_diff_fields: $rsd,
     surface_manifest: $sm,
     external_export_metadata: $ext,
     consistency_checks: $cc,

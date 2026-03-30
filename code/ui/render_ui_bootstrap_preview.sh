@@ -2189,10 +2189,7 @@ jq -n \
     source_consistency_checks: ($cc + {diff_viewer: $dcc, settings_profile: $scc}),
     diff_viewer_state: {
       available: true,
-      empty_state_only: (
-        ($d.viewer_context.empty_state == true)
-        or (($d.viewer_context.valid_snapshots_count // 0) == 0)
-      ),
+      empty_state_only: ($d.comparison_ready != true),
       comparison_ready: ($d.comparison_ready == true)
     },
     settings_surface_state: {

@@ -6,12 +6,14 @@
 # AI Task 083: history workspace HTML; production surface classes on served preview.
 # AI Task 085: diff viewer section; render_profile + diff_viewer_state in preview_summary.
 # AI Task 088: settings section; render_profile 088_stage9_secondary_flows_preview; settings_surface_state; investor gate includes settings.
+# AI Task 102: fast artifact path reads diff comparison flags from embedded payload and live diff contract.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PREPARE="${SCRIPT_DIR}/prepare_ui_preview_launch.sh"
 BOOTSTRAP_VERIFY="${SCRIPT_DIR}/verify_stage8_ui_bootstrap_contracts.sh"
 DELIVERY_VERIFY="${SCRIPT_DIR}/verify_stage8_ui_preview_delivery.sh"
+DIFF_CONTRACT="${SCRIPT_DIR}/../diff/get_diff_viewer_contract_bundle.sh"
 
 usage() {
   cat <<'USAGE'
@@ -196,6 +198,31 @@ build_prepare_json_fast_from_artifact() {
   grep -q 'id="ui-bootstrap-payload"' "$artifact" 2>/dev/null && has_payload="true"
   grep -q 'data-cv-preview-shell="080"' "$artifact" 2>/dev/null && has_shell="true"
 
+  df_json="$(
+    python3 - "$artifact" <<'PYDF'
+import json
+import re
+import sys
+
+path = sys.argv[1]
+with open(path, encoding="utf-8") as f:
+    html = f.read()
+m = re.search(
+    r'<script type="application/json" id="ui-bootstrap-payload">\s*([\s\S]*?)\s*</script>',
+    html,
+)
+comp = False
+if m:
+    try:
+        pl = json.loads(m.group(1))
+        dv = (pl.get("ui_sections") or {}).get("diff_viewer") or {}
+        comp = dv.get("comparison_ready") is True
+    except (json.JSONDecodeError, TypeError, AttributeError):
+        pass
+print(json.dumps({"comparison_ready": comp, "empty_state_only": not comp}))
+PYDF
+  )"
+
   jq -n \
     --argjson pid "$project_id" \
     --arg ga "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
@@ -209,6 +236,7 @@ build_prepare_json_fast_from_artifact() {
     --argjson hs "$has_settings" \
     --argjson hp "$has_payload" \
     --argjson hsh "$has_shell" \
+    --argjson df "$df_json" \
     '
     def sec_list($ho; $hv; $hh; $hd; $hs):
       [
@@ -235,8 +263,8 @@ build_prepare_json_fast_from_artifact() {
         render_profile: "088_stage9_secondary_flows_preview",
         diff_viewer_state: {
           available: $hd,
-          empty_state_only: true,
-          comparison_ready: false
+          empty_state_only: (if $hd then $df.empty_state_only else true end),
+          comparison_ready: (if $hd then $df.comparison_ready else false end)
         },
         settings_surface_state: {
           available: $hs,
@@ -253,6 +281,22 @@ if [[ "$mode" == "fast" ]]; then
   fast_artifact="${output_dir%/}/contextviewer_ui_preview_${project_id}.html"
   if [[ -f "$fast_artifact" ]]; then
     prepare_json="$(build_prepare_json_fast_from_artifact "$fast_artifact")"
+    if [[ -f "$DIFF_CONTRACT" && -x "$DIFF_CONTRACT" ]]; then
+      set +e
+      live_diff="$("$DIFF_CONTRACT" --project-id "$project_id" 2>/dev/null)"
+      ld_rc=$?
+      set -e
+      if [[ "$ld_rc" -eq 0 ]] && printf '%s' "$live_diff" | jq -e . >/dev/null 2>&1; then
+        prepare_json="$(printf '%s' "$prepare_json" | jq --argjson ld "$live_diff" '
+          .preview_summary.diff_viewer_state |= (
+            if (.available == true) then
+              ($ld.comparison_ready == true) as $cr
+              | . + {empty_state_only: ($cr | not), comparison_ready: $cr}
+            else . end
+          )
+        ')"
+      fi
+    fi
   else
     prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
   fi
