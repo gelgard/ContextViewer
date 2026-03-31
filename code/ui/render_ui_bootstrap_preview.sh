@@ -8,6 +8,7 @@
 # AI Task 103: comparison-ready diff scan fidelity — stat strip, snapshot cards, panel markers (truth from 084/085 only).
 # AI Task 105: comparison-ready changed-key UI from get_stage10_diff_change_inspector_contract.sh when inspector_ready (fallback: same jq as 104 on diff contract).
 # AI Task 106: stable data-cv-* DOM contract on inspector wrap, rows root, and per changed-key row (types + presence) for future interaction hooks.
+# AI Task 107: deterministic default focus = first changed_key_inspector row (contract order); DOM markers for focus mode, row, and key identity.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -49,6 +50,8 @@ When diff contract reports comparison_ready, this script may invoke
   inspector-shaped metadata from the diff contract if the inspector is not inspector_ready.
 Task 106 adds stable DOM markers (data-cv-diff-inspector-dom-contract="106", per-row
   data-cv-inspector-row-index and type/presence attributes) derived from that contract shape.
+Task 107 adds default-focus on the first changed-key row only (data-cv-inspector-default-focus-mode="107",
+  data-cv-diff-inspector-default-focus="107" on workspace when rows exist).
 USAGE
 }
 
@@ -1097,6 +1100,14 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
             + fmt_key_list(fallback_keys, cap)
             + "</div>"
         )
+    fk0 = rows[0].get("key") if rows else None
+    rows_focus_attrs = (
+        ' data-cv-inspector-default-focus-mode="107"'
+        ' data-cv-inspector-default-focus-index="0"'
+        ' data-cv-inspector-default-focus-key="'
+        + esc_attr(str(fk0))
+        + '"'
+    )
     parts_i = [
         '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
         'data-cv-diff-inspector-dom-contract="106" '
@@ -1104,7 +1115,9 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         + esc_attr(str(len(rows)))
         + '">',
         '<p class="diff-inspector-lead muted">' + src_note + "</p>",
-        '<div class="diff-inspector-rows" role="list" data-cv-inspector-rows-dom-contract="106">',
+        '<div class="diff-inspector-rows" role="list" data-cv-inspector-rows-dom-contract="106"'
+        + rows_focus_attrs
+        + ">",
     ]
     for idx, row in enumerate(rows[:cap]):
         k = row.get("key")
@@ -1112,30 +1125,46 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         pt = row.get("previous_value_type") or "null"
         lp = row.get("latest_value_present")
         pp = row.get("previous_value_present")
+        row_class = "diff-inspector-row diff-inspector-row--default-focus" if idx == 0 else "diff-inspector-row"
+        focus_tail = ""
+        focus_badge = ""
+        if idx == 0:
+            focus_tail = (
+                ' data-cv-inspector-default-focus="true" aria-current="true"'
+                ' data-cv-inspector-default-focus-key="'
+                + esc_attr(str(k))
+                + '"'
+            )
+            focus_badge = (
+                '<p class="diff-inspector-focus-badge mono">Default focus</p>'
+            )
         parts_i.append(
-            '<div class="diff-inspector-row" role="listitem" '
+            '<div class="' + row_class + '" role="listitem" '
             'data-cv-inspector-dom-contract="106" '
             'data-cv-inspector-row-index="' + esc_attr(str(idx)) + '" '
             'data-cv-inspector-key="' + esc_attr(str(k)) + '" '
             'data-cv-inspector-latest-type="' + esc_attr(str(lt)) + '" '
             'data-cv-inspector-previous-type="' + esc_attr(str(pt)) + '" '
             'data-cv-inspector-latest-present="' + esc_attr(str(lp)) + '" '
-            'data-cv-inspector-previous-present="' + esc_attr(str(pp)) + '">'
-            '<div class="diff-inspector-key mono">' + esc(str(k)) + "</div>"
-            '<dl class="diff-inspector-types">'
-            '<dt class="muted">Latest type</dt><dd><span class="diff-type-pill">'
+            'data-cv-inspector-previous-present="' + esc_attr(str(pp)) + '"'
+            + focus_tail
+            + ">"
+            + focus_badge
+            + '<div class="diff-inspector-key mono">' + esc(str(k)) + "</div>"
+            + '<dl class="diff-inspector-types">'
+            + '<dt class="muted">Latest type</dt><dd><span class="diff-type-pill">'
             + esc(str(lt))
             + "</span></dd>"
-            '<dt class="muted">Previous type</dt><dd><span class="diff-type-pill diff-type-pill--prev">'
+            + '<dt class="muted">Previous type</dt><dd><span class="diff-type-pill diff-type-pill--prev">'
             + esc(str(pt))
             + "</span></dd>"
-            "</dl>"
-            '<p class="diff-inspector-flags mono muted">present: latest <strong>'
+            + "</dl>"
+            + '<p class="diff-inspector-flags mono muted">present: latest <strong>'
             + esc(str(lp))
             + "</strong> · previous <strong>"
             + esc(str(pp))
             + "</strong></p>"
-            "</div>"
+            + "</div>"
         )
     if len(rows) > cap:
         parts_i.append(
@@ -1203,6 +1232,10 @@ else:
     state_label = "Comparison ready — two newest valid snapshots"
 
 comp_bool = comp is True
+_ins_chk = dv.get("changed_key_inspector") or []
+if not isinstance(_ins_chk, list):
+    _ins_chk = []
+has_inspector_focus = comp_bool and len(_ins_chk) > 0
 fidelity_attr = (
     ' data-cv-diff-fidelity="103" data-cv-diff-comparison-ready="'
     + ("true" if comp_bool else "false")
@@ -1219,6 +1252,8 @@ if comp_bool:
         + '" data-cv-diff-inspector-preview="105"'
         + ' data-cv-diff-inspector-dom-contract="106"'
     )
+    if has_inspector_focus:
+        fidelity_attr += ' data-cv-diff-inspector-default-focus="107"'
 
 wr_class = "diff-workspace"
 if comp_bool:
@@ -2291,6 +2326,26 @@ tmp_html="$(mktemp)"
     border-radius: var(--cv-radius-sm);
     background: var(--cv-surface-lowest);
     border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 14%, transparent);
+  }
+  .diff-inspector-row--default-focus {
+    outline: 2px solid color-mix(in srgb, var(--cv-primary) 55%, transparent);
+    outline-offset: 2px;
+    border-color: color-mix(in srgb, var(--cv-primary) 30%, transparent);
+    background: color-mix(in srgb, var(--cv-primary) 7%, var(--cv-surface-lowest));
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--cv-primary) 72%, transparent);
+  }
+  .diff-inspector-focus-badge {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 var(--cv-space-2);
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cv-primary-ink);
+    background: color-mix(in srgb, var(--cv-primary) 16%, var(--cv-surface-low));
+    border: 1px solid color-mix(in srgb, var(--cv-primary) 28%, transparent);
   }
   .diff-inspector-key {
     font-weight: 700;

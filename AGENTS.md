@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff comparison implementation-ready baseline active above Stage 10 summary / manifest / entry authority (lightweight artifact-first validation model)
+- Substage: Diff change inspector default-focus (Task 107) active above DOM-contract / preview integration / inspector contract / diff-comparison-ready chain (lightweight artifact-first validation model)
 
 Next required action:
-→ create and execute the next numbered AI task under the Stage 10 diff-comparison-ready baseline; use diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task under the Stage 107 default-focus + DOM-stable inspector preview baseline; use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---

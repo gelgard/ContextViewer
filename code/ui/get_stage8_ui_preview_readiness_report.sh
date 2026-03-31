@@ -10,6 +10,7 @@
 # AI Task 103: fast delivery checks Task 103 diff preview fidelity markers when comparison_ready.
 # AI Task 105: fast delivery checks change-inspector preview markers when comparison_ready.
 # AI Task 106: fast delivery checks inspector DOM contract marker (106) when comparison_ready.
+# AI Task 107: fast delivery checks inspector default-focus markers when comparison_ready and rows list exists.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -283,7 +284,18 @@ prepare_json=""
 if [[ "$mode" == "fast" ]]; then
   fast_artifact="${output_dir%/}/contextviewer_ui_preview_${project_id}.html"
   if [[ -f "$fast_artifact" ]]; then
+    refresh_fast_artifact="false"
+    if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$fast_artifact" 2>/dev/null; then
+      if ! grep -q 'data-cv-inspector-default-focus-mode="107"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-default-focus="107"' "$fast_artifact" 2>/dev/null; then
+        refresh_fast_artifact="true"
+      fi
+    fi
+    if [[ "$refresh_fast_artifact" == "true" ]]; then
+      prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
+    else
     prepare_json="$(build_prepare_json_fast_from_artifact "$fast_artifact")"
+    fi
     if [[ -f "$DIFF_CONTRACT" && -x "$DIFF_CONTRACT" ]]; then
       set +e
       live_diff="$("$DIFF_CONTRACT" --project-id "$project_id" 2>/dev/null)"
@@ -412,6 +424,20 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector DOM contract (106)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-inspector-default-focus-mode="107"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-diff-inspector-default-focus="107"' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector default focus (107)" "pass" "107 focus markers present"
+        else
+          add_fast_check "delivery-fast: diff inspector default focus (107)" "fail" "regenerate preview for Task 107 default-focus markers"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector default focus (107)" "pass" "skipped (no inspector rows list)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector default focus (107)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

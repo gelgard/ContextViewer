@@ -94,14 +94,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102** | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106** | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
 | PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102** | implemented |
-| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102** | implemented |
+| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106** | implemented |
+| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106** | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -149,6 +149,10 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 100` is completed: Stage 10 execution-readiness summary is now the compact operational readiness artifact above the surface manifest.
 - `AI Task 101` is completed: Stage 10 diff-comparison readiness bundle is the exploratory focused artifact above the summary.
 - `AI Task 102` is completed: Stage 10 diff comparison implementation baseline is now ready on comparable two-snapshot projects; fast preview-readiness artifacts align with diff contract truth and the live diff readiness verifier passes.
+- `AI Task 103` is completed: Stage 10 diff comparison preview fidelity adds richer comparison-ready visual cues and contract-aligned HTML markers above the 102 baseline.
+- `AI Task 104` is completed: Stage 10 diff change inspector contract adds machine-readable changed-key drilldown metadata above the comparison-ready diff baseline.
+- `AI Task 105` is completed: Stage 10 inspector preview integration embeds the 104 contract into the comparison-ready diff UI.
+- `AI Task 106` is completed: Stage 10 inspector DOM contract adds stable per-key `data-cv-*` markers above the 105 preview integration baseline.
 - Requirement mapping for **091** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
@@ -233,7 +237,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
 - Current Stage 10 execution-entry authority is `AI Task 098`.
-- Current Stage 10 execution anchor is `AI Task 102`.
+- Current Stage 10 execution anchor is `AI Task 106`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks
