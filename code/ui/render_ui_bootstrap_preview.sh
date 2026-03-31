@@ -13,6 +13,7 @@
 # AI Task 109: stable DOM contract for focus-summary wrap + focused key/latest/previous type fields.
 # AI Task 110: focused latest/previous presence on focus-summary (attrs + field markers) from default row truth.
 # AI Task 111: compact state-chip strip in focus-summary (latest/previous type + presence) with Task 111 DOM markers.
+# AI Task 112: stable DOM contract on the state-chip strip (112) + per-chip field + value-span markers for interaction.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -64,6 +65,8 @@ Task 109 adds stable DOM markers for the focus-summary block itself and its visi
 Task 110 adds latest/previous value presence on the summary (data-cv-diff-inspector-focus-summary-presence-fields="110",
   data-cv-inspector-focus-summary-latest-present / previous-present, field markers latest_present|previous_present).
 Task 111 adds a state-chip strip (data-cv-diff-inspector-focus-summary-state-chips="111", per-chip chip + chip-value).
+Task 112 adds state-chips DOM contract (data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112" on aside, strip, workspace;
+  data-cv-inspector-focus-summary-state-chip-field + data-cv-inspector-focus-summary-state-chip-value on each chip).
 USAGE
 }
 
@@ -1128,32 +1131,46 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '" '
         'data-cv-inspector-focus-summary-latest-present="' + esc_attr(str(lp0)) + '" '
         'data-cv-inspector-focus-summary-previous-present="' + esc_attr(str(pp0)) + '" '
-        'data-cv-diff-inspector-focus-summary-state-chips="111">'
+        'data-cv-diff-inspector-focus-summary-state-chips="111" '
+        'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112">'
         '<p class="diff-inspector-focus-summary-kicker muted mono">Focused key</p>'
         '<p class="diff-inspector-focus-summary-keyline mono" '
         'data-cv-inspector-focus-summary-field="key">' + esc(str(fk0)) + "</p>"
         '<div class="diff-inspector-focus-summary-chips" role="list" aria-label="Focused key state" '
-        'data-cv-diff-inspector-focus-summary-state-chips="111">'
+        'data-cv-diff-inspector-focus-summary-state-chips="111" '
+        'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112">'
         '<span role="listitem" class="diff-inspector-state-chip" '
         'data-cv-inspector-focus-summary-chip="latest_type" data-cv-inspector-focus-summary-chip-value="'
         + esc_attr(str(lt0))
+        + '" data-cv-inspector-focus-summary-state-chip-field="latest_type"'
         + '"><span class="diff-inspector-state-chip-kicker muted">Latest type</span>'
-        '<span class="diff-inspector-state-chip-val mono">' + esc(str(lt0)) + "</span></span>"
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-state-chip-value="'
+        + esc_attr(str(lt0))
+        + '">' + esc(str(lt0)) + "</span></span>"
         '<span role="listitem" class="diff-inspector-state-chip" '
         'data-cv-inspector-focus-summary-chip="previous_type" data-cv-inspector-focus-summary-chip-value="'
         + esc_attr(str(pt0))
+        + '" data-cv-inspector-focus-summary-state-chip-field="previous_type"'
         + '"><span class="diff-inspector-state-chip-kicker muted">Prev type</span>'
-        '<span class="diff-inspector-state-chip-val mono">' + esc(str(pt0)) + "</span></span>"
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-state-chip-value="'
+        + esc_attr(str(pt0))
+        + '">' + esc(str(pt0)) + "</span></span>"
         '<span role="listitem" class="diff-inspector-state-chip" '
         'data-cv-inspector-focus-summary-chip="latest_present" data-cv-inspector-focus-summary-chip-value="'
         + esc_attr(str(lp0))
+        + '" data-cv-inspector-focus-summary-state-chip-field="latest_present"'
         + '"><span class="diff-inspector-state-chip-kicker muted">Latest present</span>'
-        '<span class="diff-inspector-state-chip-val mono">' + esc(str(lp0)) + "</span></span>"
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-state-chip-value="'
+        + esc_attr(str(lp0))
+        + '">' + esc(str(lp0)) + "</span></span>"
         '<span role="listitem" class="diff-inspector-state-chip" '
         'data-cv-inspector-focus-summary-chip="previous_present" data-cv-inspector-focus-summary-chip-value="'
         + esc_attr(str(pp0))
+        + '" data-cv-inspector-focus-summary-state-chip-field="previous_present"'
         + '"><span class="diff-inspector-state-chip-kicker muted">Prev present</span>'
-        '<span class="diff-inspector-state-chip-val mono">' + esc(str(pp0)) + "</span></span>"
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-state-chip-value="'
+        + esc_attr(str(pp0))
+        + '">' + esc(str(pp0)) + "</span></span>"
         "</div>"
         '<p class="diff-inspector-focus-summary-types">'
         '<span class="muted">Latest</span> '
@@ -1328,6 +1345,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-dom-contract="109"'
             ' data-cv-diff-inspector-focus-summary-presence-fields="110"'
             ' data-cv-diff-inspector-focus-summary-state-chips="111"'
+            ' data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"'
         )
 
 wr_class = "diff-workspace"

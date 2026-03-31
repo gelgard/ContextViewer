@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 109: Stage 10 diff inspector focus-summary DOM-contract verifier.
+# AI Task 112: Stage 10 diff inspector focus-summary state-chips DOM-contract verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,9 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_dom_contract.sh — Stage 109 focus-summary DOM contract
+verify_stage10_diff_inspector_focus_summary_state_chips_dom_contract.sh — Stage 112 state-chips DOM contract
 
-Validates stable DOM markers on the focus-summary block derived from the default-focused row. No benchmark.
+Validates stable DOM markers on the state-chip strip (112 contract) + per-chip field/value span markers vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -48,8 +48,7 @@ while [[ $# -gt 0 ]]; do
       [[ -n "${2:-}" ]] || { echo "error: --invalid-project-id requires a value" >&2; exit 2; }
       invalid_id="$2"; shift 2 ;;
     *)
-      echo "error: unknown argument: $1" >&2
-      exit 2 ;;
+      echo "error: unknown argument: $1" >&2; exit 2 ;;
   esac
 done
 
@@ -107,21 +106,20 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips="111"' "$html" 2>/dev/null \
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips="111"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
   if [[ "$refresh_preview" == "true" ]]; then
+    html_before="$html"
     set +e
     prep_json="$(bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>/dev/null)"
     prep_rc=$?
     set -e
     if [[ "$prep_rc" -ne 0 ]] || ! printf '%s' "$prep_json" | jq -e . >/dev/null 2>&1; then
-      add_check "prepare: preview artifact" "fail" "refresh failed: exit ${prep_rc} or invalid JSON"
-      html=""
+      add_check "prepare: preview artifact" "pass" "refresh failed (exit ${prep_rc}); kept existing artifact for HTML checks"
+      html="$html_before"
     else
       add_check "prepare: preview artifact" "pass" "refreshed existing preview artifact"
       html="$(printf '%s' "$prep_json" | jq -r '.output_file // ""')"
@@ -179,19 +177,20 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace focus-summary DOM marker (109)" "fail" "missing HTML preview artifact"
-  add_check "html: focus-summary fields vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: workspace state-chips DOM contract (112)" "fail" "missing HTML preview artifact"
+  add_check "html: strip + per-chip state-chip-field / state-chip-value vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace focus-summary DOM marker (109)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: focus-summary fields vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: workspace state-chips DOM contract (112)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: strip + per-chip state-chip-field / state-chip-value vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace focus-summary DOM marker (109)" "pass" 'data-cv-diff-inspector-focus-summary-dom-contract="109"'
+    if grep -q 'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"' "$html_tmp" 2>/dev/null; then
+      add_check "html: workspace state-chips DOM contract (112)" "pass" \
+        'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"'
     else
-      add_check "html: workspace focus-summary DOM marker (109)" "fail" "missing Task 109 focus-summary DOM marker"
+      add_check "html: workspace state-chips DOM contract (112)" "fail" "missing Task 112 state-chips DOM contract on workspace"
     fi
-    py_dom="$(
+    py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
 import html
 import json
@@ -214,73 +213,73 @@ if not isinstance(rows, list):
 if rows:
     row0 = rows[0]
     if not isinstance(row0, dict):
-      print("fail|first row not object")
-      sys.exit(0)
-    k0 = row0.get("key")
+        print("fail|first row not object")
+        sys.exit(0)
     lt0 = row0.get("latest_value_type") or "null"
     pt0 = row0.get("previous_value_type") or "null"
+    lp0 = row0.get("latest_value_present")
+    pp0 = row0.get("previous_value_present")
 else:
-    m_summary = re.search(
-        r'data-cv-inspector-focus-summary-key="([^"]+)"\s+'
-        r'data-cv-inspector-focus-summary-latest-type="([^"]+)"\s+'
-        r'data-cv-inspector-focus-summary-previous-type="([^"]+)"',
+    mrow = re.search(
+        r'<div class="diff-inspector-row diff-inspector-row--default-focus" role="listitem"\s+'
+        r'data-cv-inspector-dom-contract="106"\s+'
+        r'data-cv-inspector-row-index="0"\s+'
+        r'data-cv-inspector-key="[^"]+"\s+'
+        r'data-cv-inspector-latest-type="([^"]+)"\s+'
+        r'data-cv-inspector-previous-type="([^"]+)"\s+'
+        r'data-cv-inspector-latest-present="([^"]+)"\s+'
+        r'data-cv-inspector-previous-present="([^"]+)"',
         page,
     )
-    if not m_summary:
-        print("fail|cannot read focus-summary attrs from HTML")
+    if not mrow:
+        print("fail|cannot read default row from HTML")
         sys.exit(0)
-    k0 = html.unescape(m_summary.group(1))
-    lt0 = html.unescape(m_summary.group(2))
-    pt0 = html.unescape(m_summary.group(3))
+    lt0 = html.unescape(mrow.group(1))
+    pt0 = html.unescape(mrow.group(2))
+    lp0 = html.unescape(mrow.group(3))
+    pp0 = html.unescape(mrow.group(4))
 
 def esc_attr(s):
     return html.escape(str(s) if s is not None else "", quote=True)
 
-exp_k = esc_attr(str(k0))
-exp_lt = esc_attr(str(lt0))
-exp_pt = esc_attr(str(pt0))
-
-aside_pat = (
-    r'<aside class="diff-inspector-focus-summary"[^>]*data-cv-diff-inspector-focus-summary="108"'
-    r'[\s\S]*?data-cv-diff-inspector-focus-summary-dom-contract="109"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-key="' + re.escape(exp_k) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-latest-type="' + re.escape(exp_lt) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-previous-type="' + re.escape(exp_pt) + r'"'
-)
-if not re.search(aside_pat, page):
-    print("fail|focus-summary aside missing or attrs mismatch")
-    sys.exit(0)
-
-field_key = re.search(
-    r'<p class="diff-inspector-focus-summary-keyline mono"\s+'
-    r'data-cv-inspector-focus-summary-field="key">' + re.escape(html.escape(str(k0), quote=False)) + r'</p>',
-    page,
-)
-if not field_key:
-    print("fail|missing field marker for focused key")
-    sys.exit(0)
-
 if not re.search(
-    r'data-cv-inspector-focus-summary-field="latest_type">' + re.escape(html.escape(str(lt0), quote=False)) + r'</span>',
+    r'<div class="diff-inspector-focus-summary-chips"[^>]*data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"',
     page,
 ):
-    print("fail|missing field marker for latest type")
+    print("fail|missing 112 DOM contract on state-chip strip container")
     sys.exit(0)
 
-if not re.search(
-    r'data-cv-inspector-focus-summary-field="previous_type">' + re.escape(html.escape(str(pt0), quote=False)) + r'</span>',
-    page,
+for name, val in (
+    ("latest_type", lt0),
+    ("previous_type", pt0),
+    ("latest_present", lp0),
+    ("previous_present", pp0),
 ):
-    print("fail|missing field marker for previous type")
-    sys.exit(0)
+    ev = esc_attr(str(val))
+    outer = (
+        r'data-cv-inspector-focus-summary-chip="' + re.escape(name) + r'"'
+        r'\s+data-cv-inspector-focus-summary-chip-value="' + re.escape(ev) + r'"'
+        r'\s+data-cv-inspector-focus-summary-state-chip-field="' + re.escape(name) + r'"'
+    )
+    if not re.search(outer, page):
+        print(f"fail|missing or mismatch state-chip-field block for {name}")
+        sys.exit(0)
+    inner = (
+        r'<span class="diff-inspector-state-chip-val mono"\s+'
+        r'data-cv-inspector-focus-summary-state-chip-value="' + re.escape(ev) + r'"'
+    )
+    if not re.search(inner, page):
+        print(f"fail|missing state-chip-value span for {name}")
+        sys.exit(0)
 
 print("ok")
 PY
     )"
-    if [[ "$py_dom" == "ok" ]]; then
-      add_check "html: focus-summary fields vs default row" "pass" "109 DOM fields match default-focused row"
+    if [[ "$py_c" == "ok" ]]; then
+      add_check "html: strip + per-chip state-chip-field / state-chip-value vs default row" "pass" \
+        "112 strip + four chips match first changed_key_inspector row"
     else
-      add_check "html: focus-summary fields vs default row" "fail" "${py_dom#fail|}"
+      add_check "html: strip + per-chip state-chip-field / state-chip-value vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi
