@@ -14,6 +14,7 @@
 # AI Task 110: focused latest/previous presence on focus-summary (attrs + field markers) from default row truth.
 # AI Task 111: compact state-chip strip in focus-summary (latest/previous type + presence) with Task 111 DOM markers.
 # AI Task 112: stable DOM contract on the state-chip strip (112) + per-chip field + value-span markers for interaction.
+# AI Task 113: stable source-link from focus-summary back to default-focused row (linked key + index) for future interaction hooks.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -67,6 +68,8 @@ Task 110 adds latest/previous value presence on the summary (data-cv-diff-inspec
 Task 111 adds a state-chip strip (data-cv-diff-inspector-focus-summary-state-chips="111", per-chip chip + chip-value).
 Task 112 adds state-chips DOM contract (data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112" on aside, strip, workspace;
   data-cv-inspector-focus-summary-state-chip-field + data-cv-inspector-focus-summary-state-chip-value on each chip).
+Task 113 adds focus-summary source-link markers (data-cv-diff-inspector-focus-summary-source-link="113",
+  data-cv-inspector-focus-summary-source-key, data-cv-inspector-focus-summary-source-index) derived from the default-focused row.
 USAGE
 }
 
@@ -1126,11 +1129,14 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary="108" '
         'data-cv-diff-inspector-focus-summary-dom-contract="109" '
         'data-cv-diff-inspector-focus-summary-presence-fields="110" '
+        'data-cv-diff-inspector-focus-summary-source-link="113" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-latest-type="' + esc_attr(str(lt0)) + '" '
         'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '" '
         'data-cv-inspector-focus-summary-latest-present="' + esc_attr(str(lp0)) + '" '
         'data-cv-inspector-focus-summary-previous-present="' + esc_attr(str(pp0)) + '" '
+        'data-cv-inspector-focus-summary-source-key="' + esc_attr(str(fk0)) + '" '
+        'data-cv-inspector-focus-summary-source-index="0" '
         'data-cv-diff-inspector-focus-summary-state-chips="111" '
         'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112">'
         '<p class="diff-inspector-focus-summary-kicker muted mono">Focused key</p>'
@@ -1346,6 +1352,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-presence-fields="110"'
             ' data-cv-diff-inspector-focus-summary-state-chips="111"'
             ' data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"'
+            ' data-cv-diff-inspector-focus-summary-source-link="113"'
         )
 
 wr_class = "diff-workspace"
