@@ -10,6 +10,7 @@
 # AI Task 106: stable data-cv-* DOM contract on inspector wrap, rows root, and per changed-key row (types + presence) for future interaction hooks.
 # AI Task 107: deterministic default focus = first changed_key_inspector row (contract order); DOM markers for focus mode, row, and key identity.
 # AI Task 108: compact focus-summary strip above inspector rows from default-focused row truth; Task 108 DOM markers on summary + workspace.
+# AI Task 109: stable DOM contract for focus-summary wrap + focused key/latest/previous type fields.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -55,6 +56,9 @@ Task 107 adds default-focus on the first changed-key row only (data-cv-inspector
   data-cv-diff-inspector-default-focus="107" on workspace when rows exist).
 Task 108 adds a focus-summary aside above the rows (data-cv-diff-inspector-focus-summary="108",
   key + latest/previous type attrs) and workspace marker when inspector rows exist.
+Task 109 adds stable DOM markers for the focus-summary block itself and its visible fields
+  (data-cv-diff-inspector-focus-summary-dom-contract="109",
+  data-cv-inspector-focus-summary-field="key|latest_type|previous_type").
 USAGE
 }
 
@@ -1110,17 +1114,19 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
     focus_summary_block = (
         '<aside class="diff-inspector-focus-summary" role="region" aria-label="Focused changed key summary" '
         'data-cv-diff-inspector-focus-summary="108" '
+        'data-cv-diff-inspector-focus-summary-dom-contract="109" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-latest-type="' + esc_attr(str(lt0)) + '" '
         'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '">'
         '<p class="diff-inspector-focus-summary-kicker muted mono">Focused key</p>'
-        '<p class="diff-inspector-focus-summary-keyline mono">' + esc(str(fk0)) + "</p>"
+        '<p class="diff-inspector-focus-summary-keyline mono" '
+        'data-cv-inspector-focus-summary-field="key">' + esc(str(fk0)) + "</p>"
         '<p class="diff-inspector-focus-summary-types">'
         '<span class="muted">Latest</span> '
-        '<span class="diff-type-pill">' + esc(str(lt0)) + "</span>"
+        '<span class="diff-type-pill" data-cv-inspector-focus-summary-field="latest_type">' + esc(str(lt0)) + "</span>"
         ' <span class="muted">·</span> '
         '<span class="muted">Previous</span> '
-        '<span class="diff-type-pill diff-type-pill--prev">' + esc(str(pt0)) + "</span>"
+        '<span class="diff-type-pill diff-type-pill--prev" data-cv-inspector-focus-summary-field="previous_type">' + esc(str(pt0)) + "</span>"
         "</p></aside>"
     )
     rows_focus_attrs = (
@@ -1279,6 +1285,7 @@ if comp_bool:
         fidelity_attr += (
             ' data-cv-diff-inspector-default-focus="107"'
             ' data-cv-diff-inspector-focus-summary="108"'
+            ' data-cv-diff-inspector-focus-summary-dom-contract="109"'
         )
 
 wr_class = "diff-workspace"

@@ -12,6 +12,7 @@
 # AI Task 106: fast delivery checks inspector DOM contract marker (106) when comparison_ready.
 # AI Task 107: fast delivery checks inspector default-focus markers when comparison_ready and rows list exists.
 # AI Task 108: fast delivery checks inspector focus-summary (108) when comparison_ready and rows list exists.
+# AI Task 109: fast delivery checks focus-summary DOM-contract markers (109) when focus-summary is present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -289,7 +290,8 @@ if [[ "$mode" == "fast" ]]; then
     if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$fast_artifact" 2>/dev/null; then
       if ! grep -q 'data-cv-inspector-default-focus-mode="107"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-default-focus="107"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-inspector-focus-summary="108"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-inspector-focus-summary="108"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -454,6 +456,22 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector focus summary (108)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-field="key"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-field="latest_type"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-field="previous_type"' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector focus summary DOM contract (109)" "pass" "109 summary DOM markers present"
+        else
+          add_fast_check "delivery-fast: diff inspector focus summary DOM contract (109)" "fail" "regenerate preview for Task 109 focus-summary DOM markers"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector focus summary DOM contract (109)" "pass" "skipped (no focus-summary block)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector focus summary DOM contract (109)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'
