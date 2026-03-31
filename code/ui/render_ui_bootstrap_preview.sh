@@ -16,6 +16,7 @@
 # AI Task 112: stable DOM contract on the state-chip strip (112) + per-chip field + value-span markers for interaction.
 # AI Task 113: stable source-link from focus-summary back to default-focused row (linked key + index) for future interaction hooks.
 # AI Task 114: field-level DOM elements for that source-link (114 wrapper + source_key / source_index spans).
+# AI Task 115: compact source-link chip strip inside focus-summary (source_key + source_index) with stable chip markers.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -73,6 +74,8 @@ Task 113 adds focus-summary source-link markers (data-cv-diff-inspector-focus-su
   data-cv-inspector-focus-summary-source-key, data-cv-inspector-focus-summary-source-index) derived from the default-focused row.
 Task 114 adds field-level source-link DOM inside the summary (data-cv-diff-inspector-focus-summary-source-link-dom-fields="114",
   data-cv-inspector-focus-summary-source-link-field="source_key|source_index") matching that row.
+Task 115 adds source-link chips inside the summary (data-cv-diff-inspector-focus-summary-source-link-chips="115",
+  data-cv-inspector-focus-summary-source-chip and data-cv-inspector-focus-summary-source-chip-value).
 USAGE
 }
 
@@ -1134,6 +1137,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-presence-fields="110" '
         'data-cv-diff-inspector-focus-summary-source-link="113" '
         'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114" '
+        'data-cv-diff-inspector-focus-summary-source-link-chips="115" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-latest-type="' + esc_attr(str(lt0)) + '" '
         'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '" '
@@ -1153,6 +1157,20 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         + '</span> <span class="muted">·</span> '
         '<span data-cv-inspector-focus-summary-source-link-field="source_index">0</span>'
         "</p>"
+        '<div class="diff-inspector-focus-summary-source-chips" role="list" aria-label="Focused key source link" '
+        'data-cv-diff-inspector-focus-summary-source-link-chips="115">'
+        '<span role="listitem" class="diff-inspector-state-chip" '
+        'data-cv-inspector-focus-summary-source-chip="source_key" data-cv-inspector-focus-summary-source-chip-value="'
+        + esc_attr(str(fk0))
+        + '"><span class="diff-inspector-state-chip-kicker muted">Source key</span>'
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-source-chip-value="'
+        + esc_attr(str(fk0))
+        + '">' + esc(str(fk0)) + "</span></span>"
+        '<span role="listitem" class="diff-inspector-state-chip" '
+        'data-cv-inspector-focus-summary-source-chip="source_index" data-cv-inspector-focus-summary-source-chip-value="0"'
+        '><span class="diff-inspector-state-chip-kicker muted">Source index</span>'
+        '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-source-chip-value="0">0</span></span>'
+        "</div>"
         '<div class="diff-inspector-focus-summary-chips" role="list" aria-label="Focused key state" '
         'data-cv-diff-inspector-focus-summary-state-chips="111" '
         'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112">'
@@ -1365,6 +1383,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"'
             ' data-cv-diff-inspector-focus-summary-source-link="113"'
             ' data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"'
+            ' data-cv-diff-inspector-focus-summary-source-link-chips="115"'
         )
 
 wr_class = "diff-workspace"
