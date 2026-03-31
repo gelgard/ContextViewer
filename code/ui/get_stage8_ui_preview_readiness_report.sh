@@ -9,6 +9,7 @@
 # AI Task 102: fast artifact path reads diff comparison flags from embedded payload and live diff contract.
 # AI Task 103: fast delivery checks Task 103 diff preview fidelity markers when comparison_ready.
 # AI Task 105: fast delivery checks change-inspector preview markers when comparison_ready.
+# AI Task 106: fast delivery checks inspector DOM contract marker (106) when comparison_ready.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -402,6 +403,15 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff change inspector preview (105)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-dom-contract="106"' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: diff inspector DOM contract (106)" "pass" 'data-cv-diff-inspector-dom-contract present'
+      else
+        add_fast_check "delivery-fast: diff inspector DOM contract (106)" "fail" "regenerate preview for Task 106 DOM markers"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector DOM contract (106)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

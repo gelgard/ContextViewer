@@ -7,6 +7,7 @@
 # AI Task 085: contract-backed diff viewer surface (get_diff_viewer_contract_bundle.sh only).
 # AI Task 103: comparison-ready diff scan fidelity — stat strip, snapshot cards, panel markers (truth from 084/085 only).
 # AI Task 105: comparison-ready changed-key UI from get_stage10_diff_change_inspector_contract.sh when inspector_ready (fallback: same jq as 104 on diff contract).
+# AI Task 106: stable data-cv-* DOM contract on inspector wrap, rows root, and per changed-key row (types + presence) for future interaction hooks.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -46,6 +47,8 @@ When diff contract reports comparison_ready, this script may invoke
   get_stage10_diff_change_inspector_contract.sh (Task 105) for changed-key UI truth
   (bounded by STAGE9_GATE_TIMEOUT_S, default 420s, min 30). Falls back to inline
   inspector-shaped metadata from the diff contract if the inspector is not inspector_ready.
+Task 106 adds stable DOM markers (data-cv-diff-inspector-dom-contract="106", per-row
+  data-cv-inspector-row-index and type/presence attributes) derived from that contract shape.
 USAGE
 }
 
@@ -1081,35 +1084,43 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
     if not rows and not fallback_keys:
         return (
             '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
+            'data-cv-diff-inspector-dom-contract="106" '
             'data-cv-changed-inspector-count="0" role="group">'
             '<p class="diff-inspector-lead muted">' + src_note + "</p>"
             '<p class="muted mono">(no changed top-level keys)</p></div>'
         )
     if not rows and fallback_keys:
         return (
-            '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" role="group">'
+            '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
+            'data-cv-diff-inspector-dom-contract="106" role="group">'
             '<p class="diff-inspector-lead muted">' + src_note + "</p>"
             + fmt_key_list(fallback_keys, cap)
             + "</div>"
         )
     parts_i = [
         '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
+        'data-cv-diff-inspector-dom-contract="106" '
         'role="group" aria-label="Changed key drilldown" data-cv-changed-inspector-count="'
         + esc_attr(str(len(rows)))
         + '">',
         '<p class="diff-inspector-lead muted">' + src_note + "</p>",
-        '<div class="diff-inspector-rows" role="list">',
+        '<div class="diff-inspector-rows" role="list" data-cv-inspector-rows-dom-contract="106">',
     ]
-    for row in rows[:cap]:
+    for idx, row in enumerate(rows[:cap]):
         k = row.get("key")
         lt = row.get("latest_value_type") or "null"
         pt = row.get("previous_value_type") or "null"
         lp = row.get("latest_value_present")
         pp = row.get("previous_value_present")
         parts_i.append(
-            '<div class="diff-inspector-row" role="listitem" data-cv-inspector-key="'
-            + esc_attr(str(k))
-            + '">'
+            '<div class="diff-inspector-row" role="listitem" '
+            'data-cv-inspector-dom-contract="106" '
+            'data-cv-inspector-row-index="' + esc_attr(str(idx)) + '" '
+            'data-cv-inspector-key="' + esc_attr(str(k)) + '" '
+            'data-cv-inspector-latest-type="' + esc_attr(str(lt)) + '" '
+            'data-cv-inspector-previous-type="' + esc_attr(str(pt)) + '" '
+            'data-cv-inspector-latest-present="' + esc_attr(str(lp)) + '" '
+            'data-cv-inspector-previous-present="' + esc_attr(str(pp)) + '">'
             '<div class="diff-inspector-key mono">' + esc(str(k)) + "</div>"
             '<dl class="diff-inspector-types">'
             '<dt class="muted">Latest type</dt><dd><span class="diff-type-pill">'
@@ -1206,6 +1217,7 @@ if comp_bool:
         + '" data-cv-diff-changed-count="'
         + esc_attr(n_chg)
         + '" data-cv-diff-inspector-preview="105"'
+        + ' data-cv-diff-inspector-dom-contract="106"'
     )
 
 wr_class = "diff-workspace"
