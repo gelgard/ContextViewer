@@ -204,6 +204,7 @@ Current execution state:
 - AI Task 108 completed: Stage 10 **diff change inspector focus summary** — compact **108** summary strip above inspector rows from default-focused row truth (`aside` + stable attrs); **`verify_stage10_diff_change_inspector_focus_summary.sh`** + Stage 8 fast check when an inspector rows list exists; benchmark diagnostic-only; `contextJSON` export-only
 - AI Task 109 completed: Stage 10 **diff inspector focus-summary DOM contract** — stable **`data-cv-*`** markers on the focus-summary wrap plus focused key/latest/previous-type fields; **`verify_stage10_diff_inspector_focus_summary_dom_contract.sh`** + Stage 8 fast check when a focus-summary block exists; benchmark diagnostic-only; `contextJSON` export-only
 - AI Task 110 completed: Stage 10 **diff inspector focus-summary presence fields** — latest/previous **value presence** on the focus-summary (`110` markers + `latest_present` / `previous_present` field hooks); **`verify_stage10_diff_inspector_focus_summary_presence_fields.sh`** + Stage 8 fast check when a focus-summary block exists; benchmark diagnostic-only; `contextJSON` export-only
+- AI Task 111 completed: Stage 10 **diff inspector focus-summary state chips** — compact chip strip for latest/previous **type + presence** from the focused row (`111` markers); **`verify_stage10_diff_inspector_focus_summary_state_chips.sh`** + Stage 8 fast check when a focus-summary block exists; benchmark diagnostic-only; `contextJSON` export-only
 
 Stage 10 — **execution entry** (current):
 - **Execution-entry bundle (098):** `get_stage10_execution_entry_bundle.sh` (+ `verify_stage10_execution_entry_bundle.sh`) — derives **`stage10_entry_ready`** from **`stage_transition_ready`** via Stage 9 transition package only
@@ -218,4 +219,5 @@ Stage 10 — **execution entry** (current):
 - **Diff inspector focus summary (108):** `verify_stage10_diff_change_inspector_focus_summary.sh` — compact focused-key summary **above** the **107** default-focus baseline
 - **Diff inspector focus-summary DOM contract (109):** `verify_stage10_diff_inspector_focus_summary_dom_contract.sh` — stable focus-summary field markers **above** the **108** focus-summary baseline
 - **Diff inspector focus-summary presence fields (110):** `verify_stage10_diff_inspector_focus_summary_presence_fields.sh` — focused key **presence** summary **above** the **109** focus-summary DOM-contract baseline
-- **Current execution anchor:** **110** focus-summary presence layer on **109**/**108**/…; next action: continue Stage 10 UI/runtime work under the lightweight validation model
+- **Diff inspector focus-summary state chips (111):** `verify_stage10_diff_inspector_focus_summary_state_chips.sh` — compact **state-chip** strip **above** the **110** presence-fields baseline
+- **Current execution anchor:** **111** state-chips layer on **110**/**109**/…; next action: continue Stage 10 UI/runtime work under the lightweight validation model

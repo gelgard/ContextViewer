@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff inspector focus-summary presence-fields (Task 110) active above focus-summary DOM-contract / focus-summary / default-focus / preview + inspector contract / diff-comparison-ready chain (lightweight artifact-first validation model)
+- Substage: Diff inspector focus-summary state-chips (Task 111) active above presence-fields / focus-summary DOM-contract / focus-summary / default-focus / preview + inspector contract / diff-comparison-ready chain (lightweight artifact-first validation model)
 
 Next required action:
-→ create and execute the next numbered AI task under the Stage 110 focus-summary presence-fields + 109 DOM-contract + 108 baseline; use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task under the Stage 111 state-chips + 110 presence-fields + 109 DOM-contract baseline; use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---
