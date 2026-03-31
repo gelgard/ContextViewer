@@ -17,6 +17,7 @@
 # AI Task 111: fast delivery checks focus-summary state-chip markers (111) when focus-summary is present.
 # AI Task 112: fast delivery checks state-chips DOM contract (112) when focus-summary is present.
 # AI Task 113: fast delivery checks focus-summary source-link markers (113) when focus-summary is present.
+# AI Task 114: fast delivery checks focus-summary source-link DOM-fields (114) when focus-summary is present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -299,7 +300,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips="111"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link="113"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link="113"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -541,6 +543,22 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector focus-summary source link (113)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-field="source_key"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-field="source_index"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'diff-inspector-focus-summary-sourceline' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link DOM fields (114)" "pass" "114 source-link DOM fields present"
+        else
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link DOM fields (114)" "fail" "regenerate preview for Task 114 source-link DOM fields"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector focus-summary source-link DOM fields (114)" "pass" "skipped (no focus-summary block)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector focus-summary source-link DOM fields (114)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'
