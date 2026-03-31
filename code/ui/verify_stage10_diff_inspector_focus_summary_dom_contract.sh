@@ -107,7 +107,8 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html" 2>/dev/null; then
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html" 2>/dev/null \
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
@@ -238,12 +239,11 @@ exp_lt = esc_attr(str(lt0))
 exp_pt = esc_attr(str(pt0))
 
 aside_pat = (
-    r'<aside class="diff-inspector-focus-summary"[^>]*'
-    r'data-cv-diff-inspector-focus-summary="108"\s+'
-    r'data-cv-diff-inspector-focus-summary-dom-contract="109"\s+'
-    r'data-cv-inspector-focus-summary-key="' + re.escape(exp_k) + r'"\s+'
-    r'data-cv-inspector-focus-summary-latest-type="' + re.escape(exp_lt) + r'"\s+'
-    r'data-cv-inspector-focus-summary-previous-type="' + re.escape(exp_pt) + r'"'
+    r'<aside class="diff-inspector-focus-summary"[^>]*data-cv-diff-inspector-focus-summary="108"'
+    r'[\s\S]*?data-cv-diff-inspector-focus-summary-dom-contract="109"'
+    r'[\s\S]*?data-cv-inspector-focus-summary-key="' + re.escape(exp_k) + r'"'
+    r'[\s\S]*?data-cv-inspector-focus-summary-latest-type="' + re.escape(exp_lt) + r'"'
+    r'[\s\S]*?data-cv-inspector-focus-summary-previous-type="' + re.escape(exp_pt) + r'"'
 )
 if not re.search(aside_pat, page):
     print("fail|focus-summary aside missing or attrs mismatch")

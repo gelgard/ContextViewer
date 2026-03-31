@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **diff inspector focus-summary DOM contract** (AI Task 109) adds stable **`data-cv-*`** markers on the Task **108** focus-summary wrap plus focused key/latest/previous-type fields, gated by **`verify_stage10_diff_inspector_focus_summary_dom_contract.sh`**, above the **108** focus-summary baseline; benchmark diagnostic-only; `contextJSON/*` export-only
+Stage 10 **diff inspector focus-summary presence fields** (AI Task 110) adds focused **latest/previous value presence** to the focus-summary above the **109** DOM-contract baseline (aside attrs, **`latest_present`** / **`previous_present`** field markers on `<strong>`), gated by **`verify_stage10_diff_inspector_focus_summary_presence_fields.sh`**; benchmark diagnostic-only; `contextJSON/*` export-only
 
 STATUS:
 - Architecture synced with latest rules
@@ -134,6 +134,7 @@ STATUS:
 - AI Task 107 completed: **Inspector default focus** — first changed-key row default-focused with Task 107 markers (`data-cv-diff-inspector-default-focus`, rows `data-cv-inspector-default-focus-mode`, single `data-cv-inspector-default-focus="true"`); `verify_stage10_diff_change_inspector_default_focus.sh` + Stage 8 fast check when inspector rows list present; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 108 completed: **Inspector focus summary** — `aside.diff-inspector-focus-summary` above rows with `data-cv-diff-inspector-focus-summary="108"`, key + type attrs from first row; `verify_stage10_diff_change_inspector_focus_summary.sh` + Stage 8 fast check when inspector rows list present; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 109 completed: **Inspector focus-summary DOM contract** — stable Task 109 markers on the focus-summary wrap and field-level key/latest/previous type elements; `verify_stage10_diff_inspector_focus_summary_dom_contract.sh` + Stage 8 fast check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
+- AI Task 110 completed: **Inspector focus-summary presence fields** — Task 110 markers and matching presence text for default-focused row; `verify_stage10_diff_inspector_focus_summary_presence_fields.sh` + Stage 8 fast check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -160,7 +161,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 comparison-ready diff preview carries **105–109** (through **`verify_stage10_diff_inspector_focus_summary_dom_contract.sh`** for **109** focus-summary DOM contract). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 comparison-ready diff preview carries **105–110** (including **`verify_stage10_diff_inspector_focus_summary_presence_fields.sh`** for **110**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack

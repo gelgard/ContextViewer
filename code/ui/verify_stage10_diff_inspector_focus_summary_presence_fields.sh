@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 108: Stage 10 diff change inspector focus-summary verifier.
+# AI Task 110: Stage 10 diff inspector focus-summary presence-fields verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,9 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_change_inspector_focus_summary.sh — Stage 108 inspector focus-summary
+verify_stage10_diff_inspector_focus_summary_presence_fields.sh — Stage 110 focus-summary presence
 
-Validates compact focus-summary block above inspector rows (default-focused row truth). No benchmark.
+Validates latest/previous value presence on the focus-summary block vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -52,7 +52,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -z "$project_id" ]] && { echo "error: --project-id is required" >&2; usage >&2; exit 2; }
+[[ -n "$project_id" ]] || { echo "error: --project-id is required" >&2; usage >&2; exit 2; }
 
 command -v jq >/dev/null 2>&1 || { echo "error: jq is required" >&2; exit 127; }
 [[ -f "$PREPARE" && -x "$PREPARE" ]] || { echo "error: missing or not executable: $PREPARE" >&2; exit 1; }
@@ -87,7 +87,6 @@ insp_rc=$?
 set -e
 
 insp_json_ok="false"
-insp_check_status="pass"
 insp_check_details=""
 if [[ "$insp_rc" -eq 0 ]] && printf '%s' "$insp_json" | jq -e . >/dev/null 2>&1; then
   insp_json_ok="true"
@@ -105,7 +104,28 @@ html="${output_dir}/contextviewer_ui_preview_${project_id}.html"
 prep_json=""
 
 if [[ -f "$html" ]]; then
-  add_check "prepare: preview artifact" "pass" "reused existing preview artifact"
+  refresh_preview="false"
+  if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html" 2>/dev/null; then
+      refresh_preview="true"
+    fi
+  fi
+  if [[ "$refresh_preview" == "true" ]]; then
+    html_before="$html"
+    set +e
+    prep_json="$(bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>/dev/null)"
+    prep_rc=$?
+    set -e
+    if [[ "$prep_rc" -ne 0 ]] || ! printf '%s' "$prep_json" | jq -e . >/dev/null 2>&1; then
+      add_check "prepare: preview artifact" "pass" "refresh failed (exit ${prep_rc}); kept existing artifact for HTML checks"
+      html="$html_before"
+    else
+      add_check "prepare: preview artifact" "pass" "refreshed existing preview artifact"
+      html="$(printf '%s' "$prep_json" | jq -r '.output_file // ""')"
+    fi
+  else
+    add_check "prepare: preview artifact" "pass" "reused existing preview artifact"
+  fi
 else
   set +e
   prep_json="$(bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>/dev/null)"
@@ -146,7 +166,7 @@ if [[ "$effective_row_count" -eq 0 ]] && [[ "$html_row_count" =~ ^[0-9]+$ ]] && 
 fi
 
 if [[ "$insp_json_ok" == "true" ]]; then
-  add_check "inspector: get_stage10_diff_change_inspector_contract JSON" "$insp_check_status" "$insp_check_details"
+  add_check "inspector: get_stage10_diff_change_inspector_contract JSON" "pass" "$insp_check_details"
 else
   if [[ "$effective_row_count" -gt 0 ]]; then
     add_check "inspector: get_stage10_diff_change_inspector_contract JSON" "pass" "DOM fallback used from existing preview rows"
@@ -156,19 +176,19 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace focus-summary marker (108)" "fail" "missing HTML preview artifact"
-  add_check "html: focus-summary container + types vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: workspace presence-fields marker (110)" "fail" "missing HTML preview artifact"
+  add_check "html: focus-summary presence attrs + fields vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace focus-summary marker (108)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: focus-summary container + types vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: workspace presence-fields marker (110)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: focus-summary presence attrs + fields vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace focus-summary marker (108)" "pass" 'data-cv-diff-inspector-focus-summary="108"'
+    if grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html_tmp" 2>/dev/null; then
+      add_check "html: workspace presence-fields marker (110)" "pass" 'data-cv-diff-inspector-focus-summary-presence-fields="110"'
     else
-      add_check "html: workspace focus-summary marker (108)" "fail" "missing workspace Task 108 marker"
+      add_check "html: workspace presence-fields marker (110)" "fail" "missing Task 110 presence-fields marker on workspace"
     fi
-    py_s="$(
+    py_p="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
 import html
 import json
@@ -188,61 +208,74 @@ rows = insp.get("changed_key_inspector") or []
 if not isinstance(rows, list):
     rows = []
 
-row_keys = re.findall(r'data-cv-inspector-key="([^"]+)"', page)
-if not row_keys:
-    print("fail|missing changed-key inspector rows in HTML")
-    sys.exit(0)
-
 if rows:
     row0 = rows[0]
     if not isinstance(row0, dict):
         print("fail|first row not object")
         sys.exit(0)
-    k0, lt0, pt0 = row0.get("key"), row0.get("latest_value_type") or "null", row0.get("previous_value_type") or "null"
+    lp0, pp0 = row0.get("latest_value_present"), row0.get("previous_value_present")
 else:
-    k0 = html.unescape(row_keys[0])
     mrow = re.search(
         r'<div class="diff-inspector-row diff-inspector-row--default-focus" role="listitem"\s+'
         r'data-cv-inspector-dom-contract="106"\s+'
         r'data-cv-inspector-row-index="0"\s+'
         r'data-cv-inspector-key="[^"]+"\s+'
-        r'data-cv-inspector-latest-type="([^"]+)"\s+'
-        r'data-cv-inspector-previous-type="([^"]+)"',
+        r'data-cv-inspector-latest-type="[^"]+"\s+'
+        r'data-cv-inspector-previous-type="[^"]+"\s+'
+        r'data-cv-inspector-latest-present="([^"]+)"\s+'
+        r'data-cv-inspector-previous-present="([^"]+)"',
         page,
     )
     if not mrow:
-        print("fail|cannot read first-row types from HTML")
+        print("fail|cannot read default-row presence from HTML")
         sys.exit(0)
-    lt0 = html.unescape(mrow.group(1))
-    pt0 = html.unescape(mrow.group(2))
+    lp0 = html.unescape(mrow.group(1))
+    pp0 = html.unescape(mrow.group(2))
 
 def esc_attr(s):
     return html.escape(str(s) if s is not None else "", quote=True)
 
-exp_k, exp_lt, exp_pt = esc_attr(str(k0)), esc_attr(str(lt0)), esc_attr(str(pt0))
-aside_pat = (
-    r'<aside class="diff-inspector-focus-summary"[^>]*data-cv-diff-inspector-focus-summary="108"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-key="' + re.escape(exp_k) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-latest-type="' + re.escape(exp_lt) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-previous-type="' + re.escape(exp_pt) + r'"'
-)
-if not re.search(aside_pat, page):
-    print("fail|focus-summary aside missing or attrs mismatch vs default-focused row")
+exp_lp, exp_pp = esc_attr(str(lp0)), esc_attr(str(pp0))
+
+am = re.search(r'<aside class="diff-inspector-focus-summary"([^>]*)>', page)
+if not am:
+    print("fail|no focus-summary aside opening tag")
     sys.exit(0)
-rows_div = re.search(r'(<div class="diff-inspector-rows"[^>]*>)', page)
-if rows_div:
-    pos = page.find(rows_div.group(1))
-    aside_m = re.search(r'<aside class="diff-inspector-focus-summary"', page)
-    if not aside_m or aside_m.start() > pos:
-        print("fail|focus-summary must appear above diff-inspector-rows")
-        sys.exit(0)
+ot = am.group(1)
+if 'data-cv-diff-inspector-focus-summary-presence-fields="110"' not in ot:
+    print("fail|aside missing data-cv-diff-inspector-focus-summary-presence-fields=110")
+    sys.exit(0)
+if 'data-cv-inspector-focus-summary-latest-present="' + exp_lp + '"' not in ot:
+    print("fail|aside missing latest-present attr")
+    sys.exit(0)
+if 'data-cv-inspector-focus-summary-previous-present="' + exp_pp + '"' not in ot:
+    print("fail|aside missing previous-present attr")
+    sys.exit(0)
+
+if not re.search(
+    r'<strong data-cv-inspector-focus-summary-field="latest_present">'
+    + re.escape(html.escape(str(lp0), quote=False))
+    + r'</strong>',
+    page,
+):
+    print("fail|missing or wrong latest_present field marker")
+    sys.exit(0)
+if not re.search(
+    r'<strong data-cv-inspector-focus-summary-field="previous_present">'
+    + re.escape(html.escape(str(pp0), quote=False))
+    + r'</strong>',
+    page,
+):
+    print("fail|missing or wrong previous_present field marker")
+    sys.exit(0)
+
 print("ok")
 PY
     )"
-    if [[ "$py_s" == "ok" ]]; then
-      add_check "html: focus-summary container + types vs default row" "pass" "108 aside matches first changed_key_inspector row"
+    if [[ "$py_p" == "ok" ]]; then
+      add_check "html: focus-summary presence attrs + fields vs default row" "pass" "110 presence matches first changed_key_inspector row"
     else
-      add_check "html: focus-summary container + types vs default row" "fail" "${py_s#fail|}"
+      add_check "html: focus-summary presence attrs + fields vs default row" "fail" "${py_p#fail|}"
     fi
   fi
 fi

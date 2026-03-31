@@ -11,6 +11,7 @@
 # AI Task 107: deterministic default focus = first changed_key_inspector row (contract order); DOM markers for focus mode, row, and key identity.
 # AI Task 108: compact focus-summary strip above inspector rows from default-focused row truth; Task 108 DOM markers on summary + workspace.
 # AI Task 109: stable DOM contract for focus-summary wrap + focused key/latest/previous type fields.
+# AI Task 110: focused latest/previous presence on focus-summary (attrs + field markers) from default row truth.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -59,6 +60,8 @@ Task 108 adds a focus-summary aside above the rows (data-cv-diff-inspector-focus
 Task 109 adds stable DOM markers for the focus-summary block itself and its visible fields
   (data-cv-diff-inspector-focus-summary-dom-contract="109",
   data-cv-inspector-focus-summary-field="key|latest_type|previous_type").
+Task 110 adds latest/previous value presence on the summary (data-cv-diff-inspector-focus-summary-presence-fields="110",
+  data-cv-inspector-focus-summary-latest-present / previous-present, field markers latest_present|previous_present).
 USAGE
 }
 
@@ -1111,13 +1114,18 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
     fk0 = r0.get("key")
     lt0 = r0.get("latest_value_type") or "null"
     pt0 = r0.get("previous_value_type") or "null"
+    lp0 = r0.get("latest_value_present")
+    pp0 = r0.get("previous_value_present")
     focus_summary_block = (
         '<aside class="diff-inspector-focus-summary" role="region" aria-label="Focused changed key summary" '
         'data-cv-diff-inspector-focus-summary="108" '
         'data-cv-diff-inspector-focus-summary-dom-contract="109" '
+        'data-cv-diff-inspector-focus-summary-presence-fields="110" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-latest-type="' + esc_attr(str(lt0)) + '" '
-        'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '">'
+        'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '" '
+        'data-cv-inspector-focus-summary-latest-present="' + esc_attr(str(lp0)) + '" '
+        'data-cv-inspector-focus-summary-previous-present="' + esc_attr(str(pp0)) + '">'
         '<p class="diff-inspector-focus-summary-kicker muted mono">Focused key</p>'
         '<p class="diff-inspector-focus-summary-keyline mono" '
         'data-cv-inspector-focus-summary-field="key">' + esc(str(fk0)) + "</p>"
@@ -1127,6 +1135,12 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         ' <span class="muted">·</span> '
         '<span class="muted">Previous</span> '
         '<span class="diff-type-pill diff-type-pill--prev" data-cv-inspector-focus-summary-field="previous_type">' + esc(str(pt0)) + "</span>"
+        "</p>"
+        '<p class="diff-inspector-focus-summary-presence mono muted">'
+        '<span class="muted">Present</span> · latest '
+        '<strong data-cv-inspector-focus-summary-field="latest_present">' + esc(str(lp0)) + "</strong>"
+        " · previous "
+        '<strong data-cv-inspector-focus-summary-field="previous_present">' + esc(str(pp0)) + "</strong>"
         "</p></aside>"
     )
     rows_focus_attrs = (
@@ -1286,6 +1300,7 @@ if comp_bool:
             ' data-cv-diff-inspector-default-focus="107"'
             ' data-cv-diff-inspector-focus-summary="108"'
             ' data-cv-diff-inspector-focus-summary-dom-contract="109"'
+            ' data-cv-diff-inspector-focus-summary-presence-fields="110"'
         )
 
 wr_class = "diff-workspace"
@@ -2370,6 +2385,14 @@ tmp_html="$(mktemp)"
     flex-wrap: wrap;
     align-items: center;
     gap: var(--cv-space-2);
+  }
+  .diff-inspector-focus-summary-presence {
+    margin: var(--cv-space-2) 0 0;
+    font-size: 0.6875rem;
+  }
+  .diff-inspector-focus-summary-presence strong {
+    font-weight: 700;
+    color: var(--cv-on-surface);
   }
   .diff-inspector-lead {
     margin: 0 0 var(--cv-space-3);
