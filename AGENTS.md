@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff change inspector default-focus (Task 107) active above DOM-contract / preview integration / inspector contract / diff-comparison-ready chain (lightweight artifact-first validation model)
+- Substage: Diff change inspector focus-summary (Task 108) active above default-focus / DOM-contract / preview integration / inspector contract / diff-comparison-ready chain (lightweight artifact-first validation model)
 
 Next required action:
-→ create and execute the next numbered AI task under the Stage 107 default-focus + DOM-stable inspector preview baseline; use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task under the Stage 108 focus-summary + default-focus + DOM-stable inspector preview baseline; use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---

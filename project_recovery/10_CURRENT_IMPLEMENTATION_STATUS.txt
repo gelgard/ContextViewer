@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **diff change inspector default focus** (AI Task 107) sets the first **`changed_key_inspector`** row as the deterministic default-focused row (contract ordering), with stable **`data-cv-*`** markers on the diff workspace, rows container, and focused row, gated by **`verify_stage10_diff_change_inspector_default_focus.sh`**, above the **106** DOM-contract baseline; benchmark diagnostic-only; `contextJSON/*` export-only
+Stage 10 **diff change inspector focus summary** (AI Task 108) adds a compact **aside** above changed-key inspector rows summarizing the default-focused key and latest/previous types (Task **108** `data-cv-*` markers on summary + diff workspace), gated by **`verify_stage10_diff_change_inspector_focus_summary.sh`**, above the **107** default-focus baseline; benchmark diagnostic-only; `contextJSON/*` export-only
 
 STATUS:
 - Architecture synced with latest rules
@@ -132,6 +132,7 @@ STATUS:
 - AI Task 105 completed: **Inspector preview integration** — `render_ui_bootstrap_preview` consumes the **104** contract when `inspector_ready` (inline 104-shaped fallback otherwise); `verify_stage10_diff_change_inspector_preview.sh` + Stage 8 fast delivery check; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 106 completed: **Inspector DOM contract** — stable per-key `data-cv-*` markers on comparison-ready inspector UI; `verify_stage10_diff_change_inspector_dom_contract.sh` + Stage 8 fast check for `data-cv-diff-inspector-dom-contract="106"`; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 107 completed: **Inspector default focus** — first changed-key row default-focused with Task 107 markers (`data-cv-diff-inspector-default-focus`, rows `data-cv-inspector-default-focus-mode`, single `data-cv-inspector-default-focus="true"`); `verify_stage10_diff_change_inspector_default_focus.sh` + Stage 8 fast check when inspector rows list present; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
+- AI Task 108 completed: **Inspector focus summary** — `aside.diff-inspector-focus-summary` above rows with `data-cv-diff-inspector-focus-summary="108"`, key + type attrs from first row; `verify_stage10_diff_change_inspector_focus_summary.sh` + Stage 8 fast check when inspector rows list present; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -158,7 +159,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 comparison-ready diff preview carries **105–107** (inspector integration, **106** DOM contract, **107** default focus — **`verify_stage10_diff_change_inspector_default_focus.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 comparison-ready diff preview carries **105–108** (through **`verify_stage10_diff_change_inspector_focus_summary.sh`** for **108** focus-summary). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack

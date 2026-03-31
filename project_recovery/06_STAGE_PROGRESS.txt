@@ -201,6 +201,7 @@ Current execution state:
 - AI Task 105 completed: Stage 10 **diff change inspector preview integration** — `render_ui_bootstrap_preview` embeds **104** inspector output for comparison-ready changed-key UI; **`verify_stage10_diff_change_inspector_preview.sh`** + Stage 8 fast check for **`data-cv-diff-inspector-preview="105"`**; no new wrapper; benchmark diagnostic-only; `contextJSON` export-only
 - AI Task 106 completed: Stage 10 **diff change inspector DOM contract** — stable **`data-cv-*`** markers on inspector wrap, rows list, and each changed-key row (index, types, presence) for interaction hooks; **`verify_stage10_diff_change_inspector_dom_contract.sh`** + Stage 8 fast check for **`data-cv-diff-inspector-dom-contract="106"`**; benchmark diagnostic-only; `contextJSON` export-only
 - AI Task 107 completed: Stage 10 **diff change inspector default focus** — first **`changed_key_inspector`** row is deterministically default-focused (contract order) with Task **107** DOM markers on workspace, rows list, and focused row; **`verify_stage10_diff_change_inspector_default_focus.sh`** + Stage 8 fast check when an inspector rows list exists; benchmark diagnostic-only; `contextJSON` export-only
+- AI Task 108 completed: Stage 10 **diff change inspector focus summary** — compact **108** summary strip above inspector rows from default-focused row truth (`aside` + stable attrs); **`verify_stage10_diff_change_inspector_focus_summary.sh`** + Stage 8 fast check when an inspector rows list exists; benchmark diagnostic-only; `contextJSON` export-only
 
 Stage 10 — **execution entry** (current):
 - **Execution-entry bundle (098):** `get_stage10_execution_entry_bundle.sh` (+ `verify_stage10_execution_entry_bundle.sh`) — derives **`stage10_entry_ready`** from **`stage_transition_ready`** via Stage 9 transition package only
@@ -212,4 +213,5 @@ Stage 10 — **execution entry** (current):
 - **Diff inspector preview integration (105):** `verify_stage10_diff_change_inspector_preview.sh` — preview/HTML integration **above** the **104** contract baseline
 - **Diff inspector DOM contract (106):** `verify_stage10_diff_change_inspector_dom_contract.sh` — stable per-key DOM markers **above** the **105** preview integration baseline
 - **Diff inspector default focus (107):** `verify_stage10_diff_change_inspector_default_focus.sh` — deterministic first-row focus **above** the **106** DOM-contract baseline
-- **Current execution anchor:** **107** default-focus layer on **106**/**105**/…; next action: continue Stage 10 UI/runtime work under the lightweight validation model
+- **Diff inspector focus summary (108):** `verify_stage10_diff_change_inspector_focus_summary.sh` — compact focused-key summary **above** the **107** default-focus baseline
+- **Current execution anchor:** **108** focus-summary layer on **107**/**106**/…; next action: continue Stage 10 UI/runtime work under the lightweight validation model
