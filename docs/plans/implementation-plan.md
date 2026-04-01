@@ -23,10 +23,10 @@ This means:
   - no programming jargon or implementation wording
 
 ## Current Stage
-Stage 9 — Secondary Flows And Release Readiness → active
+Stage 10 — Execution Entry → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain **084–089** is delivered (diff + settings surfaces, readiness gate, completion gate). **Current execution anchor:** **AI Task 090** (fast-smoke mode and runtime benchmark closure for orchestration validation).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 119** (focus-summary source-link hint badge above the Stage 10 comparison-ready diff execution chain).
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 

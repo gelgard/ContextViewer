@@ -21,6 +21,7 @@
 # AI Task 117: compact human-readable source-link hint (117) + hint-key / hint-index DOM markers.
 # AI Task 118: source-link hint DOM contract (118) on aside/workspace/hint + linked_key / linked_index field hooks.
 # AI Task 119: compact source-link hint badge (119) above hint line; badge-label + badge-value from default row.
+# AI Task 120: hint badge DOM contract (120) on aside/workspace/badge + badge_label / badge_value field hooks.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -88,6 +89,8 @@ Task 118 adds source-link hint DOM contract (data-cv-diff-inspector-focus-summar
   on aside, hint paragraph, workspace; data-cv-inspector-focus-summary-source-link-hint-field linked_key | linked_index).
 Task 119 adds a source-link hint badge (data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"
   on aside, badge div, workspace; hint-badge-label + hint-badge-value from row 0 and focused key).
+Task 120 adds hint badge DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"
+  on aside, badge strip, workspace; data-cv-inspector-focus-summary-source-link-hint-badge-field badge_label | badge_value).
 USAGE
 }
 
@@ -1154,6 +1157,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1196,10 +1200,14 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         ' data-cv-inspector-focus-summary-source-link-chip-value="0">0</span></span>'
         "</div>"
         '<div class="diff-inspector-focus-summary-source-hint-badge" role="status" '
-        'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" aria-label="Source link summary">'
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
+        'aria-label="Source link summary">'
         '<span class="diff-inspector-focus-summary-source-hint-badge-label muted" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-field="badge_label" '
         'data-cv-inspector-focus-summary-source-link-hint-badge-label="Source link">Source link</span>'
         ' <span class="diff-inspector-focus-summary-source-hint-badge-val mono" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-field="badge_value" '
         'data-cv-inspector-focus-summary-source-link-hint-badge-value="'
         + esc_attr("0 · " + str(fk0))
         + '">'
@@ -1433,6 +1441,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-hint="117"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"'
         )
 
 wr_class = "diff-workspace"
