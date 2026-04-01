@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 114: Stage 10 diff inspector focus-summary source-link DOM-fields verifier.
+# AI Task 117: Stage 10 diff inspector focus-summary source-link hint verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,9 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_source_link_dom_fields.sh — Stage 114 source-link DOM fields
+verify_stage10_diff_inspector_focus_summary_source_link_hint.sh — Stage 117 source-link hint
 
-Validates field-level DOM markers for the focus-summary source-link (114) vs default-focused row. No benchmark.
+Validates the compact source-link hint inside the focus-summary vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -106,10 +106,7 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link="113"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
@@ -180,18 +177,18 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace source-link DOM-fields (114)" "fail" "missing HTML preview artifact"
-  add_check "html: source-link DOM field spans vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: workspace source-link hint (117)" "fail" "missing HTML preview artifact"
+  add_check "html: source-link hint markers vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace source-link DOM-fields (114)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: source-link DOM field spans vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: workspace source-link hint (117)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: source-link hint markers vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace source-link DOM-fields (114)" "pass" \
-        'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"'
+    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html_tmp" 2>/dev/null; then
+      add_check "html: workspace source-link hint (117)" "pass" \
+        'data-cv-diff-inspector-focus-summary-source-link-hint="117"'
     else
-      add_check "html: workspace source-link DOM-fields (114)" "fail" "missing Task 114 source-link DOM-fields on workspace"
+      add_check "html: workspace source-link hint (117)" "fail" "missing Task 117 source-link hint on workspace"
     fi
     py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
@@ -232,43 +229,50 @@ else:
         sys.exit(0)
     key0 = html.unescape(mrow.group(1))
 
-
-def key_inner_text(k):
-    # Match render_ui_bootstrap_preview focus-summary keyline: esc(str(fk0))
-    return html.escape(str(k) if k is not None else "None", quote=False)
-
-
-key_inner = key_inner_text(key0)
+key_attr = html.escape(str(key0), quote=True)
+key_visible = html.escape(str(key0) if key0 is not None else "None", quote=False)
 
 if not re.search(
-    r'<p class="diff-inspector-focus-summary-sourceline[^"]*"[^>]*'
-    r'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"',
+    r'<p class="diff-inspector-focus-summary-source-hint[^"]*"[^>]*data-cv-diff-inspector-focus-summary-source-link-hint="117"',
     page,
 ):
-    print("fail|missing 114 sourceline paragraph")
+    print("fail|missing 117 source-hint paragraph")
     sys.exit(0)
 
 if not re.search(
-    r'<span data-cv-inspector-focus-summary-source-link-field="source_key">' + re.escape(key_inner) + r'</span>',
+    r'data-cv-inspector-focus-summary-source-link-hint-key="' + re.escape(key_attr) + r'"',
     page,
 ):
-    print("fail|source_key field span text mismatch")
+    print("fail|source-link-hint-key attr mismatch")
+    sys.exit(0)
+
+if not re.search(r'data-cv-inspector-focus-summary-source-link-hint-index="0"', page):
+    print("fail|source-link-hint-index missing")
     sys.exit(0)
 
 if not re.search(
-    r'<span data-cv-inspector-focus-summary-source-link-field="source_index">0</span>',
+    r'<strong data-cv-inspector-focus-summary-source-link-hint-linked-index="0">0</strong>',
     page,
 ):
-    print("fail|source_index field span missing or not 0")
+    print("fail|hint linked-index visible node missing")
+    sys.exit(0)
+
+if not re.search(
+    r'<span class="mono" data-cv-inspector-focus-summary-source-link-hint-linked-key">'
+    + re.escape(key_visible)
+    + r"</span>",
+    page,
+):
+    print("fail|hint linked-key visible text mismatch")
     sys.exit(0)
 
 print("ok")
 PY
     )"
     if [[ "$py_c" == "ok" ]]; then
-      add_check "html: source-link DOM field spans vs default row" "pass" "114 sourceline matches default-focused row"
+      add_check "html: source-link hint markers vs default row" "pass" "117 hint matches default-focused row"
     else
-      add_check "html: source-link DOM field spans vs default row" "fail" "${py_c#fail|}"
+      add_check "html: source-link hint markers vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi

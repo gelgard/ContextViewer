@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **diff inspector focus-summary source-link chips DOM contract** (AI Task 116) adds **`116`** markers on the source-link chip strip, aside, and workspace, plus **`data-cv-inspector-focus-summary-source-link-chip-field`** and **`data-cv-inspector-focus-summary-source-link-chip-value`** on each chip, gated by **`verify_stage10_diff_inspector_focus_summary_source_link_chips_dom_contract.sh`**, above the **115** source-link chips baseline; benchmark diagnostic-only; `contextJSON/*` export-only (not preview authority)
+Stage 10 **diff inspector focus-summary source-link hint** (AI Task 117) adds a compact **hint** line (**`.diff-inspector-focus-summary-source-hint`**) with **`data-cv-diff-inspector-focus-summary-source-link-hint="117"`**, **`data-cv-inspector-focus-summary-source-link-hint-key` / `hint-index`**, and visible linked row/key nodes, on aside + workspace + hint paragraph, gated by **`verify_stage10_diff_inspector_focus_summary_source_link_hint.sh`**, above the **116** source-link chips DOM-contract baseline; benchmark diagnostic-only; `contextJSON/*` export-only (not preview authority)
 
 STATUS:
 - Architecture synced with latest rules
@@ -141,6 +141,7 @@ STATUS:
 - AI Task 114 completed: **Inspector focus-summary source-link DOM fields** — `114` sourceline + span fields for `source_key` / `source_index`; `verify_stage10_diff_inspector_focus_summary_source_link_dom_fields.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 115 completed: **Inspector focus-summary source-link chips** — compact `115` source-link chips for `source_key` / `source_index`; `verify_stage10_diff_inspector_focus_summary_source_link_chips.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 116 completed: **Inspector focus-summary source-link chips DOM contract** — `116` strip + link-chip field/value spans; `verify_stage10_diff_inspector_focus_summary_source_link_chips_dom_contract.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
+- AI Task 117 completed: **Inspector focus-summary source-link hint** — `117` scannable hint + hint-key/index markers; `verify_stage10_diff_inspector_focus_summary_source_link_hint.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -167,7 +168,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 comparison-ready diff preview carries **105–116** (including **`verify_stage10_diff_inspector_focus_summary_source_link_chips_dom_contract.sh`** for **116** source-link chips DOM contract above **115**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 comparison-ready diff preview carries **105–117** (including **`verify_stage10_diff_inspector_focus_summary_source_link_hint.sh`** for **117** source-link hint above **116**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack

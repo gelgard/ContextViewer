@@ -94,14 +94,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116** | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117** | implemented |
 | PG-OV-001 | Stage 4-5 | 018-029 | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
 | PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
 | PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
 | PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116** | implemented |
-| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116** | implemented |
+| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117** | implemented |
+| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117** | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -163,6 +163,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 114` is completed: Stage 10 focus-summary source-link DOM fields add field-level span markers (`source_key`, `source_index`) inside the summary above the 113 source-link baseline.
 - `AI Task 115` is completed: Stage 10 focus-summary source-link chips add a compact chip strip for `source_key` and `source_index` above the 114 DOM-fields baseline.
 - `AI Task 116` is completed: Stage 10 focus-summary source-link chips DOM contract adds strip/workspace `116` markers plus per-chip `source-link-chip-field` and `source-link-chip-value` spans above the 115 baseline.
+- `AI Task 117` is completed: Stage 10 focus-summary source-link hint adds a compact scannable hint line with `117` and hint-key/index markers above the 116 baseline.
 - Requirement mapping for **091** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
@@ -247,7 +248,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
 - Current Stage 10 execution-entry authority is `AI Task 098`.
-- Current Stage 10 execution anchor is `AI Task 116`.
+- Current Stage 10 execution anchor is `AI Task 117`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks

@@ -18,6 +18,7 @@
 # AI Task 114: field-level DOM elements for that source-link (114 wrapper + source_key / source_index spans).
 # AI Task 115: compact source-link chip strip inside focus-summary (source_key + source_index) with stable chip markers.
 # AI Task 116: DOM contract on source-link chip strip (116) + per-chip field + value-span markers for interaction.
+# AI Task 117: compact human-readable source-link hint (117) + hint-key / hint-index DOM markers.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -79,6 +80,8 @@ Task 115 adds source-link chips inside the summary (data-cv-diff-inspector-focus
   data-cv-inspector-focus-summary-source-chip and data-cv-inspector-focus-summary-source-chip-value).
 Task 116 adds source-link chips DOM contract (data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"
   on aside, strip, workspace; data-cv-inspector-focus-summary-source-link-chip-field + source-link-chip-value).
+Task 117 adds a compact source-link hint line (data-cv-diff-inspector-focus-summary-source-link-hint="117",
+  data-cv-inspector-focus-summary-source-link-hint-key, data-cv-inspector-focus-summary-source-link-hint-index).
 USAGE
 }
 
@@ -1142,6 +1145,9 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114" '
         'data-cv-diff-inspector-focus-summary-source-link-chips="115" '
         'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
+        'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
+        'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-latest-type="' + esc_attr(str(lt0)) + '" '
         'data-cv-inspector-focus-summary-previous-type="' + esc_attr(str(pt0)) + '" '
@@ -1181,6 +1187,16 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-source-chip-value="0"'
         ' data-cv-inspector-focus-summary-source-link-chip-value="0">0</span></span>'
         "</div>"
+        '<p class="diff-inspector-focus-summary-source-hint mono muted" role="status" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
+        'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
+        'data-cv-inspector-focus-summary-source-link-hint-index="0">'
+        '<span class="muted">Linked to inspector row</span> '
+        '<strong data-cv-inspector-focus-summary-source-link-hint-linked-index="0">0</strong>'
+        ' <span class="muted">·</span> <span class="muted">key</span> '
+        '<span class="mono" data-cv-inspector-focus-summary-source-link-hint-linked-key">'
+        + esc(str(fk0))
+        + "</span></p>"
         '<div class="diff-inspector-focus-summary-chips" role="list" aria-label="Focused key state" '
         'data-cv-diff-inspector-focus-summary-state-chips="111" '
         'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112">'
@@ -1395,6 +1411,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"'
             ' data-cv-diff-inspector-focus-summary-source-link-chips="115"'
             ' data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint="117"'
         )
 
 wr_class = "diff-workspace"
@@ -2484,6 +2501,16 @@ tmp_html="$(mktemp)"
     margin: 0 0 var(--cv-space-3);
     padding: 0;
     list-style: none;
+  }
+  .diff-inspector-focus-summary-source-hint {
+    margin: calc(-1 * var(--cv-space-2)) 0 var(--cv-space-3);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    word-break: break-all;
+  }
+  .diff-inspector-focus-summary-source-hint strong {
+    font-weight: 700;
+    color: var(--cv-on-surface);
   }
   .diff-inspector-focus-summary-chips {
     display: flex;
