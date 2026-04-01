@@ -107,7 +107,8 @@ if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
     if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null; then
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
@@ -251,14 +252,14 @@ if not re.search(r'data-cv-inspector-focus-summary-source-link-hint-index="0"', 
     sys.exit(0)
 
 if not re.search(
-    r'<strong data-cv-inspector-focus-summary-source-link-hint-linked-index="0">0</strong>',
+    r'<strong[^>]*data-cv-inspector-focus-summary-source-link-hint-linked-index="0"[^>]*>0</strong>',
     page,
 ):
     print("fail|hint linked-index visible node missing")
     sys.exit(0)
 
 if not re.search(
-    r'<span class="mono" data-cv-inspector-focus-summary-source-link-hint-linked-key">'
+    r'<span class="mono"[^>]*data-cv-inspector-focus-summary-source-link-hint-linked-key"[^>]*>'
     + re.escape(key_visible)
     + r"</span>",
     page,

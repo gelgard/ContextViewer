@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff inspector focus-summary source-link hint (Task 117) complete — baseline above Task 116 source-link chips DOM contract / 115–102 chain (lightweight artifact-first validation model); next numbered task pending
+- Substage: Diff inspector focus-summary source-link hint DOM contract (Task 118) complete — baseline above Task 117 source-link hint / 116–102 chain (lightweight artifact-first validation model); next numbered task pending
 
 Next required action:
-→ create and execute the next numbered AI task building on the Stage 117 source-link hint baseline (116–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task building on the Stage 118 source-link hint DOM-contract baseline (117–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---
@@ -141,6 +141,12 @@ Supported commands:
 - architecture planning, architecture synchronization, validation logic, changed-file scope review, next-step planning, and user-facing orchestration remain in the local agent layer and must not be duplicated inside the Cursor prompt
 - every AI task must map to product goal requirements from `docs/plans/product_goal_traceability_matrix.md`
 - if task-to-goal mapping is missing, task is blocked until mapping is added
+- every new AI task must include a short non-technical manager-facing step summary:
+  - describe what will be done in the current step
+  - describe it from the user point of view, not from the programmer point of view
+  - explain why the step matters for the user or business outcome
+  - avoid implementation jargon, internal file names, protocol names, and specialist terminology
+  - keep it short: 1-3 sentences or 2-4 short bullets
 - fast smoke mode is mandatory by default:
   - run one top-level stage gate first
   - run child smoke scripts separately only for diagnostics/failure localization or explicit user request
@@ -455,9 +461,15 @@ When command is triggered:
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
 - for "дай следующую AI task", response is valid only in this strict block order:
   1) `AI Task file created: /ai_tasks/NNN_*.md`
-  2) `Cursor prompt (EN)`
-  3) `Manual Test (exact commands)`
-  4) `What to send back for validation`
+  2) `Manager Summary (non-technical)`
+  3) `Cursor prompt (EN)`
+  4) `Manual Test (exact commands)`
+  5) `What to send back for validation`
+- block `Manager Summary (non-technical)` is mandatory for every new AI task response:
+  - it must explain the current step in plain language for a non-technical manager
+  - it must say what user-visible improvement or clarity this step adds
+  - it must not use code-oriented or architecture-oriented jargon unless unavoidable
+  - if jargon is unavoidable, it must be replaced with simple user-facing wording
 - block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option
 - if block `Manual Test (exact commands)` is missing, assistant must output only:
   - `BLOCKED: response format violation, regenerating with full test section.`
@@ -474,6 +486,7 @@ When command is triggered:
   - file exists in `ai_tasks/`
   - numbering is continuous
   - stage/substage is synchronized
+  - manager-facing non-technical step summary is present and readable for a non-programmer
   - test steps are executable and explicit
 - if self-check fails due to missing AI task file, output only:
   - `BLOCKED: AI task file missing, creating it now.`

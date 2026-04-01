@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 110: Stage 10 diff inspector focus-summary presence-fields verifier.
+# AI Task 118: Stage 10 diff inspector focus-summary source-link hint DOM-contract verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,9 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_presence_fields.sh — Stage 110 focus-summary presence
+verify_stage10_diff_inspector_focus_summary_source_link_hint_dom_contract.sh — Stage 118 source-link hint DOM contract
 
-Validates latest/previous value presence on the focus-summary block vs default-focused row. No benchmark.
+Validates stable DOM markers on the source-link hint (118) + linked_key / linked_index field hooks vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -106,14 +106,7 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips="111"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link="113"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
@@ -184,19 +177,20 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace presence-fields marker (110)" "fail" "missing HTML preview artifact"
-  add_check "html: focus-summary presence attrs + fields vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: workspace source-link hint DOM contract (118)" "fail" "missing HTML preview artifact"
+  add_check "html: hint paragraph + linked field hooks vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace presence-fields marker (110)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: focus-summary presence attrs + fields vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: workspace source-link hint DOM contract (118)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: hint paragraph + linked field hooks vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace presence-fields marker (110)" "pass" 'data-cv-diff-inspector-focus-summary-presence-fields="110"'
+    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html_tmp" 2>/dev/null; then
+      add_check "html: workspace source-link hint DOM contract (118)" "pass" \
+        'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"'
     else
-      add_check "html: workspace presence-fields marker (110)" "fail" "missing Task 110 presence-fields marker on workspace"
+      add_check "html: workspace source-link hint DOM contract (118)" "fail" "missing Task 118 source-link hint DOM contract on workspace"
     fi
-    py_p="$(
+    py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
 import html
 import json
@@ -221,69 +215,64 @@ if rows:
     if not isinstance(row0, dict):
         print("fail|first row not object")
         sys.exit(0)
-    lp0, pp0 = row0.get("latest_value_present"), row0.get("previous_value_present")
+    key0 = row0.get("key")
 else:
     mrow = re.search(
         r'<div class="diff-inspector-row diff-inspector-row--default-focus" role="listitem"\s+'
         r'data-cv-inspector-dom-contract="106"\s+'
         r'data-cv-inspector-row-index="0"\s+'
-        r'data-cv-inspector-key="[^"]+"\s+'
-        r'data-cv-inspector-latest-type="[^"]+"\s+'
-        r'data-cv-inspector-previous-type="[^"]+"\s+'
-        r'data-cv-inspector-latest-present="([^"]+)"\s+'
-        r'data-cv-inspector-previous-present="([^"]+)"',
+        r'data-cv-inspector-key="([^"]+)"',
         page,
     )
     if not mrow:
-        print("fail|cannot read default-row presence from HTML")
+        print("fail|cannot read default row from HTML")
         sys.exit(0)
-    lp0 = html.unescape(mrow.group(1))
-    pp0 = html.unescape(mrow.group(2))
+    key0 = html.unescape(mrow.group(1))
 
-def esc_attr(s):
-    return html.escape(str(s) if s is not None else "", quote=True)
+key_attr = html.escape(str(key0), quote=True)
+key_visible = html.escape(str(key0) if key0 is not None else "None", quote=False)
 
-exp_lp, exp_pp = esc_attr(str(lp0)), esc_attr(str(pp0))
-
-am = re.search(r'<aside class="diff-inspector-focus-summary"([^>]*)>', page)
-if not am:
-    print("fail|no focus-summary aside opening tag")
-    sys.exit(0)
-ot = am.group(1)
-if 'data-cv-diff-inspector-focus-summary-presence-fields="110"' not in ot:
-    print("fail|aside missing data-cv-diff-inspector-focus-summary-presence-fields=110")
-    sys.exit(0)
-if 'data-cv-inspector-focus-summary-latest-present="' + exp_lp + '"' not in ot:
-    print("fail|aside missing latest-present attr")
-    sys.exit(0)
-if 'data-cv-inspector-focus-summary-previous-present="' + exp_pp + '"' not in ot:
-    print("fail|aside missing previous-present attr")
+if not re.search(
+    r'<p class="diff-inspector-focus-summary-source-hint[^"]*"[^>]*data-cv-diff-inspector-focus-summary-source-link-hint="117"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"',
+    page,
+):
+    print("fail|missing 117+118 on source-hint paragraph")
     sys.exit(0)
 
 if not re.search(
-    r'<strong data-cv-inspector-focus-summary-field="latest_present">'
-    + re.escape(html.escape(str(lp0), quote=False))
-    + r'</strong>',
+    r'<strong[^>]*data-cv-inspector-focus-summary-source-link-hint-field="linked_index"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-linked-index="0"[^>]*>0</strong>',
     page,
 ):
-    print("fail|missing or wrong latest_present field marker")
+    print("fail|missing linked_index hint-field on strong")
     sys.exit(0)
+
 if not re.search(
-    r'<strong data-cv-inspector-focus-summary-field="previous_present">'
-    + re.escape(html.escape(str(pp0), quote=False))
-    + r'</strong>',
+    r'<span class="mono"[^>]*data-cv-inspector-focus-summary-source-link-hint-field="linked_key"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-linked-key"[^>]*>'
+    + re.escape(key_visible)
+    + r"</span>",
     page,
 ):
-    print("fail|missing or wrong previous_present field marker")
+    print("fail|missing linked_key hint-field span or key text mismatch")
+    sys.exit(0)
+
+if not re.search(
+    r'data-cv-inspector-focus-summary-source-link-hint-key="' + re.escape(key_attr) + r'"',
+    page,
+):
+    print("fail|source-link-hint-key attr mismatch")
     sys.exit(0)
 
 print("ok")
 PY
     )"
-    if [[ "$py_p" == "ok" ]]; then
-      add_check "html: focus-summary presence attrs + fields vs default row" "pass" "110 presence matches first changed_key_inspector row"
+    if [[ "$py_c" == "ok" ]]; then
+      add_check "html: hint paragraph + linked field hooks vs default row" "pass" \
+        "118 DOM contract + linked_key / linked_index match default-focused row"
     else
-      add_check "html: focus-summary presence attrs + fields vs default row" "fail" "${py_p#fail|}"
+      add_check "html: hint paragraph + linked field hooks vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi

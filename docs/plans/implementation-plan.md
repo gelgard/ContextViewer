@@ -16,6 +16,11 @@ This means:
 - stage structure must align with the template process model
 - AI tasks must follow the template execution discipline
 - future recovery and architecture updates must remain compatible with the template-defined rules and commands
+- each next-step task must include a short manager-facing description in plain language:
+  - what will be improved in the current step
+  - what the user will notice or gain
+  - why the step matters for progress reporting
+  - no programming jargon or implementation wording
 
 ## Current Stage
 Stage 9 — Secondary Flows And Release Readiness → active
@@ -125,6 +130,7 @@ Stage 9 — Secondary Flows And Release Readiness → active
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.
+For management reporting, every AI-task step must also have a brief non-technical summary written from the user point of view.
 
 ## Forbidden Actions
 - skipping stages

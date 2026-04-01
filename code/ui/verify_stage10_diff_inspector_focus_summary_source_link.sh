@@ -109,7 +109,8 @@ if [[ -f "$html" ]]; then
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null; then
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi

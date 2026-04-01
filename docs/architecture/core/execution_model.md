@@ -37,6 +37,24 @@ Output:
 Required response format:
 `FAST RESTORE: stage=<...> | task=<...> | next=<...> | gate=<...> | readiness=<ready|blocked>`
 
+## Manager-Facing Step Summary Rule
+
+Every new AI task must carry a short manager-facing summary in plain language.
+
+This summary must:
+- explain what the current step will improve
+- describe the change from the user point of view
+- explain why the step matters for reporting or stakeholder understanding
+- avoid programming jargon, file names, script names, and internal implementation wording
+- stay concise
+
+For command `дай следующую AI task`, this summary is a mandatory response block:
+1. `AI Task file created: /ai_tasks/NNN_*.md`
+2. `Manager Summary (non-technical)`
+3. `Cursor prompt (EN)`
+4. `Manual Test (exact commands)`
+5. `What to send back for validation`
+
 ### Full restore
 Mandatory when triggered.
 

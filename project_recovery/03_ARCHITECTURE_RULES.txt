@@ -89,6 +89,12 @@ ARCHITECTURE RULES
 28. Command "дай следующую AI task" is invalid unless `ai_tasks/NNN_*.md` is physically created before response.
 29. AI task response must include explicit created-file marker: `AI Task file created: /ai_tasks/NNN_*.md`.
 30. Pre-response self-check is mandatory: file existence, numbering continuity, stage/substage sync, executable tests.
+30a. Every new AI task must include a mandatory manager-facing non-technical step summary:
+   - explain what will be done in the current step;
+   - explain it from the user point of view, not from the programmer point of view;
+   - explain why the step matters for the user or decision-maker;
+   - avoid specialist/programming terminology;
+   - keep it concise.
 31. If AI task file is missing, assistant must stop normal output and emit only: `BLOCKED: AI task file missing, creating it now.` then create the file.
 32. After user submits test results, assistant must auto-generate "List of changed files" from `git status --short` and validate file scope against current AI task.
 33. Changed-files validation uses task commit boundary assumption: expected changes belong to current task; unrelated changes must be flagged explicitly.
@@ -99,9 +105,14 @@ ARCHITECTURE RULES
 34. Changed-files validation must exclude transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`).
 35. For command "дай следующую AI task", the response format is a hard gate and must contain, in strict order:
    - `AI Task file created: /ai_tasks/NNN_*.md`
+   - `Manager Summary (non-technical)`
    - `Cursor prompt (EN)`
    - `Manual Test (exact commands)`
    - `What to send back for validation`
+35a. Block `Manager Summary (non-technical)` is mandatory:
+   - it exists for a manager or stakeholder without programming experience;
+   - it must state what will be improved in this step and why that matters for the user;
+   - it must use plain language and avoid technical jargon.
 36. Block `Cursor prompt (EN)` must contain the prompt inside exactly one fenced code block so the UI exposes a `Copy` option.
 36a. `Cursor prompt (EN)` must contain implementation instructions only and must not include:
    - `Manual Test`
