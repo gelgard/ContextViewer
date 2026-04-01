@@ -24,6 +24,7 @@
 # AI Task 118: fast delivery checks focus-summary source-link hint DOM contract (118) when focus-summary is present.
 # AI Task 119: fast delivery checks focus-summary source-link hint badge (119) when focus-summary is present.
 # AI Task 120: fast delivery checks focus-summary source-link hint badge DOM contract (120) when focus-summary is present.
+# AI Task 121: fast delivery checks focus-summary source-link hint badge readable copy (121) when focus-summary is present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -313,7 +314,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -667,6 +669,22 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge DOM contract (120)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'diff-inspector-focus-summary-source-hint-badge-copy' "$output_file_fast" 2>/dev/null \
+          && grep -q 'Inspector row 0 (default focus)' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge copy (121)" "pass" "121 hint badge readable copy present"
+        else
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge copy (121)" "fail" "regenerate preview for Task 121 hint badge copy"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge copy (121)" "pass" "skipped (no focus-summary block)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge copy (121)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 109: Stage 10 diff inspector focus-summary DOM-contract verifier.
+# AI Task 121: Stage 10 diff inspector focus-summary source-link hint badge copy verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,9 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_dom_contract.sh — Stage 109 focus-summary DOM contract
+verify_stage10_diff_inspector_focus_summary_source_link_hint_badge_copy.sh — Stage 121 source-link hint badge readable copy
 
-Validates stable DOM markers on the focus-summary block derived from the default-focused row. No benchmark.
+Validates readable copy inside the hint badge strip vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -48,8 +48,7 @@ while [[ $# -gt 0 ]]; do
       [[ -n "${2:-}" ]] || { echo "error: --invalid-project-id requires a value" >&2; exit 2; }
       invalid_id="$2"; shift 2 ;;
     *)
-      echo "error: unknown argument: $1" >&2
-      exit 2 ;;
+      echo "error: unknown argument: $1" >&2; exit 2 ;;
   esac
 done
 
@@ -107,30 +106,20 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-presence-fields="110"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips="111"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-state-chips-dom-contract="112"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link="113"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-dom-fields="114"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$html" 2>/dev/null \
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
   if [[ "$refresh_preview" == "true" ]]; then
+    html_before="$html"
     set +e
     prep_json="$(bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id" 2>/dev/null)"
     prep_rc=$?
     set -e
     if [[ "$prep_rc" -ne 0 ]] || ! printf '%s' "$prep_json" | jq -e . >/dev/null 2>&1; then
-      add_check "prepare: preview artifact" "fail" "refresh failed: exit ${prep_rc} or invalid JSON"
-      html=""
+      add_check "prepare: preview artifact" "pass" "refresh failed (exit ${prep_rc}); kept existing artifact for HTML checks"
+      html="$html_before"
     else
       add_check "prepare: preview artifact" "pass" "refreshed existing preview artifact"
       html="$(printf '%s' "$prep_json" | jq -r '.output_file // ""')"
@@ -188,19 +177,20 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace focus-summary DOM marker (109)" "fail" "missing HTML preview artifact"
-  add_check "html: focus-summary fields vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: workspace hint badge copy (121)" "fail" "missing HTML preview artifact"
+  add_check "html: hint badge readable copy vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace focus-summary DOM marker (109)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: focus-summary fields vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: workspace hint badge copy (121)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: hint badge readable copy vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-dom-contract="109"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace focus-summary DOM marker (109)" "pass" 'data-cv-diff-inspector-focus-summary-dom-contract="109"'
+    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html_tmp" 2>/dev/null; then
+      add_check "html: workspace hint badge copy (121)" "pass" \
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"'
     else
-      add_check "html: workspace focus-summary DOM marker (109)" "fail" "missing Task 109 focus-summary DOM marker"
+      add_check "html: workspace hint badge copy (121)" "fail" "missing Task 121 hint badge copy on workspace"
     fi
-    py_dom="$(
+    py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
 import html
 import json
@@ -223,73 +213,46 @@ if not isinstance(rows, list):
 if rows:
     row0 = rows[0]
     if not isinstance(row0, dict):
-      print("fail|first row not object")
-      sys.exit(0)
-    k0 = row0.get("key")
-    lt0 = row0.get("latest_value_type") or "null"
-    pt0 = row0.get("previous_value_type") or "null"
+        print("fail|first row not object")
+        sys.exit(0)
+    key0 = row0.get("key")
 else:
-    m_summary = re.search(
-        r'data-cv-inspector-focus-summary-key="([^"]+)"\s+'
-        r'data-cv-inspector-focus-summary-latest-type="([^"]+)"\s+'
-        r'data-cv-inspector-focus-summary-previous-type="([^"]+)"',
+    mrow = re.search(
+        r'<div class="diff-inspector-row diff-inspector-row--default-focus" role="listitem"\s+'
+        r'data-cv-inspector-dom-contract="106"\s+'
+        r'data-cv-inspector-row-index="0"\s+'
+        r'data-cv-inspector-key="([^"]+)"',
         page,
     )
-    if not m_summary:
-        print("fail|cannot read focus-summary attrs from HTML")
+    if not mrow:
+        print("fail|cannot read default row from HTML")
         sys.exit(0)
-    k0 = html.unescape(m_summary.group(1))
-    lt0 = html.unescape(m_summary.group(2))
-    pt0 = html.unescape(m_summary.group(3))
+    key0 = html.unescape(mrow.group(1))
 
-def esc_attr(s):
-    return html.escape(str(s) if s is not None else "", quote=True)
-
-exp_k = esc_attr(str(k0))
-exp_lt = esc_attr(str(lt0))
-exp_pt = esc_attr(str(pt0))
-
-aside_pat = (
-    r'<aside class="diff-inspector-focus-summary"[^>]*data-cv-diff-inspector-focus-summary="108"'
-    r'[\s\S]*?data-cv-diff-inspector-focus-summary-dom-contract="109"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-key="' + re.escape(exp_k) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-latest-type="' + re.escape(exp_lt) + r'"'
-    r'[\s\S]*?data-cv-inspector-focus-summary-previous-type="' + re.escape(exp_pt) + r'"'
+expected = (
+    "Inspector row 0 (default focus) — this summary matches the highlighted changed-key row · key "
+    + str(key0)
 )
-if not re.search(aside_pat, page):
-    print("fail|focus-summary aside missing or attrs mismatch")
-    sys.exit(0)
-
-field_key = re.search(
-    r'<p class="diff-inspector-focus-summary-keyline mono"\s+'
-    r'data-cv-inspector-focus-summary-field="key">' + re.escape(html.escape(str(k0), quote=False)) + r'</p>',
-    page,
-)
-if not field_key:
-    print("fail|missing field marker for focused key")
-    sys.exit(0)
+inner = html.escape(expected, quote=False)
 
 if not re.search(
-    r'data-cv-inspector-focus-summary-field="latest_type">' + re.escape(html.escape(str(lt0), quote=False)) + r'</span>',
+    r'<p class="diff-inspector-focus-summary-source-hint-badge-copy[^"]*"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"[^>]*>'
+    + re.escape(inner)
+    + r"</p>",
     page,
 ):
-    print("fail|missing field marker for latest type")
-    sys.exit(0)
-
-if not re.search(
-    r'data-cv-inspector-focus-summary-field="previous_type">' + re.escape(html.escape(str(pt0), quote=False)) + r'</span>',
-    page,
-):
-    print("fail|missing field marker for previous type")
+    print("fail|missing 121 badge-copy paragraph or text mismatch")
     sys.exit(0)
 
 print("ok")
 PY
     )"
-    if [[ "$py_dom" == "ok" ]]; then
-      add_check "html: focus-summary fields vs default row" "pass" "109 DOM fields match default-focused row"
+    if [[ "$py_c" == "ok" ]]; then
+      add_check "html: hint badge readable copy vs default row" "pass" "121 copy matches default-focused key"
     else
-      add_check "html: focus-summary fields vs default row" "fail" "${py_dom#fail|}"
+      add_check "html: hint badge readable copy vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi

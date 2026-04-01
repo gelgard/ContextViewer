@@ -22,6 +22,7 @@
 # AI Task 118: source-link hint DOM contract (118) on aside/workspace/hint + linked_key / linked_index field hooks.
 # AI Task 119: compact source-link hint badge (119) above hint line; badge-label + badge-value from default row.
 # AI Task 120: hint badge DOM contract (120) on aside/workspace/badge + badge_label / badge_value field hooks.
+# AI Task 121: readable source-link hint badge copy line (121) + badge-copy readable_text field inside badge strip.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -91,6 +92,8 @@ Task 119 adds a source-link hint badge (data-cv-diff-inspector-focus-summary-sou
   on aside, badge div, workspace; hint-badge-label + hint-badge-value from row 0 and focused key).
 Task 120 adds hint badge DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"
   on aside, badge strip, workspace; data-cv-inspector-focus-summary-source-link-hint-badge-field badge_label | badge_value).
+Task 121 adds readable badge copy (data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"
+  on aside, workspace, badge strip, copy line; data-cv-inspector-focus-summary-source-link-hint-badge-copy-field readable_text).
 USAGE
 }
 
@@ -1158,6 +1161,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1202,6 +1206,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         '<div class="diff-inspector-focus-summary-source-hint-badge" role="status" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
         'aria-label="Source link summary">'
         '<span class="diff-inspector-focus-summary-source-hint-badge-label muted" '
         'data-cv-inspector-focus-summary-source-link-hint-badge-field="badge_label" '
@@ -1212,7 +1217,15 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         + esc_attr("0 · " + str(fk0))
         + '">'
         + esc("0 · " + str(fk0))
-        + "</span></div>"
+        + "</span>"
+        '<p class="diff-inspector-focus-summary-source-hint-badge-copy muted" role="note" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text">'
+        + esc(
+            "Inspector row 0 (default focus) — this summary matches the highlighted changed-key row · key "
+            + str(fk0)
+        )
+        + "</p></div>"
         '<p class="diff-inspector-focus-summary-source-hint mono muted" role="status" '
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
@@ -1442,6 +1455,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"'
         )
 
 wr_class = "diff-workspace"
@@ -2557,6 +2571,15 @@ tmp_html="$(mktemp)"
     font-weight: 600;
     word-break: break-all;
     min-width: 0;
+  }
+  .diff-inspector-focus-summary-source-hint-badge-copy {
+    flex-basis: 100%;
+    margin: var(--cv-space-1) 0 0;
+    padding-top: var(--cv-space-1);
+    border-top: 1px solid var(--cv-outline-variant);
+    font-size: 0.625rem;
+    line-height: 1.45;
+    word-break: break-word;
   }
   .diff-inspector-focus-summary-source-hint {
     margin: 0 0 var(--cv-space-3);
