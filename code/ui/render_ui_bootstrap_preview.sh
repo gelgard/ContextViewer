@@ -94,6 +94,8 @@ Task 120 adds hint badge DOM contract (data-cv-diff-inspector-focus-summary-sour
   on aside, badge strip, workspace; data-cv-inspector-focus-summary-source-link-hint-badge-field badge_label | badge_value).
 Task 121 adds readable badge copy (data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"
   on aside, workspace, badge strip, copy line; data-cv-inspector-focus-summary-source-link-hint-badge-copy-field readable_text).
+Task 122 adds readable badge-copy DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"
+  on aside, workspace, copy paragraph; readable_text + readable_value field spans derived from default-focused row).
 USAGE
 }
 
@@ -1162,6 +1164,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1220,12 +1223,18 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         + "</span>"
         '<p class="diff-inspector-focus-summary-source-hint-badge-copy muted" role="note" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
-        'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text">'
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122">'
+        '<span data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text">'
         + esc(
             "Inspector row 0 (default focus) — this summary matches the highlighted changed-key row · key "
-            + str(fk0)
         )
-        + "</p></div>"
+        + '</span><span class="mono" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_value" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-copy-value="'
+        + esc_attr(str(fk0))
+        + '">'
+        + esc(str(fk0))
+        + "</span></p></div>"
         '<p class="diff-inspector-focus-summary-source-hint mono muted" role="status" '
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
@@ -1456,6 +1465,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"'
         )
 
 wr_class = "diff-workspace"

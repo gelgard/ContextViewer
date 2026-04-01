@@ -96,10 +96,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff inspector focus-summary source-link hint badge readable copy (Task 121) complete — baseline above Task 120 hint badge DOM contract / 119–102 chain (lightweight artifact-first validation model); next numbered task pending
+- Substage: Diff inspector focus-summary source-link hint badge copy DOM contract (Task 122) complete — baseline above Task 121 readable copy / 120–102 chain (lightweight artifact-first validation model); next numbered task pending
 
 Next required action:
-→ create and execute the next numbered AI task building on the Stage 121 hint badge readable-copy baseline (120–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task building on the Stage 122 hint badge copy DOM-contract baseline (121–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 115: Stage 10 diff inspector focus-summary source-link chips verifier.
+# AI Task 122: Stage 10 diff inspector focus-summary source-link hint badge copy DOM-contract verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,10 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_source_link_chips.sh — Stage 115 source-link chips
+verify_stage10_diff_inspector_focus_summary_source_link_hint_badge_copy_dom_contract.sh — Stage 122 hint badge copy DOM contract
 
-Validates compact source-link chips inside the focus-summary block vs default-focused row. No benchmark.
+Validates stable DOM markers on the readable badge-copy region (122): version on aside/workspace/copy <p>,
+plus readable_text and readable_value field spans vs default-focused row. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -95,23 +96,18 @@ else
   insp_check_details="fallback candidate (exit ${insp_rc} or invalid JSON)"
 fi
 
-row_count="0"
+ch_count="0"
 if [[ "$insp_json_ok" == "true" ]]; then
-  row_count="$(printf '%s' "$insp_json" | jq '.changed_key_inspector | length')"
+  ch_count="$(printf '%s' "$insp_json" | jq '.changed_key_inspector | length')"
 fi
 
 html="${output_dir}/contextviewer_ui_preview_${project_id}.html"
 prep_json=""
+
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint="117"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null \
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null \
       || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
@@ -148,7 +144,6 @@ fi
 
 html_tmp="$(mktemp)"
 insp_tmp="$(mktemp)"
-trap 'rm -f "$html_tmp" "$insp_tmp"' EXIT
 [[ -n "$html" && -f "$html" ]] && cat "$html" >"$html_tmp"
 printf '%s' "$insp_json" >"$insp_tmp"
 
@@ -167,7 +162,7 @@ print(len(re.findall(r'data-cv-inspector-row-index="(\d+)"', page)))
 PY
 )"
 
-effective_row_count="$row_count"
+effective_row_count="$ch_count"
 if [[ "$effective_row_count" -eq 0 ]] && [[ "$html_row_count" =~ ^[0-9]+$ ]] && [[ "$html_row_count" -gt 0 ]]; then
   effective_row_count="$html_row_count"
 fi
@@ -183,18 +178,26 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace source-link chips (115)" "fail" "missing HTML preview artifact"
-  add_check "html: source-link chip values vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: badge-copy DOM contract markers (122)" "fail" "missing HTML preview artifact"
+  add_check "html: badge-copy readable_text / readable_value vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace source-link chips (115)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: source-link chip values vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: badge-copy DOM contract markers (122)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: badge-copy readable_text / readable_value vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-chips="115"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace source-link chips (115)" "pass" \
-        'data-cv-diff-inspector-focus-summary-source-link-chips="115"'
+    dc122="$(
+      grep -o 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html_tmp" 2>/dev/null | wc -l | tr -d ' '
+    )"
+    if [[ "${dc122:-0}" -ge 3 ]] \
+      && grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html_tmp" \
+      && grep -q 'diff-inspector-focus-summary-source-hint-badge-copy' "$html_tmp" \
+      && grep -q 'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"' "$html_tmp" \
+      && grep -q 'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_value"' "$html_tmp" \
+      && grep -q 'data-cv-inspector-focus-summary-source-link-hint-badge-copy-value="' "$html_tmp"; then
+      add_check "html: badge-copy DOM contract markers (122)" "pass" \
+        "122 on aside/workspace/copy + readable_text/readable_value hooks present (${dc122}×)"
     else
-      add_check "html: workspace source-link chips (115)" "fail" "missing Task 115 source-link chips marker"
+      add_check "html: badge-copy DOM contract markers (122)" "fail" "missing Task 122 badge-copy DOM contract or field hooks"
     fi
     py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
@@ -219,8 +222,8 @@ if not isinstance(rows, list):
 if rows:
     row0 = rows[0]
     if not isinstance(row0, dict):
-      print("fail|first row not object")
-      sys.exit(0)
+        print("fail|first row not object")
+        sys.exit(0)
     key0 = row0.get("key")
 else:
     mrow = re.search(
@@ -235,75 +238,65 @@ else:
         sys.exit(0)
     key0 = html.unescape(mrow.group(1))
 
-def esc_attr(s):
-    return html.escape(str(s) if s is not None else "", quote=True)
-
-if not re.search(r'data-cv-diff-inspector-focus-summary-source-link-chips="115"', page):
-    print("fail|missing 115 source-link chip strip")
-    sys.exit(0)
-
-if not re.search(
-    r'data-cv-inspector-focus-summary-source-chip="source_key"[^>]*'
-    r'data-cv-inspector-focus-summary-source-chip-value="' + re.escape(esc_attr(key0)) + r'"',
-    page,
-):
-    print("fail|source_key chip mismatch")
-    sys.exit(0)
+lead = (
+    "Inspector row 0 (default focus) — this summary matches the highlighted changed-key row · key "
+)
+lead_esc = html.escape(lead, quote=False)
+key_vis = html.escape(str(key0), quote=False)
+key_attr = html.escape(str(key0), quote=True)
 
 if not re.search(
-    r'data-cv-inspector-focus-summary-source-chip="source_index"[^>]*'
-    r'data-cv-inspector-focus-summary-source-chip-value="0"',
+    r'<p class="diff-inspector-focus-summary-source-hint-badge-copy[^"]*"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"[^>]*>'
+    r'<span[^>]*data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"[^>]*>'
+    + re.escape(lead_esc)
+    + r'</span><span class="mono"[^>]*data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_value"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-badge-copy-value="'
+    + re.escape(key_attr)
+    + r'"[^>]*>'
+    + re.escape(key_vis)
+    + r"</span></p>",
     page,
 ):
-    print("fail|source_index chip mismatch")
+    print("fail|missing 121+122 badge-copy paragraph or readable field mismatch vs default row")
     sys.exit(0)
 
-print("pass|115 source-link chips match default-focused row")
+print("ok")
 PY
     )"
-    py_status="${py_c%%|*}"
-    py_details="${py_c#*|}"
-    if [[ "$py_status" == "pass" ]]; then
-      add_check "html: source-link chip values vs default row" "pass" "$py_details"
+    if [[ "$py_c" == "ok" ]]; then
+      add_check "html: badge-copy readable_text / readable_value vs default row" "pass" "122 field spans match default-focused key"
     else
-      add_check "html: source-link chip values vs default row" "fail" "$py_details"
+      add_check "html: badge-copy readable_text / readable_value vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi
 
-set +e
-bash "$PREPARE" --invalid-project-id "$invalid_id" --output-dir "$output_dir" >/dev/null 2>&1
-miss_rc=$?
-set -e
-if [[ "$miss_rc" -eq 2 ]]; then
-  add_check "negative: prepare missing --project-id" "pass" "exit 2 as expected"
-else
-  add_check "negative: prepare missing --project-id" "fail" "expected exit 2, got ${miss_rc}"
-fi
+rm -f "$html_tmp" "$insp_tmp"
 
-set +e
-bash "$PREPARE" --project-id "$invalid_id" --output-dir "$output_dir" >/dev/null 2>&1
-inv_rc=$?
-set -e
-if [[ "$inv_rc" -eq 1 ]]; then
-  add_check "negative: prepare invalid --project-id" "pass" "exit 1 as expected"
-else
-  add_check "negative: prepare invalid --project-id" "fail" "expected exit 1, got ${inv_rc}"
-fi
+run_neg() {
+  local name="$1" exp="$2"; shift 2
+  local r
+  set +e
+  "$@" >/dev/null 2>&1
+  r=$?
+  set -e
+  if [[ "$r" -eq "$exp" ]]; then
+    add_check "$name" "pass" "exit ${exp} as expected"
+  else
+    add_check "$name" "fail" "expected exit ${exp}, got ${r}"
+  fi
+}
 
-failed_checks="$(printf '%s' "$checks" | jq '[.[] | select(.status != "pass")] | length')"
-final_status="pass"
-if [[ "$failed_checks" -ne 0 ]]; then
-  final_status="fail"
-fi
+run_neg "negative: prepare missing --project-id" 2 bash "$PREPARE" --output-dir "$output_dir"
+run_neg "negative: prepare invalid --project-id" 1 bash "$PREPARE" --project-id "$invalid_id" --output-dir "$output_dir"
 
-jq -n \
-  --arg st "$final_status" \
-  --argjson ch "$checks" \
-  --argjson fc "$failed_checks" \
-  --arg ga "$generated_at" \
-  '{status: $st, checks: $ch, failed_checks: $fc, generated_at: $ga}'
+failed_checks="$(echo "$checks" | jq '[.[] | select(.status == "fail")] | length')"
+overall="pass"
+[[ "$failed_checks" -eq 0 ]] || overall="fail"
 
-if [[ "$final_status" != "pass" ]]; then
-  exit 1
-fi
+jq -n --arg st "$overall" --argjson chk "$checks" --argjson fc "$failed_checks" --arg ga "$generated_at" \
+  '{status: $st, checks: $chk, failed_checks: $fc, generated_at: $ga}'
+
+[[ "$overall" == "pass" ]]

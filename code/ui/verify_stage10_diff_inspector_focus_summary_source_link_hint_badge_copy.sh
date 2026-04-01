@@ -107,7 +107,8 @@ if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
     if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null; then
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null \
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
@@ -229,21 +230,28 @@ else:
         sys.exit(0)
     key0 = html.unescape(mrow.group(1))
 
-expected = (
+lead = (
     "Inspector row 0 (default focus) — this summary matches the highlighted changed-key row · key "
-    + str(key0)
 )
-inner = html.escape(expected, quote=False)
+lead_esc = html.escape(lead, quote=False)
+key_vis = html.escape(str(key0), quote=False)
+key_attr = html.escape(str(key0), quote=True)
 
 if not re.search(
     r'<p class="diff-inspector-focus-summary-source-hint-badge-copy[^"]*"[^>]*'
     r'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"[^>]*'
-    r'data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"[^>]*>'
-    + re.escape(inner)
-    + r"</p>",
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"[^>]*>'
+    r'<span[^>]*data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_text"[^>]*>'
+    + re.escape(lead_esc)
+    + r'</span><span class="mono"[^>]*data-cv-inspector-focus-summary-source-link-hint-badge-copy-field="readable_value"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-badge-copy-value="'
+    + re.escape(key_attr)
+    + r'"[^>]*>'
+    + re.escape(key_vis)
+    + r"</span></p>",
     page,
 ):
-    print("fail|missing 121 badge-copy paragraph or text mismatch")
+    print("fail|missing 121+122 badge-copy paragraph or field mismatch vs default row")
     sys.exit(0)
 
 print("ok")
