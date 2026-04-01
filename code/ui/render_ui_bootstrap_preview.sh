@@ -20,6 +20,7 @@
 # AI Task 116: DOM contract on source-link chip strip (116) + per-chip field + value-span markers for interaction.
 # AI Task 117: compact human-readable source-link hint (117) + hint-key / hint-index DOM markers.
 # AI Task 118: source-link hint DOM contract (118) on aside/workspace/hint + linked_key / linked_index field hooks.
+# AI Task 119: compact source-link hint badge (119) above hint line; badge-label + badge-value from default row.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 set -euo pipefail
 
@@ -85,6 +86,8 @@ Task 117 adds a compact source-link hint line (data-cv-diff-inspector-focus-summ
   data-cv-inspector-focus-summary-source-link-hint-key, data-cv-inspector-focus-summary-source-link-hint-index).
 Task 118 adds source-link hint DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"
   on aside, hint paragraph, workspace; data-cv-inspector-focus-summary-source-link-hint-field linked_key | linked_index).
+Task 119 adds a source-link hint badge (data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"
+  on aside, badge div, workspace; hint-badge-label + hint-badge-value from row 0 and focused key).
 USAGE
 }
 
@@ -1150,6 +1153,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116" '
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1191,6 +1195,16 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         '<span class="diff-inspector-state-chip-val mono" data-cv-inspector-focus-summary-source-chip-value="0"'
         ' data-cv-inspector-focus-summary-source-link-chip-value="0">0</span></span>'
         "</div>"
+        '<div class="diff-inspector-focus-summary-source-hint-badge" role="status" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119" aria-label="Source link summary">'
+        '<span class="diff-inspector-focus-summary-source-hint-badge-label muted" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-label="Source link">Source link</span>'
+        ' <span class="diff-inspector-focus-summary-source-hint-badge-val mono" '
+        'data-cv-inspector-focus-summary-source-link-hint-badge-value="'
+        + esc_attr("0 · " + str(fk0))
+        + '">'
+        + esc("0 · " + str(fk0))
+        + "</span></div>"
         '<p class="diff-inspector-focus-summary-source-hint mono muted" role="status" '
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
@@ -1418,6 +1432,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-chips-dom-contract="116"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint="117"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"'
         )
 
 wr_class = "diff-workspace"
@@ -2508,8 +2523,34 @@ tmp_html="$(mktemp)"
     padding: 0;
     list-style: none;
   }
+  .diff-inspector-focus-summary-source-hint-badge {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--cv-space-1);
+    margin: calc(-1 * var(--cv-space-1)) 0 var(--cv-space-2);
+    padding: var(--cv-space-1) var(--cv-space-2);
+    border-radius: var(--cv-radius-md);
+    background: var(--cv-surface-high);
+    border: 1px solid var(--cv-outline-variant);
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .diff-inspector-focus-summary-source-hint-badge-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .diff-inspector-focus-summary-source-hint-badge-val {
+    font-weight: 600;
+    word-break: break-all;
+    min-width: 0;
+  }
   .diff-inspector-focus-summary-source-hint {
-    margin: calc(-1 * var(--cv-space-2)) 0 var(--cv-space-3);
+    margin: 0 0 var(--cv-space-3);
     font-size: 0.6875rem;
     line-height: 1.4;
     word-break: break-all;
