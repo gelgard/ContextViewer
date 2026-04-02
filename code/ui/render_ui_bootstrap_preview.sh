@@ -29,6 +29,7 @@
 # AI Task 128: overview surface RC — data-cv-overview-surface-productization="128", overview-surface--product-rc; dashboard feed truth unchanged (081).
 # AI Task 129: visualization surface RC — data-cv-visualization-surface-productization="129", viz-workspace--product-rc; Stage 6 bundle field truth unchanged (082).
 # AI Task 130: history surface RC — data-cv-history-surface-productization="130", history-workspace--product-rc; 083 baseline marker retained on root.
+# AI Task 131: full-page RC cleanup — data-cv-release-candidate-full-page-cleanup="131", cv-app-shell--rc-page-complete; chrome copy only; 125–130 + 080 retained.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -113,6 +114,8 @@ Task 129 productizes the visualization workspace: data-cv-visualization-surface-
   architecture-explorer framing; tree, graph, and first-row inspector remain feed-backed only (082).
 Task 130 productizes the history workspace: data-cv-history-surface-productization="130", history-workspace--product-rc,
   calmer activity/timeline framing; data-cv-history-surface="083" retained; daily rollup + timeline rows unchanged (083).
+Task 131 applies full-page release-candidate cleanup: data-cv-release-candidate-full-page-cleanup="131", cv-app-shell--rc-page-complete,
+  calmer global chrome and continuity; all data-section roots and 125–130 markers unchanged.
 USAGE
 }
 
@@ -1866,6 +1869,49 @@ tmp_html="$(mktemp)"
     font-size: 0.75rem;
     color: var(--cv-on-surface-variant);
   }
+  /* AI Task 131 — full-page RC cleanup (global continuity + scanability) */
+  .cv-app-shell--rc-page-complete .workspace-panels {
+    gap: var(--cv-space-5);
+  }
+  .cv-app-shell--rc-page-complete section.workspace-panel {
+    scroll-margin-top: var(--cv-space-8);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, var(--cv-outline-variant) 18%, transparent),
+      0 8px 24px -12px rgba(42, 52, 57, 0.06);
+  }
+  .cv-app-shell--rc-page-complete ul.consistency {
+    font-family: var(--cv-font-ui);
+    font-size: 0.8125rem;
+    list-style: none;
+    padding-left: 0;
+  }
+  .cv-app-shell--rc-page-complete ul.consistency li {
+    padding: var(--cv-space-2) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--cv-outline-variant) 15%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--cv-space-2);
+  }
+  .cv-app-shell--rc-page-complete ul.consistency li:last-child {
+    border-bottom: none;
+  }
+  .cv-app-shell--rc-page-complete .cc-label {
+    color: var(--cv-on-surface);
+    font-weight: 600;
+  }
+  .cv-app-shell--rc-page-complete .cc-flag {
+    font-family: var(--cv-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .consistency-panel-lead {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--cv-on-surface-variant);
+    max-width: 46rem;
+  }
   .app-top-bar {
     flex-shrink: 0;
     background: linear-gradient(145deg, var(--cv-primary) 0%, var(--cv-primary-dim) 100%);
@@ -3125,25 +3171,25 @@ tmp_html="$(mktemp)"
   }
 </style>
 </head>
-<body data-cv-preview-shell="080" data-cv-shell-navigation-productization="127">
-<div class="cv-app-shell cv-app-shell--product-rc">
+<body data-cv-preview-shell="080" data-cv-shell-navigation-productization="127" data-cv-release-candidate-full-page-cleanup="131">
+<div class="cv-app-shell cv-app-shell--product-rc cv-app-shell--rc-page-complete">
   <header class="app-top-bar" role="banner">
     <div class="app-top-bar-inner">
       <div class="product-lockup">
         <span class="product-name">ContextViewer</span>
         <h1 class="project-headline">$(printf '%s' "$proj_name" | html_escape)</h1>
       </div>
-      <div class="project-meta-chips" aria-label="Summary for this project">
-        <span class="meta-chip">Project ID <span class="val">${project_id}</span></span>
+      <div class="project-meta-chips" aria-label="Project facts">
+        <span class="meta-chip">Reference <span class="val">${project_id}</span></span>
         <span class="meta-chip">Snapshots <span class="val">${proj_snapshots}</span></span>
-        <span class="meta-chip">Latest export <span class="val">$(printf '%s' "$proj_latest" | html_escape)</span></span>
+        <span class="meta-chip">Latest snapshot <span class="val">$(printf '%s' "$proj_latest" | html_escape)</span></span>
       </div>
     </div>
   </header>
   <div class="app-body">
-    <aside class="app-sidebar" aria-label="Page sections">
-      <nav class="workspace-nav" aria-label="Skip to a section">
-        <span class="nav-label">Jump to</span>
+    <aside class="app-sidebar" aria-label="Workspace">
+      <nav class="workspace-nav" aria-label="Sections on this page">
+        <span class="nav-label">On this page</span>
         <a class="nav-item" href="#cv-section-overview">Project home</a>
         <a class="nav-item" href="#cv-section-visualization">Architecture explorer</a>
         <a class="nav-item" href="#cv-section-history">Activity &amp; imports</a>
@@ -3174,18 +3220,19 @@ $(printf '%s' "$diff_inner")
 $(printf '%s' "$settings_inner")
         </section>
         <section class="consistency-panel">
-          <h2>Snapshot alignment checks</h2>
+          <h2>Bundle consistency</h2>
+          <p class="consistency-panel-lead">Read-only checks that every workspace above is wired to the same stored project bundle.</p>
           <ul class="consistency">
-            <li class="$( [[ "$cc_project" == "true" ]] && echo ok || echo bad )">project_id_match: ${cc_project}</li>
-            <li class="$( [[ "$cc_over" == "true" ]] && echo ok || echo bad )">overview_present: ${cc_over}</li>
-            <li class="$( [[ "$cc_viz" == "true" ]] && echo ok || echo bad )">visualization_consistent: ${cc_viz}</li>
-            <li class="$( [[ "$cc_hist" == "true" ]] && echo ok || echo bad )">history_consistent: ${cc_hist}</li>
-            <li class="$( [[ "$cc_diff" == "true" ]] && echo ok || echo bad )">diff_viewer_contract_consistent: ${cc_diff}</li>
-            <li class="$( [[ "$cc_settings" == "true" ]] && echo ok || echo bad )">settings_profile_contract_consistent: ${cc_settings}</li>
+            <li class="$( [[ "$cc_project" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Project alignment</span> <span class="cc-flag">${cc_project}</span></li>
+            <li class="$( [[ "$cc_over" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Project home feed</span> <span class="cc-flag">${cc_over}</span></li>
+            <li class="$( [[ "$cc_viz" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Architecture explorer</span> <span class="cc-flag">${cc_viz}</span></li>
+            <li class="$( [[ "$cc_hist" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Activity &amp; imports</span> <span class="cc-flag">${cc_hist}</span></li>
+            <li class="$( [[ "$cc_diff" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Snapshot changes</span> <span class="cc-flag">${cc_diff}</span></li>
+            <li class="$( [[ "$cc_settings" == "true" ]] && echo ok || echo bad )"><span class="cc-label">Project &amp; integration</span> <span class="cc-flag">${cc_settings}</span></li>
           </ul>
         </section>
       </div>
-      <footer class="note">This page works offline. Your project data is embedded below.</footer>
+      <footer class="note">Single-page bundle — everything above loads from embedded project data in this file.</footer>
     </main>
   </div>
 </div>

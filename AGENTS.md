@@ -99,10 +99,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Task 130 completed — **Activity & imports** / history productization (RC preview): **`data-cv-history-surface-productization="130"`**, **`history-workspace--product-rc`**, **`hist-product-hero`**; **`data-cv-history-surface="083"`**, **`data-section="history"`**, and **083** rollup + timeline truth unchanged; verifier **`verify_stage10_history_surface_productization_release_candidate.sh`**; fast readiness check **130** when history is present
+- Substage: Task 131 completed — **Release-candidate full-page cleanup** (RC preview): **`data-cv-release-candidate-full-page-cleanup="131"`**, **`cv-app-shell--rc-page-complete`**; **`data-cv-preview-shell="080"`**, **127**, **125–130** surface markers, five **`data-section`** roots, and **`ui-bootstrap-payload`** unchanged at contract layer; verifier **`verify_stage10_release_candidate_full_page_cleanup.sh`**; fast readiness check **131** when **080** shell is present
 
 Next required action:
-→ define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** export metadata only)
+→ define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** external export metadata only, not local preview authority)
 
 
 ---

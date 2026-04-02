@@ -34,6 +34,7 @@
 # AI Task 128: fast delivery checks overview-surface productization marker (128) when overview section present.
 # AI Task 129: fast delivery checks visualization-surface productization marker (129) when visualization section present.
 # AI Task 130: fast delivery checks history-surface productization marker (130) when history section present.
+# AI Task 131: fast delivery checks full-page RC cleanup marker (131) when 080 shell present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -332,7 +333,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-overview-surface-productization="128"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-visualization-surface-productization="129"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-history-surface-productization="130"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-history-surface-productization="130"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-release-candidate-full-page-cleanup="131"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -358,6 +360,10 @@ if [[ "$mode" == "fast" ]]; then
     fi
     if grep -q 'data-section="history"' "$fast_artifact" 2>/dev/null \
       && ! grep -q 'data-cv-history-surface-productization="130"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
+    fi
+    if grep -q 'data-cv-preview-shell="080"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-release-candidate-full-page-cleanup="131"' "$fast_artifact" 2>/dev/null; then
       refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
@@ -839,6 +845,16 @@ else
       fi
     else
       add_fast_check "delivery-fast: shell and navigation productization (127)" "pass" "skipped (no 080 shell marker)"
+    fi
+    if grep -q 'data-cv-preview-shell="080"' "$output_file_fast" 2>/dev/null; then
+      if grep -q 'data-cv-release-candidate-full-page-cleanup="131"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'cv-app-shell--rc-page-complete' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: release-candidate full-page cleanup (131)" "pass" "Task 131 markers present"
+      else
+        add_fast_check "delivery-fast: release-candidate full-page cleanup (131)" "fail" "regenerate preview for Task 131 full-page RC cleanup"
+      fi
+    else
+      add_fast_check "delivery-fast: release-candidate full-page cleanup (131)" "pass" "skipped (no 080 shell marker)"
     fi
   else
     add_fast_check "delivery-fast: preview artifact exists" "fail" "output_file missing"

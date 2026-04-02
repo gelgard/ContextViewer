@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **history / Activity & imports productization — release candidate** (AI Task 130) reworks the history workspace into a product-facing activity view: **`data-cv-history-surface-productization="130"`**, **`history-workspace--product-rc`**, **`hist-product-hero`**; **`data-cv-history-surface="083"`**, **`data-section="history"`**, **`cv-section-history`**, and **083** daily rollup + snapshot timeline bindings unchanged; sidebar link **Activity & imports**; gated by **`verify_stage10_history_surface_productization_release_candidate.sh`** and Stage 8 fast check for **130**; benchmark diagnostic-only; **`contextJSON/*`** external export metadata only (not preview authority)
+Stage 10 **release-candidate full-page cleanup** (AI Task 131) integrates **125–130** surface RC work into one coherent product shell: **`data-cv-release-candidate-full-page-cleanup="131"`**, **`cv-app-shell--rc-page-complete`**; preserves **`data-cv-preview-shell="080"`**, **127**, all five **`data-section`** roots, **`cv-section-*`** ids, **`ui-bootstrap-payload`**, and underlying overview / visualization / history / diff / settings contract truth (page-level presentation only); gated by **`verify_stage10_release_candidate_full_page_cleanup.sh`** and Stage 8 fast check for **131** when **080** present; benchmark diagnostic-only; **`contextJSON/*`** external export metadata only (not local preview authority)
 
 CURRENT EXECUTION STRATEGY:
 - The Task 105–124 diff focus-summary chain is treated as a completed fine-grained baseline.
@@ -157,6 +157,10 @@ STATUS:
 - AI Task 125 completed: **Diff surface productization (release candidate)** — `verify_stage10_diff_surface_productization_release_candidate.sh` + Stage 8 fast **125** check when `comparison_ready`; `render_ui_bootstrap_preview` product-facing **Snapshot changes** surface with stable **125** marker; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 / PG-AR-001
 - AI Task 126 completed: **Settings surface productization (release candidate)** — `verify_stage10_settings_surface_productization_release_candidate.sh` + Stage 8 fast **126** check; `render_ui_bootstrap_preview` product-facing **Project & integration** settings workspace; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
 - AI Task 127 completed: **Shell and navigation productization (release candidate)** — `verify_stage10_shell_navigation_productization_release_candidate.sh` + Stage 8 fast **127** check; shared shell/nav RC frame; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 / PG-OV-001
+- AI Task 128 completed: **Overview / Project home productization (release candidate)** — `verify_stage10_overview_surface_productization_release_candidate.sh` + Stage 8 fast **128** check; goals PG-OV-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
+- AI Task 129 completed: **Visualization / Architecture explorer productization (release candidate)** — `verify_stage10_visualization_surface_productization_release_candidate.sh` + Stage 8 fast **129** check; goals PG-AR-001 / PG-AR-002 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
+- AI Task 130 completed: **History / Activity & imports productization (release candidate)** — `verify_stage10_history_surface_productization_release_candidate.sh` + Stage 8 fast **130** check; goals PG-HI-001 / PG-HI-002 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
+- AI Task 131 completed: **Release-candidate full-page cleanup** — `verify_stage10_release_candidate_full_page_cleanup.sh` + Stage 8 fast **131** check when **080** present; **`131`** + **`cv-app-shell--rc-page-complete`** with **125–130** + section roots preserved; goals PG-OV-001 / PG-AR-001 / PG-HI-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -169,7 +173,7 @@ STATUS:
   - recursive orchestration is classified as architecture defect
   - legacy heavy validators are retained as diagnostic-only legacy paths until replaced
 - JSON authority separation is active:
-  - `contextJSON/*` is an external informational export for the viewer app only
+  - `contextJSON/*` is external viewer export metadata only (not local HTML preview or project-OS acceptance authority)
   - validation artifacts are separate JSON evidence for acceptance/diagnostics
   - architecture, planning, testing policy, and execution methodology are governed by recovery + AGENTS + plans, never by `contextJSON`
 - Stage 9 closure evidence recorded:
@@ -183,7 +187,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 preview carries **125**/**126** productized diff and settings surfaces, **127** productized shared shell/navigation, **128** productized **Project home** / overview, **129** productized **Architecture explorer** / visualization, and **130** productized **Activity & imports** / history (**`verify_stage10_diff_surface_productization_release_candidate.sh`**, **`verify_stage10_settings_surface_productization_release_candidate.sh`**, **`verify_stage10_shell_navigation_productization_release_candidate.sh`**, **`verify_stage10_overview_surface_productization_release_candidate.sh`**, **`verify_stage10_visualization_surface_productization_release_candidate.sh`**, **`verify_stage10_history_surface_productization_release_candidate.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 preview has passed surface-by-surface RC productization (**125**–**130**) and **131** full-page cleanup (**`verify_stage10_release_candidate_full_page_cleanup.sh`**, Stage 8 fast **131** when **080** present). Surface-level gates remain: **`verify_stage10_diff_surface_productization_release_candidate.sh`**, **`verify_stage10_settings_surface_productization_release_candidate.sh`**, **`verify_stage10_shell_navigation_productization_release_candidate.sh`**, **`verify_stage10_overview_surface_productization_release_candidate.sh`**, **`verify_stage10_visualization_surface_productization_release_candidate.sh`**, **`verify_stage10_history_surface_productization_release_candidate.sh`**. Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
