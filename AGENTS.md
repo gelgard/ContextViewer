@@ -38,6 +38,7 @@ When entering the project:
 
 5. Default next command:
    → "дай следующую AI task"
+   → alias: "давай следующую аи таск"
 
 
 ---
@@ -98,10 +99,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff inspector focus-summary source-link hint copy cleanup (Task 123) complete — baseline above Task 122 badge-copy DOM contract / 121–102 chain (lightweight artifact-first validation model); next numbered task pending
+- Substage: Task 125 completed — diff surface productization (release-candidate preview): full **Snapshot changes** workspace with **125** markers above the **102–124** comparison/inspector truth; verifier **`verify_stage10_diff_surface_productization_release_candidate.sh`**; fast readiness checks **125** when **`comparison_ready`**
 
 Next required action:
-→ create and execute the next numbered AI task building on the Stage 123 hint copy-cleanup baseline (122–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** export metadata only)
 
 
 ---
@@ -115,6 +116,10 @@ Supported commands:
 
 2. "дай следующую AI task"
    → return next executable task
+
+2a. "давай следующую аи таск"
+   → alias of "дай следующую AI task"
+   → return next executable task under the same hard response and file-creation rules
 
 3. "восстанови проект"
    → reconstruct state
@@ -149,6 +154,12 @@ Supported commands:
   - explain why the step matters for the user or business outcome
   - avoid implementation jargon, internal file names, protocol names, and specialist terminology
   - keep it short: 1-3 sentences or 2-4 short bullets
+- execution granularity rule is mandatory:
+  - prefer larger product-facing tasks that produce a clearly visible change in one user surface or one end-to-end user scenario
+  - avoid serializing one visual block into many near-invisible microtasks when the same result can be delivered safely in one bounded task
+  - use microtasks only when a contract/risk boundary makes larger delivery unsafe
+  - if three or more consecutive tasks affect the same small UI fragment without materially changing the whole screen, the next task must be reconsidered and preferably merged into a broader productization slice
+  - after a stable baseline exists, priority shifts from adding more local hooks to improving clarity, layout quality, and release-candidate readiness of the full user-facing surface
 - fast smoke mode is mandatory by default:
   - run one top-level stage gate first
   - run child smoke scripts separately only for diagnostics/failure localization or explicit user request
@@ -198,6 +209,13 @@ Supported commands:
   - if a task cannot fit this budget, it must be split or re-architected before execution
 - validated preview / handoff state is the current Stage 8 checkpoint and must remain preserved while the Figma design branch is developed
 - the Stage 8 Figma design branch refines the implementation plan and must not replace or invalidate the original architecture / runtime model
+- release-candidate acceleration rule is mandatory once core surfaces are live:
+  - when overview, visualization, history, diff, and settings surfaces already exist in working form, planning must favor cleanup/productization slices over more local exploratory refinement
+  - the preferred sequence becomes:
+    1. ship a fuller, cleaner user-visible surface
+    2. validate that integrated surface
+    3. then perform small follow-up refinements only where needed
+  - do not postpone a coherent near-final product view in order to keep polishing one small technical sub-block
 - Figma prompt generation, Figma-result validation, Figma import, and post-Figma implementation refinement must all execute through numbered AI tasks
 - in the Stage 8 Figma design branch, the local agent authors prompt packs for a third-party Figma-generation system; the user then returns the generated Figma artifacts to the workspace for validation, import, and implementation-plan refinement
 - once an approved Figma artifact is returned to the workspace, it becomes the authoritative UI design reference for implementation decisions, but never replaces recovery/planning authority
@@ -206,6 +224,7 @@ Supported commands:
 - when a new Stage begins, explicitly announce the stage transition
 - before starting tasks for a new Stage, merge current branch into `main` and create `feature/stage<stageNum>`
 - command "дай следующую AI task" is valid only if `ai_tasks/NNN_*.md` is physically created before response
+- command "давай следующую аи таск" is an exact operational alias of "дай следующую AI task" and is subject to the same file-creation, restore, numbering, and response-format gates
 - if the AI task file is missing, response must stop and switch to file creation
 
 
@@ -467,6 +486,7 @@ When command is triggered:
 - on stage transition, include exact git commands for merge-to-`main` and branch creation `feature/stage<stageNum>`
 - for "дай следующую AI task", always include line: `AI Task file created: /ai_tasks/NNN_*.md`
 - for "дай следующую AI task", response is valid only in this strict block order:
+- for "давай следующую аи таск", use exactly the same response contract and strict block order as for "дай следующую AI task"
   1) `AI Task file created: /ai_tasks/NNN_*.md`
   2) `Manager Summary (non-technical)`
   3) `Cursor prompt (EN)`

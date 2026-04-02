@@ -98,6 +98,10 @@ Task 122 adds readable badge-copy DOM contract (data-cv-diff-inspector-focus-sum
   on aside, workspace, copy paragraph; readable_text + readable_value field spans derived from default-focused row).
 Task 123 cleans up source-link hint copy (data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"
   on aside, workspace, hint paragraph; cleaned_text field span; preserves 117/118 linked_key/linked_index hooks).
+Task 124 adds cleaned hint copy DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"
+  on aside, workspace, hint paragraph; cleaned_text + cleaned_value on linked_key span from default-focused row).
+Task 125 productizes the full diff workspace for release-candidate preview: data-cv-diff-surface-productization="125",
+  diff-workspace--product-rc, clearer headings/copy and hierarchy; preserves 102–124 comparison + inspector truth and hooks.
 USAGE
 }
 
@@ -527,8 +531,8 @@ parts.append("</section>")
 parts.append(
     '<p class="overview-deep-hint muted">Architecture tree, graph, and inspector: '
     "use <strong>Visualization</strong> in the sidebar. Snapshot history: "
-    "<strong>History</strong>. Top-level snapshot key diff: "
-    "<strong>Diff viewer</strong>.</p>"
+    "<strong>History</strong>. What changed between exports: "
+    "<strong>Snapshot changes</strong>.</p>"
 )
 parts.append("</div>")
 print("".join(parts), end="")
@@ -1126,23 +1130,23 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         cic = {}
     rows = rows if isinstance(rows, list) else []
     src_note = (
-        "Integrated from <code>get_stage10_diff_change_inspector_contract.sh</code>."
+        "Details match your live inspection contract (integrated build)."
         if cic.get("integrated")
-        else "Contract-aligned drilldown (same <code>changed_key_inspector</code> shape as Stage 104)."
+        else "Each row reflects the same changed-key metadata as your diff contract (top-level keys only)."
     )
     if not rows and not fallback_keys:
         return (
             '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
             'data-cv-diff-inspector-dom-contract="106" '
             'data-cv-changed-inspector-count="0" role="group">'
-            '<p class="diff-inspector-lead muted">' + src_note + "</p>"
-            '<p class="muted mono">(no changed top-level keys)</p></div>'
+            '<p class="diff-inspector-lead muted">' + esc(src_note) + "</p>"
+            '<p class="muted">No keys changed between these two snapshots.</p></div>'
         )
     if not rows and fallback_keys:
         return (
             '<div class="diff-inspector-wrap" data-cv-diff-inspector-preview="105" '
             'data-cv-diff-inspector-dom-contract="106" role="group">'
-            '<p class="diff-inspector-lead muted">' + src_note + "</p>"
+            '<p class="diff-inspector-lead muted">' + esc(src_note) + "</p>"
             + fmt_key_list(fallback_keys, cap)
             + "</div>"
         )
@@ -1168,6 +1172,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1242,6 +1247,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0">'
         '<span class="muted" data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text">'
@@ -1249,7 +1255,12 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         + '</span> '
         '<strong data-cv-inspector-focus-summary-source-link-hint-field="linked_index" data-cv-inspector-focus-summary-source-link-hint-linked-index="0">0</strong>'
         ' <span class="muted">·</span> '
-        '<span class="mono" data-cv-inspector-focus-summary-source-link-hint-field="linked_key" data-cv-inspector-focus-summary-source-link-hint-linked-key">'
+        '<span class="mono" data-cv-inspector-focus-summary-source-link-hint-field="linked_key" '
+        'data-cv-inspector-focus-summary-source-link-hint-linked-key" '
+        'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_value" '
+        'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-value="'
+        + esc_attr(str(fk0))
+        + '">'
         + esc(str(fk0))
         + "</span></p>"
         '<div class="diff-inspector-focus-summary-chips" role="list" aria-label="Focused key state" '
@@ -1315,7 +1326,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'role="group" aria-label="Changed key drilldown" data-cv-changed-inspector-count="'
         + esc_attr(str(len(rows)))
         + '">',
-        '<p class="diff-inspector-lead muted">' + src_note + "</p>",
+        '<p class="diff-inspector-lead muted">' + esc(src_note) + "</p>",
         focus_summary_block,
         '<div class="diff-inspector-rows" role="list" data-cv-inspector-rows-dom-contract="106"'
         + rows_focus_attrs
@@ -1425,13 +1436,13 @@ hint = vc.get("hint") or ""
 
 if empty_st:
     state_class = "diff-state-empty"
-    state_label = "Empty state"
+    state_label = "Waiting for snapshots"
 elif single_st or not comp:
     state_class = "diff-state-single"
-    state_label = "Single snapshot only"
+    state_label = "Need one more snapshot to compare"
 else:
     state_class = "diff-state-ready"
-    state_label = "Comparison ready — two newest valid snapshots"
+    state_label = "Comparing the two most recent snapshots"
 
 comp_bool = comp is True
 _ins_chk = dv.get("changed_key_inspector") or []
@@ -1473,9 +1484,10 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"'
         )
 
-wr_class = "diff-workspace"
+wr_class = "diff-workspace diff-workspace--product-rc"
 if comp_bool:
     wr_class += " diff-workspace--compare-ready"
 
@@ -1483,13 +1495,13 @@ parts = []
 parts.append(
     '<div class="'
     + wr_class
-    + '" role="region" data-cv-diff-surface="085"'
+    + '" role="region" data-cv-diff-surface="085" data-cv-diff-surface-productization="125"'
     + fidelity_attr
-    + ' aria-label="Diff viewer from snapshot contract bundle">'
+    + ' aria-label="Snapshot comparison">'
 )
 parts.append('<header class="diff-workspace-header">')
 parts.append(
-    '<p class="diff-kicker">Secondary flow · top-level JSON keys · contract <time datetime="'
+    '<p class="diff-kicker">Snapshot comparison · updated <time datetime="'
     + esc_attr(gen)
     + '">'
     + esc(gen)
@@ -1498,24 +1510,24 @@ parts.append(
 parts.append(
     '<div class="diff-state-banner ' + esc_attr(state_class) + '">'
     '<span class="diff-state-label">' + esc(state_label) + "</span>"
-    '<span class="diff-state-meta mono">valid snapshots: '
+    '<span class="diff-state-meta">Snapshots on file: '
     + esc(str(n_valid))
     + "</span></div>"
 )
 if comp_bool:
     parts.append(
-        '<div class="diff-compare-summary" role="group" aria-label="Top-level key delta counts">'
-        '<p class="diff-compare-summary-lead">Comparing <strong>latest</strong> vs <strong>previous</strong> valid snapshot — scan counts, then key lists below.</p>'
+        '<div class="diff-compare-summary" role="group" aria-label="How many top-level keys differ">'
+        '<p class="diff-compare-summary-lead">Here is the delta between the <strong>newer</strong> and <strong>earlier</strong> snapshot. Counts are for top-level keys only; lists follow.</p>'
         '<ul class="diff-stat-chips">'
-        '<li><span class="diff-stat-label">Added keys</span>'
+        '<li><span class="diff-stat-label">Added</span>'
         '<span class="diff-stat-value diff-stat-value--add" data-cv-stat="added">'
         + esc(str(n_add))
         + "</span></li>"
-        '<li><span class="diff-stat-label">Removed keys</span>'
+        '<li><span class="diff-stat-label">Removed</span>'
         '<span class="diff-stat-value diff-stat-value--rem" data-cv-stat="removed">'
         + esc(str(n_rem))
         + "</span></li>"
-        '<li><span class="diff-stat-label">Changed keys</span>'
+        '<li><span class="diff-stat-label">Changed</span>'
         '<span class="diff-stat-value diff-stat-value--chg" data-cv-stat="changed">'
         + esc(str(n_chg))
         + "</span></li>"
@@ -1532,9 +1544,9 @@ parts.append(
     + esc_attr(lid)
     + '">'
 )
-parts.append('<h4 class="diff-snap-title">Latest valid snapshot</h4>')
+parts.append('<h4 class="diff-snap-title">Newer snapshot</h4>')
 parts.append(
-    '<p class="mono diff-snap-line diff-snap-line--id">id <span class="diff-snap-id">'
+    '<p class="mono diff-snap-line diff-snap-line--id">Snapshot id <span class="diff-snap-id">'
     + esc(lid)
     + "</span></p>"
 )
@@ -1551,9 +1563,9 @@ parts.append(
     + esc_attr(pid)
     + '">'
 )
-parts.append('<h4 class="diff-snap-title">Previous valid snapshot <span class="diff-snap-sub">(newer − 1)</span></h4>')
+parts.append('<h4 class="diff-snap-title">Earlier snapshot <span class="diff-snap-sub">(next older)</span></h4>')
 parts.append(
-    '<p class="mono diff-snap-line diff-snap-line--id">id <span class="diff-snap-id">'
+    '<p class="mono diff-snap-line diff-snap-line--id">Snapshot id <span class="diff-snap-id">'
     + esc(pid)
     + "</span></p>"
 )
@@ -1571,19 +1583,19 @@ parts.append('<div class="diff-grid-keys">')
 parts.append(
     '<section class="diff-key-panel" aria-labelledby="diff-add-h" data-cv-diff-panel="added">'
 )
-parts.append('<h3 id="diff-add-h" class="diff-panel-title">Added top-level keys</h3>')
+parts.append('<h3 id="diff-add-h" class="diff-panel-title">Keys only in the newer snapshot</h3>')
 parts.append(fmt_key_list(ds.get("added_top_level_keys"), 120))
 parts.append("</section>")
 parts.append(
     '<section class="diff-key-panel" aria-labelledby="diff-rem-h" data-cv-diff-panel="removed">'
 )
-parts.append('<h3 id="diff-rem-h" class="diff-panel-title">Removed top-level keys</h3>')
+parts.append('<h3 id="diff-rem-h" class="diff-panel-title">Keys absent in the newer snapshot</h3>')
 parts.append(fmt_key_list(ds.get("removed_top_level_keys"), 120))
 parts.append("</section>")
 parts.append(
     '<section class="diff-key-panel diff-key-panel--changed-inspector" aria-labelledby="diff-chg-h" data-cv-diff-panel="changed">'
 )
-parts.append('<h3 id="diff-chg-h" class="diff-panel-title">Changed top-level keys</h3>')
+parts.append('<h3 id="diff-chg-h" class="diff-panel-title">Keys that changed type or shape</h3>')
 
 cic = dv.get("change_inspector_contract") or {}
 if comp_bool:
@@ -1599,21 +1611,17 @@ else:
     parts.append(fmt_key_list(ds.get("changed_top_level_keys"), 120))
 parts.append("</section></div>")
 
-parts.append('<div class="diff-cc-wrap"><h4 class="diff-cc-heading">Contract consistency</h4>')
+parts.append('<div class="diff-cc-wrap"><h4 class="diff-cc-heading">Internal checks</h4>')
 parts.append('<dl class="diff-cc-dl mono muted">')
 for k in sorted(ccdv.keys()):
     parts.append("<dt>" + esc(k) + "</dt><dd>" + esc(ccdv.get(k)) + "</dd>")
 parts.append("</dl></div>")
 foot_src = (
-    "<code class=\"mono\">get_diff_viewer_contract_bundle.sh</code>"
-    + (
-        " and <code class=\"mono\">get_stage10_diff_change_inspector_contract.sh</code> (changed-key drilldown when comparison-ready and inspector_ready)"
-        if comp_bool
-        else ""
-    )
-    + " — top-level key semantics match Stage 4 diff summary; no markdown or invented analytics."
+    "Comparison uses your database-backed diff contract"
+    + (" and the change-inspection metadata when comparison is available." if comp_bool else ".")
+    + " Only top-level keys are compared; figures come from stored snapshots, not from narrative docs."
 )
-parts.append('<p class="diff-foot muted">Sources: ' + foot_src + "</p>")
+parts.append('<p class="diff-foot muted">' + foot_src + "</p>")
 parts.append("</div>")
 print("".join(parts), end="")
 PYDIFF
@@ -2360,11 +2368,34 @@ tmp_html="$(mktemp)"
     background: color-mix(in srgb, var(--cv-tertiary) 7%, var(--cv-surface-low));
   }
   /* AI Task 085 — diff viewer (contract bundle 084 only) */
+  /* AI Task 125 — productized diff surface (release-candidate hierarchy) */
   .workspace-panel-diff { padding-bottom: var(--cv-space-8); }
   .diff-workspace {
     display: flex;
     flex-direction: column;
     gap: var(--cv-space-4);
+  }
+  .diff-workspace--product-rc {
+    padding: var(--cv-space-4);
+    border-radius: var(--cv-radius-md);
+    background: color-mix(in srgb, var(--cv-surface-high) 12%, var(--cv-surface-low));
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--cv-on-surface) 4%, transparent);
+  }
+  .diff-workspace--product-rc .diff-workspace-header {
+    padding: var(--cv-space-4) var(--cv-space-5);
+    border-radius: var(--cv-radius-md);
+    border-left-width: 4px;
+  }
+  .diff-workspace--product-rc .diff-panel-title {
+    font-size: 0.9375rem;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--cv-on-surface);
+  }
+  .diff-workspace--product-rc .diff-snap-title {
+    font-size: 0.75rem;
+    color: var(--cv-on-surface);
   }
   .diff-workspace-header {
     padding: var(--cv-space-3) var(--cv-space-4);
@@ -2876,7 +2907,7 @@ tmp_html="$(mktemp)"
         <a class="nav-item" href="#cv-section-overview">Overview</a>
         <a class="nav-item" href="#cv-section-visualization">Visualization</a>
         <a class="nav-item" href="#cv-section-history">History</a>
-        <a class="nav-item" href="#cv-section-diff">Diff viewer</a>
+        <a class="nav-item" href="#cv-section-diff">Snapshot changes</a>
         <a class="nav-item" href="#cv-section-settings">Settings / profile</a>
       </nav>
     </aside>
@@ -2895,7 +2926,7 @@ $(printf '%s' "$viz_inner")
 $(printf '%s' "$hist_inner")
         </section>
         <section id="cv-section-diff" data-section="diff" class="workspace-panel workspace-panel-diff">
-          <h2>Diff viewer</h2>
+          <h2>Snapshot changes</h2>
 $(printf '%s' "$diff_inner")
         </section>
         <section id="cv-section-settings" data-section="settings" class="workspace-panel workspace-panel-settings">

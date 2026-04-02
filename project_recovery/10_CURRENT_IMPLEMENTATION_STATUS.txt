@@ -4,7 +4,12 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **diff inspector focus-summary source-link hint copy cleanup** (AI Task 123) adds **`data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"`** on the focus-summary **aside**, workspace fidelity strip, and **`.diff-inspector-focus-summary-source-hint`** paragraph, with **`data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text"`** for product-readable lead copy while preserving **117**/**118** **`linked_index`** / **`linked_key`** and **119–122** badge/readable-copy hooks, gated by **`verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup.sh`**, above the **122** readable badge-copy DOM-contract baseline; benchmark diagnostic-only; `contextJSON/*` export-only (not preview authority)
+Stage 10 **diff surface productization — release candidate** (AI Task 125) reworks the full **`data-section="diff"`** preview into a product-facing **Snapshot changes** screen: **`data-cv-diff-surface-productization="125"`**, **`diff-workspace--product-rc`**, clearer hierarchy and copy, less workbench/debug chrome; **102–104** comparison truth and **105–124** inspector/focus-summary **`data-cv-*`** hooks are preserved; gated by **`verify_stage10_diff_surface_productization_release_candidate.sh`** and Stage 8 fast check for **125** when **`comparison_ready`**; benchmark diagnostic-only; **`contextJSON/*`** external export metadata only (not preview authority)
+
+CURRENT EXECUTION STRATEGY:
+- The Task 105–124 diff focus-summary chain is treated as a completed fine-grained baseline.
+- Further execution must prefer larger product-facing slices with clearer screen-level change.
+- Priority now shifts to productization / release-candidate work: cleaner user-facing copy, less engineering-looking UI, fuller surface coherence, and faster delivery of a near-final visible product.
 
 STATUS:
 - Architecture synced with latest rules
@@ -148,6 +153,8 @@ STATUS:
 - AI Task 121 completed: **Inspector focus-summary source-link hint badge readable copy** — `121` copy markers + `readable_text` / `readable_value` field spans; `verify_stage10_diff_inspector_focus_summary_source_link_hint_badge_copy.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 122 completed: **Inspector focus-summary source-link hint badge copy DOM contract** — `122` on aside/workspace/copy paragraph + stable readable field hooks; `verify_stage10_diff_inspector_focus_summary_source_link_hint_badge_copy_dom_contract.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 123 completed: **Inspector focus-summary source-link hint copy cleanup** — `123` + `cleaned_text` on the `117` hint line; `verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
+- AI Task 124 completed: **Inspector focus-summary source-link hint copy cleanup DOM contract** — `124` + `cleaned_text`/`cleaned_value` on cleaned hint region; `verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup_dom_contract.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
+- AI Task 125 completed: **Diff surface productization (release candidate)** — `verify_stage10_diff_surface_productization_release_candidate.sh` + Stage 8 fast **125** check when `comparison_ready`; `render_ui_bootstrap_preview` product-facing **Snapshot changes** surface with stable **125** marker; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 / PG-AR-001
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -174,11 +181,13 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 comparison-ready diff preview carries **105–123** (including **`verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup.sh`** for **123** source-link hint copy cleanup above **122**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 diff preview carries **102–124** comparison/inspector truth and **125** productized **Snapshot changes** surface (**`verify_stage10_diff_surface_productization_release_candidate.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack
 - if a future task would require another orchestration layer, it must first introduce or reuse an artifact-first validation path
+- the next task should be a larger product-facing slice with clearly visible user impact rather than another microtask on the same diff-summary fragment
+- planning should prioritize release-candidate acceleration across full surfaces before resuming narrow local refinements
 - **`run_stage9_validation_runtime_benchmark`** remains diagnostic-only and is not part of the ordinary manifest, summary, or diff-readiness path
 - **`contextJSON/*`** is external viewer export metadata only, not diff-readiness, summary, manifest, or runtime authority
 

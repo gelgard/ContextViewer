@@ -4,7 +4,7 @@
 Stage 10 — Execution Entry
 
 ## Current Substage
-Lightweight validation model active with Stage 10 diff inspector focus-summary source-link hint badge copy DOM-contract baseline above readable-copy / hint badge DOM-contract / hint badge / hint DOM-contract / source-link hint / source-link chips DOM-contract / source-link chips / source-link DOM-fields / source-link / state-chips DOM-contract / state chips / presence fields / focus-summary DOM contract / focus summary / default-focus / inspector DOM contract / inspector preview integration / inspector contract / diff-comparison-ready execution chain
+Stage **125** delivered the diff surface **release-candidate** productization (**Snapshot changes** screen, **`125`** markers, **`diff-workspace--product-rc`**) while preserving **102–124** comparison/inspector truth; lightweight validation model continues with the next larger product-facing slice
 
 ## Progress
 
@@ -137,8 +137,11 @@ Current:
 - **Stage 9 closure chain:** `084–089` delivered; `091` closure/runtime stabilization completed; `092` fixture support added for offline verifier-shape validation; `093`, `095`, `096`, `097` closure-chain artifacts completed; `098` opens Stage 10 entry
 - **Validation operating model:** lightweight / artifact-first / fast-authoritative
 - **Legacy heavy validation paths:** retained as diagnostic-only until replaced by artifact-first acceptance flows
-- **Stage 10 runtime chain:** `098` entry bundle, `099` surface manifest, `100` readiness summary, `101` exploratory diff-readiness artifact, `102` diff comparison implementation-ready baseline, `103` preview fidelity, `104` diff change inspector contract, `105` inspector preview integration, `106` inspector DOM contract, `107` inspector default focus, `108` inspector focus summary, `109` focus-summary DOM contract, `110` focus-summary presence fields, `111` focus-summary state chips, `112` focus-summary state-chips DOM contract, `113` focus-summary source link, `114` focus-summary source-link DOM fields, `115` focus-summary source-link chips, `116` focus-summary source-link chips DOM contract, `117` focus-summary source-link hint, `118` focus-summary source-link hint DOM contract, `119` focus-summary source-link hint badge, `120` focus-summary source-link hint badge DOM contract, `121` focus-summary source-link hint badge readable copy, `122` focus-summary source-link hint badge copy DOM contract, `123` focus-summary source-link hint copy cleanup
-- **Current execution anchor:** open on **AI Task 123** focus-summary source-link hint copy-cleanup baseline; next numbered AI task must continue Stage 10 under the lightweight validation model from this runtime/UI baseline instead of reopening generic transition wrappers
+- **Stage 10 runtime chain:** `098` entry bundle, `099` surface manifest, `100` readiness summary, `101` exploratory diff-readiness artifact, `102` diff comparison implementation-ready baseline, `103` preview fidelity, `104` diff change inspector contract, `105` inspector preview integration, `106` inspector DOM contract, `107` inspector default focus, `108` inspector focus summary, `109` focus-summary DOM contract, `110` focus-summary presence fields, `111` focus-summary state chips, `112` focus-summary state-chips DOM contract, `113` focus-summary source link, `114` focus-summary source-link DOM fields, `115` focus-summary source-link chips, `116` focus-summary source-link chips DOM contract, `117` focus-summary source-link hint, `118` focus-summary source-link hint DOM contract, `119` focus-summary source-link hint badge, `120` focus-summary source-link hint badge DOM contract, `121` focus-summary source-link hint badge readable copy, `122` focus-summary source-link hint badge copy DOM contract, `123` focus-summary source-link hint copy cleanup, `124` focus-summary source-link hint copy cleanup DOM contract, `125` diff surface productization release candidate (**`verify_stage10_diff_surface_productization_release_candidate.sh`**, fast **125** check in readiness when **`comparison_ready`**)
+- **Current execution anchor:** open on **AI Task 125** diff-surface productization RC baseline (**102–124** truth preserved)
+- **Execution strategy update:** next numbered AI tasks must continue Stage 10 under the lightweight validation model with larger product-facing slices from this baseline instead of reopening the same small diff fragment or adding new generic transition wrappers
+- **Preferred next-track shape:** screen/workspace productization, UI cleanup, clearer product copy, and release-candidate readiness passes with one visible outcome per task
+- **Command policy:** both `дай следующую AI task` and `давай следующую аи таск` must produce the same kind of larger product-facing next task from this baseline
 
 Next (production UI, architecture-first):
 - **080** — Apply **approved visual system + shell** to bootstrap/preview surfaces (tokens, layout chrome, nav parity with IA); validate vs `task074` + `task076` exports; **no** JSON field semantic changes without a dedicated contract task — **completed**
@@ -172,6 +175,20 @@ If a future task would require:
 - or benchmark execution inside ordinary closure evidence,
 
 then that task must first create or reuse an artifact-first validation path and reduce total validation complexity rather than increasing it.
+
+## Delivery Strategy Constraint
+
+No future functional AI task should default to a fine-grained micro-step when a broader bounded task can safely deliver a clearer user-visible result.
+
+Planning must prefer:
+- one task per visible surface-level improvement
+- one task per coherent user-facing scenario
+- broader cleanup/productization passes once the surface already works technically
+
+Microtasks remain allowed only when:
+- a contract boundary would otherwise become unsafe
+- a high-risk dependency must be isolated
+- a failure must be localized before a larger product-facing pass can proceed
 
 ## Post-Figma validation discipline (all slices 080+)
 - **Contract-first:** extend or reuse existing `code/ui` read-only scripts only through **new numbered tasks**; each slice lists exact shell commands for JSON contract checks

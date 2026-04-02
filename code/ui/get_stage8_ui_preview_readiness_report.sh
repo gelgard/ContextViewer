@@ -25,6 +25,10 @@
 # AI Task 119: fast delivery checks focus-summary source-link hint badge (119) when focus-summary is present.
 # AI Task 120: fast delivery checks focus-summary source-link hint badge DOM contract (120) when focus-summary is present.
 # AI Task 121: fast delivery checks focus-summary source-link hint badge readable copy (121) when focus-summary is present.
+# AI Task 122: fast delivery checks focus-summary source-link hint badge copy DOM contract (122) when focus-summary is present.
+# AI Task 123: fast delivery checks focus-summary source-link hint copy cleanup (123) when focus-summary is present.
+# AI Task 124: fast delivery checks focus-summary source-link hint copy cleanup DOM contract (124) when focus-summary is present.
+# AI Task 125: fast delivery checks diff-surface productization marker (125) when comparison_ready.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -317,14 +321,20 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
+    fi
+    if grep -q 'data-section="diff"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
       prepare_json="$(run_capture_strict bash "$PREPARE" --project-id "$project_id" --output-dir "$output_dir" --invalid-project-id "$invalid_id")" || exit "$?"
     else
-    prepare_json="$(build_prepare_json_fast_from_artifact "$fast_artifact")"
+      prepare_json="$(build_prepare_json_fast_from_artifact "$fast_artifact")"
     fi
     if [[ -f "$DIFF_CONTRACT" && -x "$DIFF_CONTRACT" ]]; then
       set +e
@@ -708,7 +718,9 @@ else
     if [[ "$prep_cmp" == "true" ]]; then
       if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
         if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"' "$output_file_fast" 2>/dev/null \
           && grep -q 'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_value"' "$output_file_fast" 2>/dev/null \
           && grep -q 'diff-inspector-focus-summary-source-hint' "$output_file_fast" 2>/dev/null \
           && grep -q 'Summary matches the highlighted change in the list' "$output_file_fast" 2>/dev/null; then
           add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "pass" "123 hint copy-cleanup present"
@@ -720,6 +732,30 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-value="' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup DOM contract (124)" "pass" "124 hint copy-cleanup DOM contract present"
+        else
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup DOM contract (124)" "fail" "regenerate preview for Task 124 hint copy-cleanup DOM contract"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup DOM contract (124)" "pass" "skipped (no focus-summary block)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup DOM contract (124)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-surface-productization="125"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'diff-workspace--product-rc' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: diff surface productization (125)" "pass" "Task 125 markers present"
+      else
+        add_fast_check "delivery-fast: diff surface productization (125)" "fail" "regenerate preview for Task 125 diff surface RC markers"
+      fi
+    else
+      add_fast_check "delivery-fast: diff surface productization (125)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'
