@@ -27,6 +27,7 @@
 # AI Task 126: settings surface RC — data-cv-settings-surface-productization="126", settings-workspace--product-rc, product copy (087 truth preserved).
 # AI Task 127: shell/navigation RC — data-cv-shell-navigation-productization="127", cv-app-shell--product-rc; section ids and data-section unchanged.
 # AI Task 128: overview surface RC — data-cv-overview-surface-productization="128", overview-surface--product-rc; dashboard feed truth unchanged (081).
+# AI Task 129: visualization surface RC — data-cv-visualization-surface-productization="129", viz-workspace--product-rc; Stage 6 bundle field truth unchanged (082).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -107,6 +108,8 @@ Task 125 productizes the full diff workspace for release-candidate preview: data
   diff-workspace--product-rc, clearer headings/copy and hierarchy; preserves 102–124 comparison + inspector truth and hooks.
 Task 128 productizes the overview surface: data-cv-overview-surface-productization="128", overview-surface--product-rc,
   landing-style hero and calmer section copy; values still come only from the dashboard feed (081).
+Task 129 productizes the visualization workspace: data-cv-visualization-surface-productization="129", viz-workspace--product-rc,
+  architecture-explorer framing; tree, graph, and first-row inspector remain feed-backed only (082).
 USAGE
 }
 
@@ -542,8 +545,8 @@ else:
 parts.append("</section>")
 
 parts.append(
-    '<p class="overview-deep-hint muted">Architecture tree, graph, and inspector: '
-    "open <strong>Architecture</strong> in the sidebar. Snapshot history: "
+    '<p class="overview-deep-hint muted">Structure, graph, and detail panels: '
+    "open <strong>Architecture explorer</strong> in the sidebar. Snapshot history: "
     "<strong>Timeline</strong>. What changed between exports: "
     "<strong>Snapshot changes</strong>.</p>"
 )
@@ -610,61 +613,80 @@ snap_tree = tree_feed.get("snapshot_id")
 snap_graph = graph_feed.get("snapshot_id")
 
 parts = []
+parts.append('<div class="viz-workspace">')
 parts.append(
-    '<div class="viz-workspace" role="region" aria-label="Visualization workspace from bootstrap feed">'
+    '<div class="viz-workspace--product-rc" role="region" '
+    'aria-label="Architecture explorer" data-cv-visualization-surface-productization="129">'
 )
-parts.append('<header class="viz-workspace-header">')
+parts.append('<header class="viz-product-hero">')
+parts.append('<h1 class="viz-product-title">Architecture explorer</h1>')
 parts.append(
-    '<p class="viz-kicker">Deep workspace · visualization bundle <time datetime="'
+    '<p class="viz-product-lead">Move from folder structure to relationship map to focused detail—all from your '
+    "latest visualization bundle, with no extra interpretation layered on top.</p>"
+)
+parts.append(
+    '<p class="viz-product-updated muted">Bundle updated <time datetime="'
     + esc_attr(ws_gen)
     + '">'
     + esc(ws_gen)
     + "</time></p>"
 )
+parts.append("</header>")
+parts.append('<div class="viz-workspace-summary">')
 parts.append('<div class="viz-meta-strip">')
 parts.append(
-    '<span class="viz-meta-chip mono">tree snapshot <strong>'
+    '<span class="viz-meta-chip mono">Structure snapshot <strong>'
     + esc(snap_tree)
     + "</strong></span>"
 )
 parts.append(
-    '<span class="viz-meta-chip mono">graph snapshot <strong>'
+    '<span class="viz-meta-chip mono">Graph snapshot <strong>'
     + esc(snap_graph)
     + "</strong></span>"
 )
 parts.append(
-    '<span class="viz-meta-chip mono">tree rows <strong>'
+    '<span class="viz-meta-chip mono">Structure rows <strong>'
     + esc(str(len(tree_rows)))
     + "</strong></span>"
 )
 parts.append(
-    '<span class="viz-meta-chip mono">nodes <strong>'
+    '<span class="viz-meta-chip mono">Nodes <strong>'
     + esc(str(len(nodes)))
     + "</strong></span>"
 )
 parts.append(
-    '<span class="viz-meta-chip mono">edges <strong>'
+    '<span class="viz-meta-chip mono">Links <strong>'
     + esc(str(len(edges)))
     + "</strong></span>"
 )
 parts.append("</div>")
+_cc_labels = {
+    "project_id_match": "Project alignment",
+    "snapshot_id_match": "Structure & graph snapshots",
+    "all_smokes_pass": "Bundle checks",
+}
 parts.append('<dl class="viz-consistency-dl mono muted">')
 for _k in ("project_id_match", "snapshot_id_match", "all_smokes_pass"):
     _v = cc_ws.get(_k)
-    parts.append("<dt>" + esc(_k) + "</dt><dd>" + esc(_v) + "</dd>")
+    _lbl = _cc_labels.get(_k, _k)
+    parts.append("<dt>" + esc(_lbl) + "</dt><dd>" + esc(_v) + "</dd>")
 parts.append("</dl>")
-parts.append("</header>")
+parts.append("</div>")
+parts.append(
+    '<p class="viz-flow-hint muted">Suggested flow: start with <strong>Project structure</strong>, scan '
+    "<strong>Relationships</strong>, then read <strong>Details</strong> for the first row.</p>"
+)
 
 parts.append('<div class="viz-unified-grid">')
 
 parts.append(
     '<section class="viz-panel viz-tree-panel" aria-labelledby="viz-tree-h">'
 )
-parts.append('<h3 id="viz-tree-h" class="viz-panel-title">Architecture tree</h3>')
+parts.append('<h3 id="viz-tree-h" class="viz-panel-title">Project structure</h3>')
 parts.append(
-    '<p class="viz-panel-sub muted mono">Paths from feed · snapshot '
+    '<p class="viz-panel-sub muted mono">Snapshot '
     + esc(snap_tree)
-    + "</p>"
+    + " · paths from the architecture tree feed.</p>"
 )
 parts.append('<div class="viz-tree-scroll"><ul class="viz-tree-list">')
 cap_t = 400
@@ -701,23 +723,23 @@ if len(tree_rows) > cap_t:
         + " more</li>"
     )
 if not tree_rows:
-    parts.append('<li class="muted">No tree rows in feed.</li>')
+    parts.append('<li class="muted">No structure rows in this bundle yet.</li>')
 parts.append("</ul></div></section>")
 
 parts.append(
     '<section class="viz-panel viz-graph-panel" aria-labelledby="viz-graph-h">'
 )
-parts.append('<h3 id="viz-graph-h" class="viz-panel-title">Architecture graph</h3>')
+parts.append('<h3 id="viz-graph-h" class="viz-panel-title">Relationships</h3>')
 parts.append(
-    '<p class="viz-panel-sub muted mono">Nodes and edges · snapshot '
+    '<p class="viz-panel-sub muted mono">Snapshot '
     + esc(snap_graph)
-    + "</p>"
+    + " · nodes and links from the architecture graph feed.</p>"
 )
 parts.append('<div class="viz-graph-scroll">')
 parts.append('<h4 class="viz-table-h">Nodes</h4>')
 parts.append(
     '<table class="viz-data-table"><thead><tr>'
-    "<th scope=\"col\">id</th><th scope=\"col\">label</th><th scope=\"col\">type</th>"
+    "<th scope=\"col\">Id</th><th scope=\"col\">Label</th><th scope=\"col\">Type</th>"
     "</tr></thead><tbody>"
 )
 cap_n = 56
@@ -748,13 +770,13 @@ if len(nodes) > cap_n:
         + " nodes</p>"
     )
 if not nodes:
-    parts.append('<p class="muted">No graph nodes in feed.</p>')
+    parts.append('<p class="muted">No nodes in this graph yet.</p>')
 
-parts.append('<h4 class="viz-table-h">Edges</h4>')
+parts.append('<h4 class="viz-table-h">Links</h4>')
 parts.append(
     '<table class="viz-data-table"><thead><tr>'
-    "<th scope=\"col\">source</th><th scope=\"col\">target</th>"
-    "<th scope=\"col\">relation</th></tr></thead><tbody>"
+    "<th scope=\"col\">From</th><th scope=\"col\">To</th>"
+    "<th scope=\"col\">Relation</th></tr></thead><tbody>"
 )
 cap_e = 72
 for e in edges[:cap_e]:
@@ -784,15 +806,15 @@ if len(edges) > cap_e:
         + " edges</p>"
     )
 if not edges:
-    parts.append('<p class="muted">No graph edges in feed.</p>')
+    parts.append('<p class="muted">No links in this graph yet.</p>')
 parts.append("</div></section>")
 
 parts.append(
     '<aside class="viz-panel viz-inspector-panel" aria-labelledby="viz-insp-h">'
 )
-parts.append('<h3 id="viz-insp-h" class="viz-panel-title">Inspector</h3>')
+parts.append('<h3 id="viz-insp-h" class="viz-panel-title">Details</h3>')
 parts.append(
-    '<p class="viz-panel-sub muted">Readout for first tree row (preview)</p>'
+    '<p class="viz-panel-sub muted">Preview readout for the first row in the structure list.</p>'
 )
 if tree_rows and isinstance(tree_rows[0], dict):
     r0 = tree_rows[0]
@@ -810,11 +832,11 @@ if tree_rows and isinstance(tree_rows[0], dict):
         parts.append(
             '<p class="viz-insp-foot muted mono">'
             + esc(str(len(tree_rows) - 1))
-            + " more rows in tree list.</p>"
+            + " more rows in the structure list.</p>"
         )
 else:
     parts.append(
-        '<p class="viz-inspector-empty muted">No tree rows — inspector empty.</p>'
+        '<p class="viz-inspector-empty muted">No structure rows — details are empty.</p>'
     )
 parts.append("</aside>")
 
@@ -1085,8 +1107,8 @@ if not tl_rows:
 parts.append("</section>")
 parts.append("</div>")
 parts.append(
-    '<p class="hist-cross-hint muted">Overview and Visualization remain the entry and '
-    "deep-architecture surfaces — this block is contract-backed history only.</p>"
+    '<p class="hist-cross-hint muted">Project home and Architecture explorer remain the entry and '
+    "deep-work surfaces — this block is contract-backed history only.</p>"
 )
 parts.append("</div>")
 print("".join(parts), end="")
@@ -2136,11 +2158,56 @@ tmp_html="$(mktemp)"
     background: color-mix(in srgb, var(--cv-primary) 6%, var(--cv-surface-low));
   }
   /* AI Task 082 — unified visualization workspace (tree | graph | inspector) */
+  /* AI Task 129 — release-candidate visualization frame (082 field truth unchanged) */
   .workspace-panel-viz { padding-bottom: var(--cv-space-8); }
   .viz-workspace {
     display: flex;
     flex-direction: column;
     gap: var(--cv-space-4);
+  }
+  .viz-workspace--product-rc {
+    gap: var(--cv-space-5);
+  }
+  .viz-product-hero {
+    padding: var(--cv-space-6) var(--cv-space-6);
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--cv-primary) 10%, var(--cv-surface-lowest)) 0%,
+      var(--cv-surface-low) 100%
+    );
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .viz-product-title {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 1.5rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.03em;
+    color: var(--cv-on-surface);
+    line-height: 1.2;
+  }
+  .viz-product-lead {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--cv-on-surface);
+    max-width: 44rem;
+  }
+  .viz-product-updated {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+  .viz-workspace-summary {
+    padding: var(--cv-space-3) var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .viz-flow-hint {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
   .viz-workspace-header {
     padding: var(--cv-space-3) var(--cv-space-4);
@@ -3002,7 +3069,7 @@ tmp_html="$(mktemp)"
       <nav class="workspace-nav" aria-label="Skip to a section">
         <span class="nav-label">Jump to</span>
         <a class="nav-item" href="#cv-section-overview">Project home</a>
-        <a class="nav-item" href="#cv-section-visualization">Architecture</a>
+        <a class="nav-item" href="#cv-section-visualization">Architecture explorer</a>
         <a class="nav-item" href="#cv-section-history">Timeline</a>
         <a class="nav-item" href="#cv-section-diff">Snapshot changes</a>
         <a class="nav-item" href="#cv-section-settings">Project &amp; integration</a>
@@ -3015,7 +3082,7 @@ tmp_html="$(mktemp)"
 $(printf '%s' "$overview_inner")
         </section>
         <section id="cv-section-visualization" data-section="visualization" class="workspace-panel workspace-panel-viz">
-          <h2>Visualization workspace</h2>
+          <h2>Architecture explorer</h2>
 $(printf '%s' "$viz_inner")
         </section>
         <section id="cv-section-history" data-section="history" class="workspace-panel workspace-panel-hist">

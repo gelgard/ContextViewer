@@ -26,7 +26,27 @@ This means:
 Stage 10 — Execution Entry → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 122** (focus-summary source-link hint badge copy DOM contract above the Stage 10 comparison-ready diff execution chain).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 128**. The current release-candidate productization track has already upgraded:
+- diff surface (`125`)
+- settings/profile surface (`126`)
+- shared shell/navigation (`127`)
+- overview / Project home surface (`128`)
+
+The next tasks should continue this same strategy with larger product-facing slices instead of returning to fine-grained fragment work.
+
+## Stage 10 Release-Candidate Track
+
+Current Stage 10 strategy is now:
+- preserve existing feed/contract truth
+- improve one full user-visible surface per task
+- reduce engineering-looking copy and preview scaffolding
+- move the application toward a coherent release-candidate view before doing smaller follow-up polish
+
+Completed larger slices in this track:
+- `125` — diff surface productization
+- `126` — settings/profile surface productization
+- `127` — shell and navigation productization
+- `128` — overview / Project home productization
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 

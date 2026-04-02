@@ -99,7 +99,7 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Task 128 completed — overview / **Project home** productization (RC preview): **`data-cv-overview-surface-productization="128"`**, **`overview-surface--product-rc`**, landing hero + calmer overview copy; **`data-section="overview"`** and dashboard-feed truth unchanged (**081**); verifier **`verify_stage10_overview_surface_productization_release_candidate.sh`**; fast readiness check **128** when overview is present
+- Substage: Task 129 completed — **Architecture explorer** / visualization productization (RC preview): **`data-cv-visualization-surface-productization="129"`**, **`viz-workspace--product-rc`**, **`viz-product-hero`**; **`data-section="visualization"`** and **082** tree/graph/first-row inspector truth unchanged; verifier **`verify_stage10_visualization_surface_productization_release_candidate.sh`**; fast readiness check **129** when visualization is present
 
 Next required action:
 → define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** export metadata only)
