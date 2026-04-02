@@ -94,14 +94,14 @@ Primary user outcomes:
 ## Stage Coverage Map
 | Requirement ID | Stage | Implementing AI Tasks | Current Coverage |
 |---|---|---|---|
-| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128** | implemented |
+| PG-RT-001, PG-RT-002 | Stage 2-4 + Stage 9-10 | 004-023; **084**, **086**; **089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128**, **129**, **130** | implemented |
 | PG-OV-001 | Stage 4-5 + Stage 10 RC UI | 018-029; **127**, **128** | implemented |
 | PG-PL-001 | Stage 4-5 + Stage 8 UI | 018-029 (feeds); **080–083** (preview/UI plan blocks vs JSON) | implemented |
-| PG-AR-001, PG-AR-002 | Stage 6 | 030-046 | implemented |
-| PG-HI-001 | Stage 7-8 | 047, 049, 051, 052, **083** | implemented |
-| PG-HI-002 | Stage 7-8 | 048-052, **083** | implemented |
-| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128** | implemented |
-| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128** | implemented |
+| PG-AR-001, PG-AR-002 | Stage 6 + Stage 10 RC UI | 030-046; **125**, **129** | implemented |
+| PG-HI-001 | Stage 7-8 + Stage 10 RC UI | 047, 049, 051, 052, **083**, **130** | implemented |
+| PG-HI-002 | Stage 7-8 + Stage 10 RC UI | 048-052, **083**, **130** | implemented |
+| PG-UX-001 | Stage 6-10 | 036-083 (062-079 design-sync complete incl. **079** plan refinement; **080-083** production UI slices; 067-072 legacy superseded); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128**, **129**, **130** | implemented |
+| PG-EX-001 | Stage 2-10 | 001-083 (062-079 design branch; 080-083 production UI; 067-072 legacy superseded placeholders); **084-089**, **095**, **096**, **097**, **098**, **099**, **100**, **101**, **102**, **103**, **104**, **105**, **106**, **107**, **108**, **109**, **110**, **111**, **112**, **113**, **114**, **115**, **116**, **117**, **118**, **119**, **120**, **121**, **122**, **123**, **124**, **125**, **126**, **127**, **128**, **129**, **130** | implemented |
 
 ## AI Task Alignment Protocol (Mandatory)
 For every new AI task:
@@ -176,6 +176,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 127` is completed: Stage 10 shell and navigation productization (release candidate) applies **`127`** + **`cv-app-shell--product-rc`** on the shared preview frame while preserving **`080`**, all **`data-section`** roots, section **`id`s**, and embedded payload behavior.
 - `AI Task 128` is completed: Stage 10 overview / **Project home** productization (release candidate) applies **`data-cv-overview-surface-productization="128"`** + **`overview-surface--product-rc`** + **`overview-product-hero`** on the feed-backed overview HTML while preserving **`data-section="overview"`**, **`cv-section-overview`**, and **081** field truth (status, progress, roadmap, timeline) from the dashboard bundle only.
 - `AI Task 129` is completed: Stage 10 **Architecture explorer** / visualization productization (release candidate) applies **`data-cv-visualization-surface-productization="129"`** + **`viz-workspace--product-rc`** + **`viz-product-hero`** on the unified visualization HTML while preserving **`data-section="visualization"`**, **`cv-section-visualization`**, and **082** tree list, graph nodes/edges, and first-row inspector readout from the visualization workspace bundle only.
+- `AI Task 130` is completed: Stage 10 **Activity & imports** / history productization (release candidate) applies **`data-cv-history-surface-productization="130"`** + **`history-workspace--product-rc`** + **`hist-product-hero`** on the history workspace HTML while retaining **`data-cv-history-surface="083"`**, **`data-section="history"`**, **`cv-section-history`**, and **083** daily rollup + timeline row bindings from the history workspace bundle only.
 - Requirement mapping for **125** (complete):
   - `PG-UX-001`
   - `PG-EX-001`
@@ -202,6 +203,13 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - Requirement mapping for **129** (complete):
   - `PG-AR-001`
   - `PG-AR-002`
+  - `PG-UX-001`
+  - `PG-EX-001`
+  - `PG-RT-001`
+  - `PG-RT-002`
+- Requirement mapping for **130** (complete):
+  - `PG-HI-001`
+  - `PG-HI-002`
   - `PG-UX-001`
   - `PG-EX-001`
   - `PG-RT-001`
@@ -290,7 +298,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
 - Current Stage 10 execution-entry authority is `AI Task 098`.
-- Current Stage 10 execution anchor is `AI Task 129`.
+- Current Stage 10 execution anchor is `AI Task 130`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks

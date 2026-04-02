@@ -26,11 +26,12 @@ This means:
 Stage 10 — Execution Entry → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 128**. The current release-candidate productization track has already upgraded:
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 129**. The current release-candidate productization track has already upgraded:
 - diff surface (`125`)
 - settings/profile surface (`126`)
 - shared shell/navigation (`127`)
 - overview / Project home surface (`128`)
+- visualization / Architecture explorer surface (`129`)
 
 The next tasks should continue this same strategy with larger product-facing slices instead of returning to fine-grained fragment work.
 
@@ -47,6 +48,7 @@ Completed larger slices in this track:
 - `126` — settings/profile surface productization
 - `127` — shell and navigation productization
 - `128` — overview / Project home productization
+- `129` — visualization / Architecture explorer productization
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 
@@ -146,7 +148,7 @@ Completed larger slices in this track:
 - screen result validation
 - Stage 8C — Figma-synced implementation refinement
   - **completed (design authority locked):** Figma import and architecture sync (**078**); post-Figma implementation plan refinement (**079**)
-  - **active runtime continuation:** Stage 10 execution proceeds above **AI Task 122** using the comparison-ready diff preview baseline while preserving **061** checkpoint and JSON contracts
+  - **active runtime continuation:** Stage 10 execution proceeds above **AI Task 129** using the release-candidate productization baseline while preserving **061** checkpoint and JSON contracts
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

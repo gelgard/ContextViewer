@@ -28,6 +28,7 @@
 # AI Task 127: shell/navigation RC — data-cv-shell-navigation-productization="127", cv-app-shell--product-rc; section ids and data-section unchanged.
 # AI Task 128: overview surface RC — data-cv-overview-surface-productization="128", overview-surface--product-rc; dashboard feed truth unchanged (081).
 # AI Task 129: visualization surface RC — data-cv-visualization-surface-productization="129", viz-workspace--product-rc; Stage 6 bundle field truth unchanged (082).
+# AI Task 130: history surface RC — data-cv-history-surface-productization="130", history-workspace--product-rc; 083 baseline marker retained on root.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -110,6 +111,8 @@ Task 128 productizes the overview surface: data-cv-overview-surface-productizati
   landing-style hero and calmer section copy; values still come only from the dashboard feed (081).
 Task 129 productizes the visualization workspace: data-cv-visualization-surface-productization="129", viz-workspace--product-rc,
   architecture-explorer framing; tree, graph, and first-row inspector remain feed-backed only (082).
+Task 130 productizes the history workspace: data-cv-history-surface-productization="130", history-workspace--product-rc,
+  calmer activity/timeline framing; data-cv-history-surface="083" retained; daily rollup + timeline rows unchanged (083).
 USAGE
 }
 
@@ -546,8 +549,8 @@ parts.append("</section>")
 
 parts.append(
     '<p class="overview-deep-hint muted">Structure, graph, and detail panels: '
-    "open <strong>Architecture explorer</strong> in the sidebar. Snapshot history: "
-    "<strong>Timeline</strong>. What changed between exports: "
+    "open <strong>Architecture explorer</strong> in the sidebar. Import activity: "
+    "<strong>Activity &amp; imports</strong>. What changed between exports: "
     "<strong>Snapshot changes</strong>.</p>"
 )
 parts.append("</div>")
@@ -927,31 +930,40 @@ if not isinstance(phb_cc, dict):
     phb_cc = {}
 
 parts = []
+parts.append('<div class="history-workspace">')
 parts.append(
-    '<div class="history-workspace" role="region" data-cv-history-surface="083" '
-    'aria-label="History workspace from bootstrap feed">'
+    '<div class="history-workspace--product-rc" role="region" '
+    'data-cv-history-surface="083" data-cv-history-surface-productization="130" '
+    'aria-label="Activity and imports">'
 )
-parts.append('<header class="hist-workspace-header">')
+parts.append('<header class="hist-product-hero">')
+parts.append('<h1 class="hist-product-title">Activity &amp; imports</h1>')
 parts.append(
-    '<p class="hist-kicker">History workspace · bundle <time datetime="'
+    '<p class="hist-product-lead">See how snapshots group by day, then step through the import '
+    "timeline—all values still come straight from your history bundle, without reinterpretation.</p>"
+)
+parts.append(
+    '<p class="hist-product-updated muted">Bundle updated <time datetime="'
     + esc_attr(ws_gen)
     + '">'
     + esc(ws_gen)
     + "</time></p>"
 )
+parts.append("</header>")
+parts.append('<div class="hist-workspace-summary">')
 parts.append('<div class="hist-meta-strip">')
 parts.append(
-    '<span class="hist-meta-chip mono">days w/ activity <strong>'
+    '<span class="hist-meta-chip mono">Days with activity <strong>'
     + esc(daily_summary.get("days_with_activity"))
     + "</strong></span>"
 )
 parts.append(
-    '<span class="hist-meta-chip mono">valid snapshots (rollup) <strong>'
+    '<span class="hist-meta-chip mono">Snapshots in rollup <strong>'
     + esc(daily_summary.get("total_valid_snapshots"))
     + "</strong></span>"
 )
 parts.append(
-    '<span class="hist-meta-chip mono">timeline rows <strong>'
+    '<span class="hist-meta-chip mono">Timeline rows <strong>'
     + esc(tl_summary.get("total_returned"))
     + "</strong></span>"
 )
@@ -959,7 +971,7 @@ rf = tl_range.get("from") if isinstance(tl_range, dict) else None
 rt = tl_range.get("to") if isinstance(tl_range, dict) else None
 rlim = tl_range.get("limit") if isinstance(tl_range, dict) else None
 parts.append(
-    '<span class="hist-meta-chip mono">range <strong>'
+    '<span class="hist-meta-chip mono">Date range <strong>'
     + esc(rf)
     + " … "
     + esc(rt)
@@ -967,24 +979,37 @@ parts.append(
 )
 if rlim is not None:
     parts.append(
-        '<span class="hist-meta-chip mono">limit <strong>'
+        '<span class="hist-meta-chip mono">Row cap <strong>'
         + esc(rlim)
         + "</strong></span>"
     )
 parts.append("</div>")
 
+_ws_cc_labels = {
+    "project_id_match": "Project alignment",
+    "selected_bundle_match": "Bundle selection",
+    "history_smoke_pass": "Workspace checks",
+}
 parts.append('<div class="hist-consistency-grid">')
-parts.append('<div class="hist-cc-block"><h4 class="hist-cc-title">Workspace checks</h4><dl class="hist-cc-dl mono">')
+parts.append(
+    '<div class="hist-cc-block"><h4 class="hist-cc-title">History workspace</h4><dl class="hist-cc-dl mono">'
+)
 for _k in ("project_id_match", "selected_bundle_match", "history_smoke_pass"):
     parts.append(
         "<dt>"
-        + esc(_k)
+        + esc(_ws_cc_labels.get(_k, _k))
         + "</dt><dd>"
         + esc(cc_ws.get(_k))
         + "</dd>"
     )
 parts.append("</dl></div>")
-parts.append('<div class="hist-cc-block"><h4 class="hist-cc-title">Bundle checks</h4><dl class="hist-cc-dl mono">')
+_phb_cc_labels = {
+    "project_id_match": "Project alignment",
+    "range_match": "Date span",
+    "timeline_count_consistent": "Timeline count",
+    "latest_timestamp_aligned": "Latest snapshot time",
+}
+parts.append('<div class="hist-cc-block"><h4 class="hist-cc-title">History bundle</h4><dl class="hist-cc-dl mono">')
 for _k in (
     "project_id_match",
     "range_match",
@@ -994,29 +1019,33 @@ for _k in (
     if _k in phb_cc:
         parts.append(
             "<dt>"
-            + esc(_k)
+            + esc(_phb_cc_labels.get(_k, _k))
             + "</dt><dd>"
             + esc(phb_cc.get(_k))
             + "</dd>"
         )
 parts.append("</dl></div></div>")
-parts.append("</header>")
+parts.append("</div>")
+parts.append(
+    '<p class="hist-flow-hint muted">Suggested flow: review <strong>Activity by day</strong>, then open '
+    "<strong>Import timeline</strong> for each snapshot row.</p>"
+)
 
 parts.append('<div class="hist-main-split">')
 parts.append('<section class="hist-panel hist-daily-panel" aria-labelledby="hist-daily-h">')
-parts.append('<h3 id="hist-daily-h" class="hist-panel-title">Daily rollup</h3>')
+parts.append('<h3 id="hist-daily-h" class="hist-panel-title">Activity by day</h3>')
 parts.append(
-    '<p class="hist-panel-sub muted mono">UTC calendar days · latest snapshot in rollup: '
+    '<p class="hist-panel-sub muted mono">UTC calendar days from the rollup · latest snapshot: '
     + esc(daily_summary.get("latest_snapshot_timestamp"))
     + "</p>"
 )
 parts.append('<div class="hist-table-wrap">')
 parts.append(
     '<table class="hist-data-table"><thead><tr>'
-    "<th scope=\"col\">UTC day</th>"
-    "<th scope=\"col\">Snapshots</th>"
-    "<th scope=\"col\">Latest row time</th>"
-    "<th scope=\"col\">Snapshot ids (max 12)</th>"
+    "<th scope=\"col\">Day (UTC)</th>"
+    "<th scope=\"col\">Count</th>"
+    "<th scope=\"col\">Latest snapshot</th>"
+    "<th scope=\"col\">Snapshot IDs (up to 12)</th>"
     "</tr></thead><tbody>"
 )
 cap_d = 35
@@ -1049,15 +1078,15 @@ if len(daily_days) > cap_d:
         + " days</p>"
     )
 if not daily_days:
-    parts.append('<p class="muted">No daily rows in feed.</p>')
+    parts.append('<p class="muted">No daily rollup rows in this bundle yet.</p>')
 parts.append("</section>")
 
 parts.append('<section class="hist-panel hist-timeline-panel" aria-labelledby="hist-tl-h">')
-parts.append('<h3 id="hist-tl-h" class="hist-panel-title">Snapshot timeline</h3>')
+parts.append('<h3 id="hist-tl-h" class="hist-panel-title">Import timeline</h3>')
 parts.append(
-    '<p class="hist-panel-sub muted mono">Ordered rows · latest: '
+    '<p class="hist-panel-sub muted mono">Ordered imports · newest '
     + esc(tl_summary.get("latest_snapshot_timestamp"))
-    + " · oldest: "
+    + " · earliest "
     + esc(tl_summary.get("oldest_snapshot_timestamp"))
     + "</p>"
 )
@@ -1068,7 +1097,7 @@ parts.append(
     "<th scope=\"col\">Snapshot</th>"
     "<th scope=\"col\">File</th>"
     "<th scope=\"col\">Snapshot time</th>"
-    "<th scope=\"col\">Import</th>"
+    "<th scope=\"col\">Imported</th>"
     "</tr></thead><tbody>"
 )
 cap_tl = 45
@@ -1103,13 +1132,14 @@ if len(tl_rows) > cap_tl:
         + " rows</p>"
     )
 if not tl_rows:
-    parts.append('<p class="muted">No timeline rows in feed.</p>')
+    parts.append('<p class="muted">No timeline rows in this bundle yet.</p>')
 parts.append("</section>")
 parts.append("</div>")
 parts.append(
-    '<p class="hist-cross-hint muted">Project home and Architecture explorer remain the entry and '
-    "deep-work surfaces — this block is contract-backed history only.</p>"
+    '<p class="hist-cross-hint muted"><strong>Project home</strong> is for status and delivery progress; '
+    "<strong>Architecture explorer</strong> is for structure—this workspace is your chronological import trail.</p>"
 )
+parts.append("</div>")
 parts.append("</div>")
 print("".join(parts), end="")
 PYHIST
@@ -2372,11 +2402,57 @@ tmp_html="$(mktemp)"
   .viz-insp-foot { margin: var(--cv-space-3) 0 0; font-size: 0.6875rem; }
   .viz-inspector-empty { margin: 0; font-size: 0.8125rem; }
   /* AI Task 083 — history workspace (daily + timeline from feeds only) */
+  /* AI Task 130 — release-candidate history frame (083 markers + feed truth unchanged) */
   .workspace-panel-hist { padding-bottom: var(--cv-space-8); }
   .history-workspace {
     display: flex;
     flex-direction: column;
     gap: var(--cv-space-4);
+  }
+  .history-workspace--product-rc {
+    gap: var(--cv-space-5);
+  }
+  .hist-product-hero {
+    padding: var(--cv-space-6) var(--cv-space-6);
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--cv-tertiary) 14%, var(--cv-surface-lowest)) 0%,
+      var(--cv-surface-low) 100%
+    );
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .hist-product-title {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 1.5rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.03em;
+    color: var(--cv-on-surface);
+    line-height: 1.2;
+  }
+  .hist-product-lead {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--cv-on-surface);
+    max-width: 44rem;
+  }
+  .hist-product-updated {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+  .hist-workspace-summary {
+    padding: var(--cv-space-3) var(--cv-space-4);
+    background: var(--cv-surface-low);
+    border-radius: var(--cv-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+    border-left: 3px solid var(--cv-tertiary);
+  }
+  .hist-flow-hint {
+    margin: 0 0 var(--cv-space-2);
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
   .hist-workspace-header {
     padding: var(--cv-space-3) var(--cv-space-4);
@@ -3070,7 +3146,7 @@ tmp_html="$(mktemp)"
         <span class="nav-label">Jump to</span>
         <a class="nav-item" href="#cv-section-overview">Project home</a>
         <a class="nav-item" href="#cv-section-visualization">Architecture explorer</a>
-        <a class="nav-item" href="#cv-section-history">Timeline</a>
+        <a class="nav-item" href="#cv-section-history">Activity &amp; imports</a>
         <a class="nav-item" href="#cv-section-diff">Snapshot changes</a>
         <a class="nav-item" href="#cv-section-settings">Project &amp; integration</a>
       </nav>
@@ -3086,7 +3162,7 @@ $(printf '%s' "$overview_inner")
 $(printf '%s' "$viz_inner")
         </section>
         <section id="cv-section-history" data-section="history" class="workspace-panel workspace-panel-hist">
-          <h2>History workspace</h2>
+          <h2>Activity &amp; imports</h2>
 $(printf '%s' "$hist_inner")
         </section>
         <section id="cv-section-diff" data-section="diff" class="workspace-panel workspace-panel-diff">

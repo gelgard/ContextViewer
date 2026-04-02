@@ -33,6 +33,7 @@
 # AI Task 127: fast delivery checks shell/navigation productization marker (127) on body.
 # AI Task 128: fast delivery checks overview-surface productization marker (128) when overview section present.
 # AI Task 129: fast delivery checks visualization-surface productization marker (129) when visualization section present.
+# AI Task 130: fast delivery checks history-surface productization marker (130) when history section present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -330,7 +331,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-overview-surface-productization="128"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-visualization-surface-productization="129"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-visualization-surface-productization="129"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-history-surface-productization="130"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -352,6 +354,10 @@ if [[ "$mode" == "fast" ]]; then
     fi
     if grep -q 'data-section="visualization"' "$fast_artifact" 2>/dev/null \
       && ! grep -q 'data-cv-visualization-surface-productization="129"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
+    fi
+    if grep -q 'data-section="history"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-history-surface-productization="130"' "$fast_artifact" 2>/dev/null; then
       refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
@@ -465,8 +471,16 @@ else
     fi
     if grep -q 'data-section="history"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: history marker" "pass" 'found data-section="history"'
+      if grep -q 'data-cv-history-surface-productization="130"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'history-workspace--product-rc' "$output_file_fast" 2>/dev/null \
+        && grep -q 'data-cv-history-surface="083"' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: history surface productization (130)" "pass" "Task 130 markers present"
+      else
+        add_fast_check "delivery-fast: history surface productization (130)" "fail" "regenerate preview for Task 130 history RC markers"
+      fi
     else
       add_fast_check "delivery-fast: history marker" "fail" 'missing data-section="history"'
+      add_fast_check "delivery-fast: history surface productization (130)" "pass" "skipped (no history section)"
     fi
     if grep -q 'data-section="diff"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: diff marker" "pass" 'found data-section="diff"'
