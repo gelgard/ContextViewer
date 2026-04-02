@@ -99,7 +99,7 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Task 126 completed — settings/profile surface productization (RC preview): **Project & integration** workspace with **`126`** markers above **088/086** contract truth; verifier **`verify_stage10_settings_surface_productization_release_candidate.sh`**; fast readiness checks **126** when the settings section is present
+- Substage: Task 127 completed — shared shell/navigation productization (RC preview): **`data-cv-shell-navigation-productization="127"`** and **`cv-app-shell--product-rc`** on **`render_ui_bootstrap_preview`** with **080** + all section markers preserved; verifier **`verify_stage10_shell_navigation_productization_release_candidate.sh`**; fast readiness check **127** on body
 
 Next required action:
 → define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** export metadata only)

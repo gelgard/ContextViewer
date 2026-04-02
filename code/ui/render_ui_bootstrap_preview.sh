@@ -25,6 +25,7 @@
 # AI Task 121: readable source-link hint badge copy line (121) + badge-copy readable_text field inside badge strip.
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 # AI Task 126: settings surface RC — data-cv-settings-surface-productization="126", settings-workspace--product-rc, product copy (087 truth preserved).
+# AI Task 127: shell/navigation RC — data-cv-shell-navigation-productization="127", cv-app-shell--product-rc; section ids and data-section unchanged.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -531,8 +532,8 @@ parts.append("</section>")
 
 parts.append(
     '<p class="overview-deep-hint muted">Architecture tree, graph, and inspector: '
-    "use <strong>Visualization</strong> in the sidebar. Snapshot history: "
-    "<strong>History</strong>. What changed between exports: "
+    "open <strong>Architecture</strong> in the sidebar. Snapshot history: "
+    "<strong>Timeline</strong>. What changed between exports: "
     "<strong>Snapshot changes</strong>.</p>"
 )
 parts.append("</div>")
@@ -1781,6 +1782,27 @@ tmp_html="$(mktemp)"
     display: flex;
     flex-direction: column;
   }
+  /* AI Task 127 — release-candidate shell frame */
+  .cv-app-shell--product-rc .app-top-bar {
+    padding: var(--cv-space-4) var(--cv-space-6);
+  }
+  .cv-app-shell--product-rc .app-sidebar {
+    background: color-mix(in srgb, var(--cv-surface-low) 94%, var(--cv-surface-high));
+    box-shadow: inset -1px 0 0 color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
+  }
+  .cv-app-shell--product-rc .workspace-nav a.nav-item {
+    font-weight: 600;
+  }
+  .cv-app-shell--product-rc .app-main {
+    padding: var(--cv-space-6) var(--cv-space-8) var(--cv-space-8);
+  }
+  .cv-app-shell--product-rc footer.note {
+    text-transform: none;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    font-size: 0.75rem;
+    color: var(--cv-on-surface-variant);
+  }
   .app-top-bar {
     flex-shrink: 0;
     background: linear-gradient(145deg, var(--cv-primary) 0%, var(--cv-primary-dim) 100%);
@@ -2923,28 +2945,28 @@ tmp_html="$(mktemp)"
   }
 </style>
 </head>
-<body data-cv-preview-shell="080">
-<div class="cv-app-shell">
+<body data-cv-preview-shell="080" data-cv-shell-navigation-productization="127">
+<div class="cv-app-shell cv-app-shell--product-rc">
   <header class="app-top-bar" role="banner">
     <div class="app-top-bar-inner">
       <div class="product-lockup">
         <span class="product-name">ContextViewer</span>
         <h1 class="project-headline">$(printf '%s' "$proj_name" | html_escape)</h1>
       </div>
-      <div class="project-meta-chips" aria-label="Project metadata from bootstrap feed">
-        <span class="meta-chip">id <span class="val">${project_id}</span></span>
-        <span class="meta-chip">snapshots <span class="val">${proj_snapshots}</span></span>
-        <span class="meta-chip">latest <span class="val">$(printf '%s' "$proj_latest" | html_escape)</span></span>
+      <div class="project-meta-chips" aria-label="Summary for this project">
+        <span class="meta-chip">Project ID <span class="val">${project_id}</span></span>
+        <span class="meta-chip">Snapshots <span class="val">${proj_snapshots}</span></span>
+        <span class="meta-chip">Latest export <span class="val">$(printf '%s' "$proj_latest" | html_escape)</span></span>
       </div>
     </div>
   </header>
   <div class="app-body">
-    <aside class="app-sidebar" aria-label="Workspace navigation">
-      <nav class="workspace-nav">
-        <span class="nav-label">Workspace</span>
+    <aside class="app-sidebar" aria-label="Page sections">
+      <nav class="workspace-nav" aria-label="Skip to a section">
+        <span class="nav-label">Jump to</span>
         <a class="nav-item" href="#cv-section-overview">Overview</a>
-        <a class="nav-item" href="#cv-section-visualization">Visualization</a>
-        <a class="nav-item" href="#cv-section-history">History</a>
+        <a class="nav-item" href="#cv-section-visualization">Architecture</a>
+        <a class="nav-item" href="#cv-section-history">Timeline</a>
         <a class="nav-item" href="#cv-section-diff">Snapshot changes</a>
         <a class="nav-item" href="#cv-section-settings">Project &amp; integration</a>
       </nav>
@@ -2972,7 +2994,7 @@ $(printf '%s' "$diff_inner")
 $(printf '%s' "$settings_inner")
         </section>
         <section class="consistency-panel">
-          <h2>Bootstrap consistency</h2>
+          <h2>Snapshot alignment checks</h2>
           <ul class="consistency">
             <li class="$( [[ "$cc_project" == "true" ]] && echo ok || echo bad )">project_id_match: ${cc_project}</li>
             <li class="$( [[ "$cc_over" == "true" ]] && echo ok || echo bad )">overview_present: ${cc_over}</li>
@@ -2983,7 +3005,7 @@ $(printf '%s' "$settings_inner")
           </ul>
         </section>
       </div>
-      <footer class="note">Standalone preview — no network. Payload embedded for inspection.</footer>
+      <footer class="note">This page works offline. Your project data is embedded below.</footer>
     </main>
   </div>
 </div>

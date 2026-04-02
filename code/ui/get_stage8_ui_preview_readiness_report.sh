@@ -30,6 +30,7 @@
 # AI Task 124: fast delivery checks focus-summary source-link hint copy cleanup DOM contract (124) when focus-summary is present.
 # AI Task 125: fast delivery checks diff-surface productization marker (125) when comparison_ready.
 # AI Task 126: fast delivery checks settings-surface productization marker (126) when settings section present.
+# AI Task 127: fast delivery checks shell/navigation productization marker (127) on body.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -324,7 +325,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -334,6 +336,10 @@ if [[ "$mode" == "fast" ]]; then
     fi
     if grep -q 'data-section="settings"' "$fast_artifact" 2>/dev/null \
       && ! grep -q 'data-cv-settings-surface-productization="126"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
+    fi
+    if grep -q 'data-cv-preview-shell="080"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null; then
       refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
@@ -783,6 +789,16 @@ else
       add_fast_check "delivery-fast: shell marker" "pass" 'found data-cv-preview-shell="080"'
     else
       add_fast_check "delivery-fast: shell marker" "fail" 'missing data-cv-preview-shell="080"'
+    fi
+    if grep -q 'data-cv-preview-shell="080"' "$output_file_fast" 2>/dev/null; then
+      if grep -q 'data-cv-shell-navigation-productization="127"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'cv-app-shell--product-rc' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: shell and navigation productization (127)" "pass" "Task 127 markers present"
+      else
+        add_fast_check "delivery-fast: shell and navigation productization (127)" "fail" "regenerate preview for Task 127 shell RC markers"
+      fi
+    else
+      add_fast_check "delivery-fast: shell and navigation productization (127)" "pass" "skipped (no 080 shell marker)"
     fi
   else
     add_fast_check "delivery-fast: preview artifact exists" "fail" "output_file missing"
