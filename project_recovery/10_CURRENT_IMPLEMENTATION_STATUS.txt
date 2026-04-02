@@ -4,7 +4,7 @@ CURRENT STAGE:
 Stage 10 — Execution Entry
 
 CURRENT SUBSTAGE:
-Stage 10 **diff surface productization — release candidate** (AI Task 125) reworks the full **`data-section="diff"`** preview into a product-facing **Snapshot changes** screen: **`data-cv-diff-surface-productization="125"`**, **`diff-workspace--product-rc`**, clearer hierarchy and copy, less workbench/debug chrome; **102–104** comparison truth and **105–124** inspector/focus-summary **`data-cv-*`** hooks are preserved; gated by **`verify_stage10_diff_surface_productization_release_candidate.sh`** and Stage 8 fast check for **125** when **`comparison_ready`**; benchmark diagnostic-only; **`contextJSON/*`** external export metadata only (not preview authority)
+Stage 10 **settings/profile surface productization — release candidate** (AI Task 126) reworks the full **`data-section="settings"`** preview into a product-facing **Project & integration** screen: **`data-cv-settings-surface-productization="126"`**, **`settings-workspace--product-rc`**, clearer hierarchy and copy; **`data-cv-settings-surface="087"`** and contract-backed profile/read-only flags unchanged; gated by **`verify_stage10_settings_surface_productization_release_candidate.sh`** and Stage 8 fast check for **126** when the settings section is present; benchmark diagnostic-only; **`contextJSON/*`** external export metadata only (not preview authority)
 
 CURRENT EXECUTION STRATEGY:
 - The Task 105–124 diff focus-summary chain is treated as a completed fine-grained baseline.
@@ -155,6 +155,7 @@ STATUS:
 - AI Task 123 completed: **Inspector focus-summary source-link hint copy cleanup** — `123` + `cleaned_text` on the `117` hint line; `verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 124 completed: **Inspector focus-summary source-link hint copy cleanup DOM contract** — `124` + `cleaned_text`/`cleaned_value` on cleaned hint region; `verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup_dom_contract.sh` + Stage 8 fast delivery check when a focus-summary block exists; goals PG-AR-001 / PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 (declarative in verifier)
 - AI Task 125 completed: **Diff surface productization (release candidate)** — `verify_stage10_diff_surface_productization_release_candidate.sh` + Stage 8 fast **125** check when `comparison_ready`; `render_ui_bootstrap_preview` product-facing **Snapshot changes** surface with stable **125** marker; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002 / PG-AR-001
+- AI Task 126 completed: **Settings surface productization (release candidate)** — `verify_stage10_settings_surface_productization_release_candidate.sh` + Stage 8 fast **126** check; `render_ui_bootstrap_preview` product-facing **Project & integration** settings workspace; goals PG-UX-001 / PG-EX-001 / PG-RT-001 / PG-RT-002
 - Stage 9 validation policy updated:
   - `fast` is the authoritative acceptance gate
   - `full` is diagnostic/non-blocking when `fast` already passed in the same unchanged validation cycle
@@ -181,7 +182,7 @@ STATUS:
 - AI-task creation gate synchronized: next-task responses require physical `ai_tasks/NNN_*.md` creation
 
 NEXT ACTION:
-Stage 10 diff preview carries **102–124** comparison/inspector truth and **125** productized **Snapshot changes** surface (**`verify_stage10_diff_surface_productization_release_candidate.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
+Stage 10 preview carries **125** productized **Snapshot changes** and **126** productized **Project & integration** settings (**`verify_stage10_diff_surface_productization_release_candidate.sh`**, **`verify_stage10_settings_surface_productization_release_candidate.sh`**). Continue execution using **`get_stage10_diff_comparison_readiness_bundle.sh`** for focused diff-step readiness (**`diff_comparison_readiness_ready`**, blockers, excerpt-backed empty-state / comparison flags), **`get_stage10_execution_readiness_summary_bundle.sh`** for compact overall readiness, **`get_stage10_execution_surface_manifest.sh`** for per-surface detail, and **`get_stage10_execution_entry_bundle.sh`** for Stage 9 transition-primary entry evidence (`stage_transition_ready` → `stage10_entry_ready`), only under the lightweight validation model:
 - the next task must define one primary acceptance gate
 - any diagnostics must be separate and optional/non-blocking
 - no future task may deepen the validation stack

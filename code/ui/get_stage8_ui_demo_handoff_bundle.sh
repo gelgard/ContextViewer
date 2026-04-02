@@ -192,7 +192,7 @@ demo_steps_json="$(jq -n '
     "Confirm the visualization section is visible (data-section=\"visualization\").",
     "Confirm the history section is visible (data-section=\"history\").",
     "Confirm the Snapshot changes section is visible (data-section=\"diff\", class diff-workspace).",
-    "Confirm the settings/profile section is visible (data-section=\"settings\", class settings-workspace)."
+    "Confirm the Project & integration section is visible (data-section=\"settings\", class settings-workspace)."
   ]
 ')"
 

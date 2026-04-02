@@ -29,6 +29,7 @@
 # AI Task 123: fast delivery checks focus-summary source-link hint copy cleanup (123) when focus-summary is present.
 # AI Task 124: fast delivery checks focus-summary source-link hint copy cleanup DOM contract (124) when focus-summary is present.
 # AI Task 125: fast delivery checks diff-surface productization marker (125) when comparison_ready.
+# AI Task 126: fast delivery checks settings-surface productization marker (126) when settings section present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -329,6 +330,10 @@ if [[ "$mode" == "fast" ]]; then
     fi
     if grep -q 'data-section="diff"' "$fast_artifact" 2>/dev/null \
       && ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
+    fi
+    if grep -q 'data-section="settings"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-settings-surface-productization="126"' "$fast_artifact" 2>/dev/null; then
       refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
@@ -759,8 +764,15 @@ else
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'
+      if grep -q 'data-cv-settings-surface-productization="126"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'settings-workspace--product-rc' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: settings surface productization (126)" "pass" "Task 126 markers present"
+      else
+        add_fast_check "delivery-fast: settings surface productization (126)" "fail" "regenerate preview for Task 126 settings RC markers"
+      fi
     else
       add_fast_check "delivery-fast: settings marker" "fail" 'missing data-section="settings"'
+      add_fast_check "delivery-fast: settings surface productization (126)" "pass" "skipped (no settings section)"
     fi
     if grep -q 'id="ui-bootstrap-payload"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: payload marker" "pass" 'found id="ui-bootstrap-payload"'

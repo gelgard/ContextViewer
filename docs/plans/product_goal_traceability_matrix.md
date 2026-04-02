@@ -172,12 +172,18 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 123` is completed: Stage 10 focus-summary source-link hint copy cleanup adds `123` markers and `cleaned_text` on the 117 hint line while preserving 118 linked hooks above the 122 baseline.
 - `AI Task 124` is completed: Stage 10 focus-summary source-link hint copy cleanup DOM contract adds `124` markers plus `cleaned_text` / `cleaned_value` hooks above the 123 baseline.
 - `AI Task 125` is completed: Stage 10 diff surface productization (release candidate) reworks the full diff preview section into a product-facing **Snapshot changes** screen with `125` markers and `diff-workspace--product-rc`, preserving **102–124** comparison and inspector truth.
+- `AI Task 126` is completed: Stage 10 settings/profile surface productization (release candidate) reworks the **Project & integration** (`data-section="settings"`) preview with `126` markers and `settings-workspace--product-rc`, preserving **087** settings baseline and contract truth.
 - Requirement mapping for **125** (complete):
   - `PG-UX-001`
   - `PG-EX-001`
   - `PG-RT-001`
   - `PG-RT-002`
   - `PG-AR-001`
+- Requirement mapping for **126** (complete):
+  - `PG-UX-001`
+  - `PG-EX-001`
+  - `PG-RT-001`
+  - `PG-RT-002`
 - Requirement mapping for **091** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
@@ -262,7 +268,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
 - Current Stage 10 execution-entry authority is `AI Task 098`.
-- Current Stage 10 execution anchor is `AI Task 125`.
+- Current Stage 10 execution anchor is `AI Task 126`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks

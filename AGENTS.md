@@ -99,7 +99,7 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Task 125 completed — diff surface productization (release-candidate preview): full **Snapshot changes** workspace with **125** markers above the **102–124** comparison/inspector truth; verifier **`verify_stage10_diff_surface_productization_release_candidate.sh`**; fast readiness checks **125** when **`comparison_ready`**
+- Substage: Task 126 completed — settings/profile surface productization (RC preview): **Project & integration** workspace with **`126`** markers above **088/086** contract truth; verifier **`verify_stage10_settings_surface_productization_release_candidate.sh`**; fast readiness checks **126** when the settings section is present
 
 Next required action:
 → define and execute the next numbered AI task as the next larger product-facing slice (lightweight artifact-first validation; keep benchmarks diagnostic-only; **`contextJSON/*`** export metadata only)
