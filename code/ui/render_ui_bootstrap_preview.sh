@@ -96,6 +96,8 @@ Task 121 adds readable badge copy (data-cv-diff-inspector-focus-summary-source-l
   on aside, workspace, badge strip, copy line; data-cv-inspector-focus-summary-source-link-hint-badge-copy-field readable_text).
 Task 122 adds readable badge-copy DOM contract (data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"
   on aside, workspace, copy paragraph; readable_text + readable_value field spans derived from default-focused row).
+Task 123 cleans up source-link hint copy (data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"
+  on aside, workspace, hint paragraph; cleaned_text field span; preserves 117/118 linked_key/linked_index hooks).
 USAGE
 }
 
@@ -1165,6 +1167,7 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0" '
         'data-cv-inspector-focus-summary-key="' + esc_attr(str(fk0)) + '" '
@@ -1238,11 +1241,14 @@ def fmt_changed_inspector(rows, fallback_keys, cap, cic):
         '<p class="diff-inspector-focus-summary-source-hint mono muted" role="status" '
         'data-cv-diff-inspector-focus-summary-source-link-hint="117" '
         'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118" '
+        'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123" '
         'data-cv-inspector-focus-summary-source-link-hint-key="' + esc_attr(str(fk0)) + '" '
         'data-cv-inspector-focus-summary-source-link-hint-index="0">'
-        '<span class="muted">Linked to inspector row</span> '
+        '<span class="muted" data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text">'
+        + esc("Summary matches the highlighted change in the list.")
+        + '</span> '
         '<strong data-cv-inspector-focus-summary-source-link-hint-field="linked_index" data-cv-inspector-focus-summary-source-link-hint-linked-index="0">0</strong>'
-        ' <span class="muted">·</span> <span class="muted">key</span> '
+        ' <span class="muted">·</span> '
         '<span class="mono" data-cv-inspector-focus-summary-source-link-hint-field="linked_key" data-cv-inspector-focus-summary-source-link-hint-linked-key">'
         + esc(str(fk0))
         + "</span></p>"
@@ -1466,6 +1472,7 @@ if comp_bool:
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"'
             ' data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"'
+            ' data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"'
         )
 
 wr_class = "diff-workspace"

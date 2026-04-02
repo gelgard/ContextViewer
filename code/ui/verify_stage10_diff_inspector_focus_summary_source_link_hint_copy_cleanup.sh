@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AI Task 119: Stage 10 diff inspector focus-summary source-link hint badge verifier.
+# AI Task 123: Stage 10 diff inspector focus-summary source-link hint copy-cleanup verifier.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,9 +8,10 @@ INSPECTOR="${SCRIPT_DIR}/get_stage10_diff_change_inspector_contract.sh"
 
 usage() {
   cat <<'USAGE'
-verify_stage10_diff_inspector_focus_summary_source_link_hint_badge.sh — Stage 119 source-link hint badge
+verify_stage10_diff_inspector_focus_summary_source_link_hint_copy_cleanup.sh — Stage 123 source-link hint copy cleanup
 
-Validates the compact source-link hint badge inside the focus-summary vs default-focused row. No benchmark.
+Validates user-facing source-link hint copy and Task 123 DOM markers (cleaned_text) vs default-focused row.
+Preserves 117/118 linked field hooks. No benchmark.
 
 Prints exactly one JSON object:
   status, checks, failed_checks, generated_at
@@ -106,12 +107,7 @@ prep_json=""
 if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
-    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$html" 2>/dev/null; then
+    if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi
@@ -181,18 +177,23 @@ else
 fi
 
 if [[ ! -s "$html_tmp" ]]; then
-  add_check "html: workspace source-link hint badge (119)" "fail" "missing HTML preview artifact"
-  add_check "html: hint badge label/value vs default row" "fail" "missing HTML preview artifact"
+  add_check "html: hint copy-cleanup markers (123)" "fail" "missing HTML preview artifact"
+  add_check "html: cleaned hint copy + linked hooks vs default row" "fail" "missing HTML preview artifact"
 else
   if [[ "$effective_row_count" -eq 0 ]]; then
-    add_check "html: workspace source-link hint badge (119)" "pass" "skipped (zero changed-key inspector rows)"
-    add_check "html: hint badge label/value vs default row" "pass" "skipped (zero changed-key rows)"
+    add_check "html: hint copy-cleanup markers (123)" "pass" "skipped (zero changed-key inspector rows)"
+    add_check "html: cleaned hint copy + linked hooks vs default row" "pass" "skipped (zero changed-key rows)"
   else
-    if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$html_tmp" 2>/dev/null; then
-      add_check "html: workspace source-link hint badge (119)" "pass" \
-        'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"'
+    dc123="$(
+      grep -o 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$html_tmp" 2>/dev/null | wc -l | tr -d ' '
+    )"
+    if [[ "${dc123:-0}" -ge 3 ]] \
+      && grep -q 'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text"' "$html_tmp" \
+      && grep -q 'diff-inspector-focus-summary-source-hint' "$html_tmp"; then
+      add_check "html: hint copy-cleanup markers (123)" "pass" \
+        "123 on aside/workspace/hint + cleaned_text hook (${dc123}×)"
     else
-      add_check "html: workspace source-link hint badge (119)" "fail" "missing Task 119 source-link hint badge on workspace"
+      add_check "html: hint copy-cleanup markers (123)" "fail" "missing Task 123 markers or cleaned_text hook"
     fi
     py_c="$(
       python3 - "$html_tmp" "$insp_tmp" <<'PY'
@@ -200,6 +201,8 @@ import html
 import json
 import re
 import sys
+
+CLEANED = "Summary matches the highlighted change in the list."
 
 html_path, insp_path = sys.argv[1], sys.argv[2]
 with open(html_path, encoding="utf-8") as f:
@@ -233,49 +236,65 @@ else:
         sys.exit(0)
     key0 = html.unescape(mrow.group(1))
 
-badge_val = "0 · " + str(key0)
-val_attr = html.escape(badge_val, quote=True)
-val_visible = html.escape(badge_val, quote=False)
+key_attr = html.escape(str(key0), quote=True)
+key_visible = html.escape(str(key0) if key0 is not None else "None", quote=False)
+clean_esc = html.escape(CLEANED, quote=False)
 
-if not re.search(
-    r'<div class="diff-inspector-focus-summary-source-hint-badge[^"]*"[^>]*'
-    r'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"',
-    page,
-):
-    print("fail|missing 119 source-hint-badge container")
+if "Linked to inspector row" in page:
+    print("fail|stale diagnostic hint copy still present")
     sys.exit(0)
 
 if not re.search(
-    r'data-cv-inspector-focus-summary-source-link-hint-badge-label="Source link"',
+    r'<p class="diff-inspector-focus-summary-source-hint[^"]*"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint="117"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-dom-contract="118"[^>]*'
+    r'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"',
     page,
 ):
-    print("fail|hint-badge-label marker missing")
+    print("fail|missing 117+118+123 on source-hint paragraph")
     sys.exit(0)
 
 if not re.search(
-    r'data-cv-inspector-focus-summary-source-link-hint-badge-value="' + re.escape(val_attr) + r'"',
-    page,
-):
-    print("fail|hint-badge-value attr mismatch")
-    sys.exit(0)
-
-if not re.search(
-    r'<span class="diff-inspector-focus-summary-source-hint-badge-val mono"[^>]*'
-    r'data-cv-inspector-focus-summary-source-link-hint-badge-value="' + re.escape(val_attr) + r'"[^>]*>'
-    + re.escape(val_visible)
+    r'<span[^>]*data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text"[^>]*>'
+    + re.escape(clean_esc)
     + r"</span>",
     page,
 ):
-    print("fail|hint-badge-value visible text mismatch")
+    print("fail|missing cleaned_text span or copy mismatch")
+    sys.exit(0)
+
+if not re.search(
+    r'<strong[^>]*data-cv-inspector-focus-summary-source-link-hint-field="linked_index"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-linked-index="0"[^>]*>0</strong>',
+    page,
+):
+    print("fail|missing linked_index strong")
+    sys.exit(0)
+
+if not re.search(
+    r'<span class="mono"[^>]*data-cv-inspector-focus-summary-source-link-hint-field="linked_key"[^>]*'
+    r'data-cv-inspector-focus-summary-source-link-hint-linked-key"[^>]*>'
+    + re.escape(key_visible)
+    + r"</span>",
+    page,
+):
+    print("fail|missing linked_key span or key text mismatch")
+    sys.exit(0)
+
+if not re.search(
+    r'data-cv-inspector-focus-summary-source-link-hint-key="' + re.escape(key_attr) + r'"',
+    page,
+):
+    print("fail|source-link-hint-key attr mismatch")
     sys.exit(0)
 
 print("ok")
 PY
     )"
     if [[ "$py_c" == "ok" ]]; then
-      add_check "html: hint badge label/value vs default row" "pass" "119 badge matches default-focused row"
+      add_check "html: cleaned hint copy + linked hooks vs default row" "pass" "123 cleaned_text + 118 fields match default-focused row"
     else
-      add_check "html: hint badge label/value vs default row" "fail" "${py_c#fail|}"
+      add_check "html: cleaned hint copy + linked hooks vs default row" "fail" "${py_c#fail|}"
     fi
   fi
 fi

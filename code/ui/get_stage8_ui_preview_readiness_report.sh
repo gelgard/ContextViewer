@@ -316,7 +316,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge="119"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-dom-contract="120"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -703,6 +704,22 @@ else
       fi
     else
       add_fast_check "delivery-fast: diff inspector focus-summary source-link hint badge copy DOM contract (122)" "pass" "skipped (comparison_ready false)"
+    fi
+    if [[ "$prep_cmp" == "true" ]]; then
+      if grep -q 'data-cv-diff-inspector-focus-summary="108"' "$output_file_fast" 2>/dev/null; then
+        if grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'data-cv-inspector-focus-summary-source-link-hint-copy-cleanup-field="cleaned_text"' "$output_file_fast" 2>/dev/null \
+          && grep -q 'diff-inspector-focus-summary-source-hint' "$output_file_fast" 2>/dev/null \
+          && grep -q 'Summary matches the highlighted change in the list' "$output_file_fast" 2>/dev/null; then
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "pass" "123 hint copy-cleanup present"
+        else
+          add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "fail" "regenerate preview for Task 123 hint copy cleanup"
+        fi
+      else
+        add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "pass" "skipped (no focus-summary block)"
+      fi
+    else
+      add_fast_check "delivery-fast: diff inspector focus-summary source-link hint copy cleanup (123)" "pass" "skipped (comparison_ready false)"
     fi
     if grep -q 'data-section="settings"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: settings marker" "pass" 'found data-section="settings"'

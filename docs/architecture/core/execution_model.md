@@ -55,6 +55,28 @@ For command `дай следующую AI task`, this summary is a mandatory res
 4. `Manual Test (exact commands)`
 5. `What to send back for validation`
 
+## Validation File Boundary Rule
+
+Validation source files that live in the repository are permanent project assets.
+
+This includes:
+- `code/**/verify_*.sh`
+- readiness and report scripts
+- contract checkers
+- fixtures committed to the repo
+
+These files are maintained code, not temporary files.
+
+Temporary validation outputs are different.
+
+This includes:
+- `/tmp/*`
+- one-off logs
+- transient exported preview files
+- disposable JSON/text outputs created only for a single run
+
+Temporary validation outputs must be deleted after they serve their purpose unless a numbered AI task explicitly preserves them as durable evidence.
+
 ### Full restore
 Mandatory when triggered.
 

@@ -26,7 +26,7 @@ This means:
 Stage 10 — Execution Entry → active
 
 ## Current Focus
-**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 119** (focus-summary source-link hint badge above the Stage 10 comparison-ready diff execution chain).
+**Preserved baseline:** validated JSON-driven **preview / demo handoff** through **AI Task 061** (unchanged implementation floor). **Design authority:** `docs/design/approved_figma_artifact.md` + **`docs/design/artifacts/task076/`**. **Runtime truth** remains latest **contextJSON** + JSON/API **contracts**. Stage 8 core/product surfaces (`080–083`) are complete. Stage 9 secondary-flow chain is closed and Stage 10 is active. **Current execution anchor:** **AI Task 122** (focus-summary source-link hint badge copy DOM contract above the Stage 10 comparison-ready diff execution chain).
 
 ## Post-Figma roadmap (production UI — Tasks 080–083)
 
@@ -126,7 +126,7 @@ Stage 10 — Execution Entry → active
 - screen result validation
 - Stage 8C — Figma-synced implementation refinement
   - **completed (design authority locked):** Figma import and architecture sync (**078**); post-Figma implementation plan refinement (**079**)
-  - **active/upcoming:** production UI slice **083** (see §Post-Figma roadmap above) — continue applying approved design to preview/product surfaces while preserving **061** checkpoint and JSON contracts
+  - **active runtime continuation:** Stage 10 execution proceeds above **AI Task 122** using the comparison-ready diff preview baseline while preserving **061** checkpoint and JSON contracts
 
 ## Process Gate
 Implementation remains locked to numbered AI tasks with executable verification steps.

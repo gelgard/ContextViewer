@@ -18,6 +18,12 @@ ARCHITECTURE RULES
 10a. `contextJSON/json_<timestamp>.json` must never define project architecture, planning policy, testing policy, execution policy, or development methodology.
 10b. Validation JSON artifacts are a separate class of machine-readable outputs and must not be conflated with `contextJSON` exports.
 10c. Higher-level validation may consume validation artifacts as execution evidence, but may not treat `contextJSON` as architecture authority.
+10d. Repository validation scripts are permanent architecture assets:
+   - files such as `code/**/verify_*.sh`, readiness reports, contract checkers, and fixtures are part of the maintained codebase
+   - they are not temporary files and must not be deleted merely because a validation cycle finished
+10e. Temporary validation outputs are disposable by default:
+   - `/tmp/*`, ad-hoc logs, exported preview files, one-off screenshots, and transient JSON/text reports created only for a run must be deleted after they fulfill their purpose
+   - they may be preserved only when a numbered AI task explicitly declares them as durable evidence artifacts
 11. Context JSON must be sufficient for an external visualization application to render:
    - architecture tree
    - file purposes and update rules
@@ -183,6 +189,9 @@ ARCHITECTURE RULES
    - heavy validation outputs must be treated as reusable JSON artifacts
    - higher-level gates must consume prior artifacts instead of recomputing heavy readiness/delivery/completion paths
    - artifact reuse is preferred over orchestration layering
+59a. Artifact reuse does not convert temporary runtime outputs into permanent repository files:
+   - reusable validation evidence may exist during a validation cycle
+   - if it is not explicitly declared as a durable project artifact, it must be removed after use
 60. Recursive orchestration is an architecture defect:
    - orchestration scripts must not invoke other orchestration scripts by default
    - a new wrapper over an existing wrapper is prohibited unless the lower layer is collapsed or replaced
@@ -208,3 +217,7 @@ ARCHITECTURE RULES
    - `contextJSON/*` = external viewer export only
    - validation artifacts = acceptance/diagnostic execution evidence only
    - neither JSON class may override `project_recovery/*`, `AGENTS.md`, or planning authority.
+67. Permanent-vs-temporary validation boundary is a hard architecture rule:
+   - tracked validation source files in the repository are permanent project files
+   - untracked runtime outputs created only for local validation are temporary and must be cleaned up after use
+   - only explicitly declared evidence artifacts may cross that boundary

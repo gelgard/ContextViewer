@@ -76,6 +76,8 @@ Never override higher-priority sources.
 
 - contextJSON → external informational export for the viewer application only
 - validation JSON artifacts → execution evidence only for acceptance/diagnostics
+- `code/**/verify_*.sh` and other repository validation scripts are permanent project assets, not temporary files
+- temporary validation outputs (`/tmp/*`, ad-hoc exported HTML, transient JSON reports, logs, screenshots created only for a single check) must be deleted after they serve their validation purpose unless a task explicitly preserves them as evidence
 - markdown docs → descriptive only
 - project_recovery → state authority
 - ai_tasks → only execution mechanism
@@ -96,10 +98,10 @@ Forbidden:
 - Architecture: LOCKED
 - Execution: ACTIVE
 - Stage: Stage 10
-- Substage: Diff inspector focus-summary source-link hint badge copy DOM contract (Task 122) complete — baseline above Task 121 readable copy / 120–102 chain (lightweight artifact-first validation model); next numbered task pending
+- Substage: Diff inspector focus-summary source-link hint copy cleanup (Task 123) complete — baseline above Task 122 badge-copy DOM contract / 121–102 chain (lightweight artifact-first validation model); next numbered task pending
 
 Next required action:
-→ create and execute the next numbered AI task building on the Stage 122 hint badge copy DOM-contract baseline (121–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
+→ create and execute the next numbered AI task building on the Stage 123 hint copy-cleanup baseline (122–102 chain); use that preview for focused UI/runtime work, diff readiness for focused diff work, summary for compact overall readiness, manifest for per-surface detail, and keep heavy legacy validation paths diagnostic-only
 
 
 ---
@@ -171,6 +173,11 @@ Supported commands:
   - higher-level validation must consume existing artifacts instead of recomputing heavy child paths
   - the same heavy readiness/delivery/completion path must not be recomputed in the same unchanged validation cycle
   - if a task requires a new wrapper over an existing wrapper, the task must first collapse or replace the lower validation layer
+- permanent-vs-temporary validation file rule is mandatory:
+  - files under version control such as `code/**/verify_*.sh`, contract checkers, readiness reporters, and fixture files are permanent project files
+  - ad-hoc runtime outputs produced during validation are temporary by default
+  - temporary validation outputs must be removed after use unless the current AI task explicitly preserves them as required evidence
+  - no temporary validation output may be committed unless the task explicitly defines it as a durable artifact
 - anti-hang validation policy is mandatory:
   - do not run heavy UI smoke scripts concurrently on the same local port
   - parallel runs must use distinct ports per process
@@ -478,6 +485,9 @@ When command is triggered:
 - assistant must run `git status --short` itself during validation even if the user did not include it
 - changed-files validation assumes one commit boundary per task; if unrelated changes are detected, assistant must flag them explicitly
 - changed-files validation must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- changed-files validation must distinguish permanent validation scripts from temporary validation outputs:
+  - modified `verify_*` files inside the repository are real product changes
+  - `/tmp/*`, throwaway logs, exported preview copies, and one-off local artifacts are temporary and must not be treated as durable project files
 - commit-boundary separation is mandatory:
   - functional task changes must be isolated from architecture-sync changes whenever possible
   - external viewer export updates under `contextJSON/*` must be treated as separate sync/export boundary, not as part of the functional task boundary, unless the task explicitly owns export generation

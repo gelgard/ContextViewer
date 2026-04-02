@@ -108,7 +108,8 @@ if [[ -f "$html" ]]; then
   refresh_preview="false"
   if grep -q 'data-cv-inspector-rows-dom-contract="106"' "$html" 2>/dev/null; then
     if ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy="121"' "$html" 2>/dev/null \
-      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html" 2>/dev/null; then
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-badge-copy-dom-contract="122"' "$html" 2>/dev/null \
+      || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$html" 2>/dev/null; then
       refresh_preview="true"
     fi
   fi

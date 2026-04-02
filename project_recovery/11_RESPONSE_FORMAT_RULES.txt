@@ -79,6 +79,10 @@ RESPONSE FORMAT RULES
 - Assistant must run `git status --short` itself during validation even if the user did not include it
 - Assistant must validate that changed files belong to current AI task scope and explicitly flag unrelated changes
 - Changed-files auto-check must ignore transient runtime artifacts (for example `.tmp_pg_*/pg_stat_tmp/*`)
+- Response and validation review must treat `verify_*` files correctly:
+  - tracked `code/**/verify_*.sh` files are permanent project files and count as real changes
+  - temporary runtime outputs such as `/tmp/*`, throwaway logs, exported preview copies, and one-off validation reports must be described as temporary artifacts, not project files
+  - temporary artifacts must be removed after use unless the current task explicitly preserves them as required evidence
 - When changed files span multiple classes, assistant must say so explicitly:
   - functional task files
   - architecture-sync/rule files
@@ -138,6 +142,9 @@ JSON authority separation rule:
 - architecture/planning/testing/execution policy must never be derived from `contextJSON`
 - when a response refers to machine-readable validation evidence, it must call it `validation artifact` or `fixture`, not `contextJSON`
 - validation-artifact JSON and external-viewer-export JSON must remain explicitly distinct in task prompts, test blocks, and validation replies
+- response wording must distinguish:
+  - permanent validation scripts in the repository
+  - temporary validation outputs generated during a run
 Visual Validation Rule (Layer 4, mandatory for every UI task):
 - every AI task that creates or modifies HTML preview content must include a dedicated Visual Validation block in Manual Test
 - Visual Validation block must contain two sub-steps:
