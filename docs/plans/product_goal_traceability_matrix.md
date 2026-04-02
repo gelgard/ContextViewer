@@ -174,6 +174,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
 - `AI Task 125` is completed: Stage 10 diff surface productization (release candidate) reworks the full diff preview section into a product-facing **Snapshot changes** screen with `125` markers and `diff-workspace--product-rc`, preserving **102–124** comparison and inspector truth.
 - `AI Task 126` is completed: Stage 10 settings/profile surface productization (release candidate) reworks the **Project & integration** (`data-section="settings"`) preview with `126` markers and `settings-workspace--product-rc`, preserving **087** settings baseline and contract truth.
 - `AI Task 127` is completed: Stage 10 shell and navigation productization (release candidate) applies **`127`** + **`cv-app-shell--product-rc`** on the shared preview frame while preserving **`080`**, all **`data-section`** roots, section **`id`s**, and embedded payload behavior.
+- `AI Task 128` is completed: Stage 10 overview / **Project home** productization (release candidate) applies **`data-cv-overview-surface-productization="128"`** + **`overview-surface--product-rc`** + **`overview-product-hero`** on the feed-backed overview HTML while preserving **`data-section="overview"`**, **`cv-section-overview`**, and **081** field truth (status, progress, roadmap, timeline) from the dashboard bundle only.
 - Requirement mapping for **125** (complete):
   - `PG-UX-001`
   - `PG-EX-001`
@@ -191,6 +192,12 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - `PG-RT-001`
   - `PG-RT-002`
   - `PG-OV-001`
+- Requirement mapping for **128** (complete):
+  - `PG-OV-001`
+  - `PG-UX-001`
+  - `PG-EX-001`
+  - `PG-RT-001`
+  - `PG-RT-002`
 - Requirement mapping for **091** (complete):
   - `PG-EX-001`
   - `PG-UX-001`
@@ -275,7 +282,7 @@ If a task cannot map to any Requirement ID, it is out of scope and must not proc
   - validation artifacts are separate execution evidence
   - project-operating authority remains recovery + AGENTS + plans
 - Current Stage 10 execution-entry authority is `AI Task 098`.
-- Current Stage 10 execution anchor is `AI Task 127`.
+- Current Stage 10 execution anchor is `AI Task 128`.
 - Future AI tasks must satisfy `PG-EX-001` using lightweight acceptance evidence, not recursive heavy validation chains.
 
 ## Next Design Branch Tasks

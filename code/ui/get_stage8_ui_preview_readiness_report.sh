@@ -31,6 +31,7 @@
 # AI Task 125: fast delivery checks diff-surface productization marker (125) when comparison_ready.
 # AI Task 126: fast delivery checks settings-surface productization marker (126) when settings section present.
 # AI Task 127: fast delivery checks shell/navigation productization marker (127) on body.
+# AI Task 128: fast delivery checks overview-surface productization marker (128) when overview section present.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -326,7 +327,8 @@ if [[ "$mode" == "fast" ]]; then
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup="123"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-inspector-focus-summary-source-link-hint-copy-cleanup-dom-contract="124"' "$fast_artifact" 2>/dev/null \
         || ! grep -q 'data-cv-diff-surface-productization="125"' "$fast_artifact" 2>/dev/null \
-        || ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null; then
+        || ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null \
+        || ! grep -q 'data-cv-overview-surface-productization="128"' "$fast_artifact" 2>/dev/null; then
         refresh_fast_artifact="true"
       fi
     fi
@@ -340,6 +342,10 @@ if [[ "$mode" == "fast" ]]; then
     fi
     if grep -q 'data-cv-preview-shell="080"' "$fast_artifact" 2>/dev/null \
       && ! grep -q 'data-cv-shell-navigation-productization="127"' "$fast_artifact" 2>/dev/null; then
+      refresh_fast_artifact="true"
+    fi
+    if grep -q 'data-section="overview"' "$fast_artifact" 2>/dev/null \
+      && ! grep -q 'data-cv-overview-surface-productization="128"' "$fast_artifact" 2>/dev/null; then
       refresh_fast_artifact="true"
     fi
     if [[ "$refresh_fast_artifact" == "true" ]]; then
@@ -429,8 +435,15 @@ else
     add_fast_check "delivery-fast: preview artifact exists" "pass" "output_file exists"
     if grep -q 'data-section="overview"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: overview marker" "pass" 'found data-section="overview"'
+      if grep -q 'data-cv-overview-surface-productization="128"' "$output_file_fast" 2>/dev/null \
+        && grep -q 'overview-surface--product-rc' "$output_file_fast" 2>/dev/null; then
+        add_fast_check "delivery-fast: overview surface productization (128)" "pass" "Task 128 markers present"
+      else
+        add_fast_check "delivery-fast: overview surface productization (128)" "fail" "regenerate preview for Task 128 overview RC markers"
+      fi
     else
       add_fast_check "delivery-fast: overview marker" "fail" 'missing data-section="overview"'
+      add_fast_check "delivery-fast: overview surface productization (128)" "pass" "skipped (no overview section)"
     fi
     if grep -q 'data-section="visualization"' "$output_file_fast" 2>/dev/null; then
       add_fast_check "delivery-fast: visualization marker" "pass" 'found data-section="visualization"'

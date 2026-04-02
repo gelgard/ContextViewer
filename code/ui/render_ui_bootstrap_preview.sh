@@ -26,6 +26,7 @@
 # AI Task 088: settings/profile surface from get_settings_profile_contract_bundle.sh only; five workspace sections + readiness gate.
 # AI Task 126: settings surface RC — data-cv-settings-surface-productization="126", settings-workspace--product-rc, product copy (087 truth preserved).
 # AI Task 127: shell/navigation RC — data-cv-shell-navigation-productization="127", cv-app-shell--product-rc; section ids and data-section unchanged.
+# AI Task 128: overview surface RC — data-cv-overview-surface-productization="128", overview-surface--product-rc; dashboard feed truth unchanged (081).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -104,6 +105,8 @@ Task 124 adds cleaned hint copy DOM contract (data-cv-diff-inspector-focus-summa
   on aside, workspace, hint paragraph; cleaned_text + cleaned_value on linked_key span from default-focused row).
 Task 125 productizes the full diff workspace for release-candidate preview: data-cv-diff-surface-productization="125",
   diff-workspace--product-rc, clearer headings/copy and hierarchy; preserves 102–124 comparison + inspector truth and hooks.
+Task 128 productizes the overview surface: data-cv-overview-surface-productization="128", overview-surface--product-rc,
+  landing-style hero and calmer section copy; values still come only from the dashboard feed (081).
 USAGE
 }
 
@@ -370,13 +373,21 @@ timeline = timeline if isinstance(timeline, list) else []
 
 feed_gen = df.get("generated_at")
 parts = []
+display_name = po.get("name")
+if display_name is None or str(display_name).strip() == "":
+    display_name = "—"
 parts.append(
-    '<div class="overview-surface" role="region" aria-label="Overview from dashboard feed">'
+    '<div class="overview-surface overview-surface--product-rc" role="region" '
+    'aria-label="Project home" data-cv-overview-surface-productization="128">'
 )
-parts.append('<header class="overview-header">')
+parts.append('<header class="overview-product-hero">')
+parts.append('<h1 class="overview-product-title">' + esc(display_name) + "</h1>")
 parts.append(
-    '<p class="overview-kicker">Entry surface · dashboard feed generated '
-    '<time datetime="'
+    '<p class="overview-product-lead">Status, delivery progress, and recent activity from your '
+    "stored overview. Everything here is read-only and reflects the same dashboard feed data as before.</p>"
+)
+parts.append(
+    '<p class="overview-product-updated muted">Last refreshed <time datetime="'
     + esc_attr(feed_gen)
     + '">'
     + esc(feed_gen)
@@ -387,29 +398,29 @@ parts.append("</header>")
 parts.append(
     '<section class="overview-block overview-current-status" aria-labelledby="ov-status-h">'
 )
-parts.append('<h3 id="ov-status-h" class="overview-block-title">Current status</h3>')
+parts.append('<h3 id="ov-status-h" class="overview-block-title">At a glance</h3>')
 parts.append('<div class="overview-status-grid">')
 parts.append(
-    '<div class="status-card"><span class="status-label">Latest snapshot time</span>'
+    '<div class="status-card"><span class="status-label">Latest snapshot</span>'
     '<span class="status-value mono">'
     + esc(ov.get("latest_snapshot_timestamp"))
     + "</span></div>"
 )
 parts.append(
-    '<div class="status-card"><span class="status-label">Valid snapshots</span>'
+    '<div class="status-card"><span class="status-label">Snapshots on record</span>'
     '<span class="status-value mono">'
     + esc(str(ov.get("total_valid_snapshots", 0)))
     + "</span></div>"
 )
 parts.append(
-    '<div class="status-card"><span class="status-label">Top-level diff keys (latest)</span>'
+    '<div class="status-card"><span class="status-label">Changed fields (latest)</span>'
     '<span class="status-value mono">'
     + esc(str(ov.get("diff_changed_keys_count", 0)))
     + "</span></div>"
 )
 parts.append(
     '<div class="status-card status-card-emphasis"><span class="status-label">'
-    "Changes since previous</span>"
+    "Changes since last snapshot</span>"
     '<span class="status-value mono">'
     + esc(str(ov.get("changes_count", 0)))
     + "</span></div>"
@@ -426,9 +437,9 @@ if gh:
         + "</a>"
     )
 else:
-    parts.append('<span class="project-link mono muted">No GitHub URL in feed</span>')
+    parts.append('<span class="project-link mono muted">No repository link on file</span>')
 parts.append(
-    '<span class="import-pill mono">import '
+    '<span class="import-pill mono">Import status · '
     + esc(po.get("latest_import_status"))
     + "</span>"
 )
@@ -439,7 +450,7 @@ parts.append('<div class="overview-row overview-split">')
 parts.append(
     '<section class="overview-block overview-progress" aria-labelledby="ov-prog-h">'
 )
-parts.append('<h3 id="ov-prog-h" class="overview-block-title">Plan progress</h3>')
+parts.append('<h3 id="ov-prog-h" class="overview-block-title">Delivery progress</h3>')
 parts.append('<div class="progress-columns">')
 for label, key, items in (
     ("Implemented", "impl", impl),
@@ -469,7 +480,7 @@ parts.append(
 )
 parts.append('<h3 id="ov-road-h" class="overview-block-title">Roadmap</h3>')
 if not roadmap:
-    parts.append('<p class="muted roadmap-empty">No roadmap rows in feed.</p>')
+    parts.append('<p class="muted roadmap-empty">No roadmap items in this overview yet.</p>')
 else:
     parts.append('<ol class="roadmap-list" start="1">')
     cap = 20
@@ -488,9 +499,9 @@ parts.append("</div>")
 parts.append(
     '<section class="overview-block overview-timeline" aria-labelledby="ov-tl-h">'
 )
-parts.append('<h3 id="ov-tl-h" class="overview-block-title">Recent snapshot timeline</h3>')
+parts.append('<h3 id="ov-tl-h" class="overview-block-title">Recent activity</h3>')
 if not timeline:
-    parts.append('<p class="muted">No timeline rows in feed.</p>')
+    parts.append('<p class="muted">No recent activity rows yet.</p>')
 else:
     parts.append('<div class="timeline-wrap"><table class="timeline-table">')
     parts.append(
@@ -498,7 +509,7 @@ else:
         "<th scope=\"col\">Snapshot</th>"
         "<th scope=\"col\">File</th>"
         "<th scope=\"col\">Snapshot time</th>"
-        "<th scope=\"col\">Import (UTC)</th>"
+        "<th scope=\"col\">Imported (UTC)</th>"
         "</tr></thead><tbody>"
     )
     cap = 8
@@ -1956,6 +1967,7 @@ tmp_html="$(mktemp)"
     border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 22%, transparent);
   }
   /* AI Task 081 — overview surface (values from dashboard_feed + project_overview only) */
+  /* AI Task 128 — release-candidate overview frame (truth unchanged) */
   .mono { font-family: var(--cv-font-mono); }
   .muted { color: var(--cv-on-surface-variant); }
   .overview-surface {
@@ -1963,13 +1975,38 @@ tmp_html="$(mktemp)"
     flex-direction: column;
     gap: var(--cv-space-6);
   }
-  .overview-header .overview-kicker {
-    margin: 0 0 var(--cv-space-2);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--cv-on-surface-variant);
+  .overview-surface--product-rc {
+    gap: var(--cv-space-8);
+  }
+  .overview-product-hero {
+    padding: var(--cv-space-6) var(--cv-space-6);
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--cv-primary) 12%, var(--cv-surface-lowest)) 0%,
+      var(--cv-surface-low) 100%
+    );
+    border-radius: var(--cv-radius-md);
+    border: 1px solid color-mix(in srgb, var(--cv-outline-variant) 18%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--cv-outline-variant) 20%, transparent);
+  }
+  .overview-product-title {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 1.625rem;
+    font-weight: var(--cv-headline-weight);
+    letter-spacing: -0.03em;
+    color: var(--cv-on-surface);
+    line-height: 1.2;
+  }
+  .overview-product-lead {
+    margin: 0 0 var(--cv-space-3);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--cv-on-surface);
+    max-width: 42rem;
+  }
+  .overview-product-updated {
+    margin: 0;
+    font-size: 0.75rem;
   }
   .overview-block-title {
     margin: 0 0 var(--cv-space-3);
@@ -2964,7 +3001,7 @@ tmp_html="$(mktemp)"
     <aside class="app-sidebar" aria-label="Page sections">
       <nav class="workspace-nav" aria-label="Skip to a section">
         <span class="nav-label">Jump to</span>
-        <a class="nav-item" href="#cv-section-overview">Overview</a>
+        <a class="nav-item" href="#cv-section-overview">Project home</a>
         <a class="nav-item" href="#cv-section-visualization">Architecture</a>
         <a class="nav-item" href="#cv-section-history">Timeline</a>
         <a class="nav-item" href="#cv-section-diff">Snapshot changes</a>
@@ -2974,7 +3011,7 @@ tmp_html="$(mktemp)"
     <main class="app-main" id="cv-main-workspace">
       <div class="workspace-panels">
         <section id="cv-section-overview" data-section="overview" class="workspace-panel workspace-panel-overview">
-          <h2>Overview</h2>
+          <h2>Project home</h2>
 $(printf '%s' "$overview_inner")
         </section>
         <section id="cv-section-visualization" data-section="visualization" class="workspace-panel workspace-panel-viz">
